@@ -18,7 +18,7 @@ int main() {
   }
 //            -- Output to a datafile --
 // Set a filename
-  std::string filename = "x_u.txt";
+  std::string filename = "x_u.csv";
   // Create and open the output file. Or, technically, create
   // an "output file stream" (type std::ofstream) and connect it to our filename.
   std::ofstream ofile;
@@ -26,7 +26,6 @@ int main() {
   // Some width and precision parameters we will use to format the output
   int width = 12;
   int prec  = 4;
-
   // Loop over steps
   for (int i = 0; i <= n-1; i++)
   {
