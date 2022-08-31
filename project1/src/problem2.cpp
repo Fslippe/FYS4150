@@ -18,7 +18,7 @@ int main() {
   }
 //            -- Output to a datafile --
 // Set a filename
-  std::string filename = "x_u.csv";
+  std::string filename = "x_u.txt";
   // Create and open the output file. Or, technically, create
   // an "output file stream" (type std::ofstream) and connect it to our filename.
   std::ofstream ofile;
