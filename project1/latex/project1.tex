@@ -20,6 +20,7 @@
 \usepackage{listings}         % display code
 \usepackage{subfigure}        % imports a lot of cool and useful figure commands
 \usepackage{float}
+\usepackage{enumitem}
 %\usepackage[section]{placeins}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
@@ -115,10 +116,55 @@ Checking analytically that an exact solution to Eq. (1) is given by Eq. (2).
 \end{figure}
 
 \section*{Problem 3}
+By using the taylor approximation of the second derivative we can discretize the second derivative in the Poission equation:
+\begin{align*}
+  \frac{\partial^2 u }{\partial x^2} \approx \frac{u_{i+1} - 2 u_i + u_{i-1}}{h^2} + O(h^2)
+\end{align*}
+Here we have the stepsize $h$ and the truncation error $O$. The one-dimensional Poisson equation can then be written for the approximated version of $u$ as $v$ like:
+\begin{align}
+    -\frac{v_{i+1} - 2 v_i + v_{i-1}}{h^2} = f_i
+    \label{eq:poiss_disc}
+\end{align}
 
 \section*{Problem 4}
-
+We can rewrite the discretized equation as a matrix equation for $n+2$ number of points with the marix $n\times 2$ matrix $A$. We rewrite the discretized Poisson funcion:
+\begin{align*}
+  2 v_1- v_2 &= f_1 h^2\\
+  -v_{1} +2 v_2 - v_{3} &= f_2 h^2 \\
+    \vdots \\
+  -v_{n-2} + 2 v_{n-1} - v_{n} &= f_{n-1} h^2\\
+  - v_{n} + 2 v_{n+1}  &= f_{n} h^2
+\end{align*}
+This can be written in terms of the following matrix equation where we rewrite $f_i h^2$ for $i = 1,2,\dots n-2$ as $g_i$
+\begin{align*}
+  \begin{bmatrix}
+    2 & -1 & 0 & 0 & \dots &0 \\
+    -1 & 2 & -1 & 0 &\dots& 0 \\
+    \vdots & \vdots & \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \dots & -1 & 2 & -1 \\
+    0 & 0 & \dots & \ 0 &-1 & 2
+  \end{bmatrix}
+  \begin{bmatrix}
+    v_1 \\
+    v_2 \\
+    \vdots\\
+    v_{n-1}\\
+    v_{n}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    g_1 \\
+    g_2 \\
+    \vdots\\
+    g_{n-1}\\
+    g_{n}
+  \end{bmatrix}
+\end{align*}
 \section*{Problem 5}
+
+\begin{enumerate}[label= \alph*)]
+  \item 
+\end{enumerate}
 
 \section*{Problem 6}
 
@@ -131,7 +177,7 @@ Checking analytically that an exact solution to Eq. (1) is given by Eq. (2).
 \section*{Problem 10}
 We write equations using the LaTeX \texttt{equation} (or \texttt{align}) environments. Here is an equation with numbering
 \begin{equation}\label{eq:newton}
-    \vb{F} = \dv{\vb{p}}{t},
+  \vb{F} = \dv{\vb{p}}{t},
 \end{equation}
 and here is one without numbering:
 \begin{equation*}
@@ -141,10 +187,10 @@ Sometimes it is useful to refer back to a previous equation, like we're demonstr
 
 We can include figures using the \texttt{figure} environment. Whenever we include a figure or table, we \textit{must} make sure to actually refer to it in the main text, e.g.\ something like this: ``In figure \ref{fig:rel_err} we show \ldots''.
 \begin{figure}%[h!]
-    \centering %Centers the figure
-    \includegraphics[scale=0.55]{} %Imports the figure.
-    \caption{Write a descriptive caption here that explains the content of the figure. Note the font size for the axis labels and ticks --- the size should approximately match the document font size.}
-    \label{fig:rel_err}
+  \centering %Centers the figure
+  \includegraphics[scale=0.55]{} %Imports the figure.
+  \caption{Write a descriptive caption here that explains the content of the figure. Note the font size for the axis labels and ticks --- the size should approximately match the document font size.}
+  \label{fig:rel_err}
 \end{figure}
 Also, note the LaTeX code we used to get correct quotation marks in the previous sentence. (Simply using the \texttt{"} key on your keyboard will give the wrong result.) Figures should preferably be vector graphics (e.g.\ a \texttt{.pdf} file) rather than raster graphics (e.g.\ a \texttt{.png} file).
 
