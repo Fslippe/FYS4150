@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex project1"] 1661969724 "project1.aux" "project1.bbl" "project1" 1661970327
+["bibtex project1"] 1661969724 "project1.aux" "project1.bbl" "project1" 1662027573
   "/usr/local/texlive/2021/texmf-dist/bibtex/bst/revtex4-1/apsrev4-1.bst" 1602107945 71515 e333383ed72bf24aa6de7e8cabb55f84 ""
-  "project1.aux" 1661970326 3263 5bfc4c5e1c5d79158c1dad0c8593f914 "pdflatex"
-  "project1Notes.bib" 1661970326 103 48ad29797468f16e2853d8797278d7af "pdflatex"
+  "project1.aux" 1662027566 3263 5bfc4c5e1c5d79158c1dad0c8593f914 "pdflatex"
+  "project1Notes.bib" 1662027566 103 48ad29797468f16e2853d8797278d7af "pdflatex"
   (generated)
-  "project1.blg"
   "project1.bbl"
-["pdflatex"] 1661970325 "project1.tex" "project1.pdf" "project1" 1661970327
-  "/Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf" 1661970292 10741 d515e61301900330d62b460b73adba53 ""
+  "project1.blg"
+["pdflatex"] 1662027563 "project1.tex" "project1.pdf" "project1" 1662027573
+  "../figures/x_u_plot.pdf" 1662027497 10741 317386b764db96335e5c40be66e8dbcb ""
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -232,14 +232,14 @@
   "/usr/local/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1632167961 2724743 b6633b263123d4f68ac29c048c99c217 ""
   "/usr/local/texlive/2021/texmf.cnf" 1616695596 577 4c1911a7228e554c6032256d3cf5567d ""
   "amsmath.tex" 0 -1 0 ""
-  "project1.aux" 1661970326 3263 5bfc4c5e1c5d79158c1dad0c8593f914 "pdflatex"
+  "project1.aux" 1662027566 3263 5bfc4c5e1c5d79158c1dad0c8593f914 "pdflatex"
   "project1.bbl" 1661969724 1983 c789b8b2e2ff60989c671635ad8473c2 "bibtex project1"
-  "project1.out" 1661970326 1121 c2e40ed3ff93fed3a6616d9b36c31d79 "pdflatex"
-  "project1.tex" 1661970324 7213 bfa9d2f007d52adf71ea4f9122cf5103 ""
+  "project1.out" 1662027566 1121 c2e40ed3ff93fed3a6616d9b36c31d79 "pdflatex"
+  "project1.tex" 1662027573 7176 055effcecb6add41e54fb55e82e6b48e ""
   (generated)
-  "amsmath.aux"
+  "project1.out"
   "project1.aux"
+  "project1Notes.bib"
+  "amsmath.aux"
   "project1.log"
   "project1.pdf"
-  "project1Notes.bib"
-  "project1.out"

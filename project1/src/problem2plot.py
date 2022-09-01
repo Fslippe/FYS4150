@@ -8,4 +8,4 @@ u = data [:,1]
 plt.plot(x,u)
 plt.xlabel("$x$")
 plt.ylabel("$u(x)$")
-plt.savefig("/Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf")
+plt.savefig("../figures/x_u_plot.pdf")

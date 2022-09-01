@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.20)  31 AUG 2022 20:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.20)  1 SEP 2022 12:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -762,16 +762,16 @@ LaTeX Info: Redefining \nameref on input line 75.
 Class revtex4-1 Info: Taking \maketitle back from hyperref on input line 75.
 \openout3 = `project1Notes.bib'.
 
-</Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf, id=51, 462.52798pt x 346.89601pt>
-File: /Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf Graphic file (type pdf)
-<use /Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf>
-Package pdftex.def Info: /Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf  used on input line 112.
+<../figures/x_u_plot.pdf, id=51, 462.52798pt x 346.89601pt>
+File: ../figures/x_u_plot.pdf Graphic file (type pdf)
+<use ../figures/x_u_plot.pdf>
+Package pdftex.def Info: ../figures/x_u_plot.pdf  used on input line 112.
 (pdftex.def)             Requested size: 462.52684pt x 346.89516pt.
  [1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.139 \end{equation*}
-                      </Users/alessiocanclini/FYS4150/project1/figures/x_u_plot.pdf>]
+                      <../figures/x_u_plot.pdf>]
 
 ./project1.tex:145: LaTeX Error: File `' not found.
 
@@ -804,7 +804,7 @@ Package rerunfilecheck Info: File `project1.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  28411 strings out of 478994
- 522740 string characters out of 5858184
+ 522518 string characters out of 5858184
  833309 words of memory out of 5000000
  45350 multiletter control sequences out of 15000+600000
  411577 words of font info for 58 fonts, out of 8000000 for 9000
@@ -812,7 +812,7 @@ Here is how much of TeX's memory you used:
  87i,9n,89p,1176b,382s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on project1.pdf (3 pages, 188608 bytes).
+Output written on project1.pdf (3 pages, 188577 bytes).
 PDF statistics:
  183 PDF objects out of 1000 (max. 8388607)
  143 compressed objects within 2 object streams
