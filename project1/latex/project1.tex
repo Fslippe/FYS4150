@@ -74,8 +74,8 @@
 
 \begin{document}
 
-\title{Title of the document}      % self-explanatory
-\author{Your name(s) here}          % self-explanatory
+\title{Project 1}      % self-explanatory
+\author{Alessio Canclini, Filip von der Lippe}          % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
 
@@ -85,14 +85,50 @@
 \textit{List a link to your github repository here!}
 
 \section*{Problem 1}
+\begin{align}
+  - \frac{d^2u}{dx^2} = f(x)
+\end{align}
 
-\subsection*{Problem a}
-Write a solution for problem 1a here.
+\begin{itemize}
+  \item source term: $f(x) = 100e^{-10x}$
+  \item $x$ range $x \in [0,1]$
+  \item boundary conditions: $u(0) = 0$ and $u(1) = 0$
+\end{itemize}
 
-\subsection*{Problem b}
-Write a solution for problem 1b here.
+\begin{align}
+  u(x) = 1 - (1 - e^{-10})x- e^{-10x}
+\end{align}
+Checking analytically that an exact solution to Eq. (1) is given by Eq. (2).
+
+\begin{align*}
+  \frac{du}{dx} & = 1 - e^{-10} + 10e^{-10x} \\
+  \frac{d^2u}{dx^2} & = -100e^{-10x} \\
+  -\frac{d^2u}{dx^2} & = 100e^{-10x} \\
+  -\frac{d^2u}{dx^2} & = f(x)
+\end{align*}
 
 \section*{Problem 2}
+\begin{figure}[H]
+  \includegraphics{../figures/x_u_plot.pdf}
+  \caption{Plot of $u(x)$.}
+  \label{tab:output_table}
+\end{figure}
+
+\section*{Problem 3}
+
+\section*{Problem 4}
+
+\section*{Problem 5}
+
+\section*{Problem 6}
+
+\section*{Problem 7}
+
+\section*{Problem 8}
+
+\section*{Problem 9}
+
+\section*{Problem 10}
 We write equations using the LaTeX \texttt{equation} (or \texttt{align}) environments. Here is an equation with numbering
 \begin{equation}\label{eq:newton}
     \vb{F} = \dv{\vb{p}}{t},
@@ -106,7 +142,7 @@ Sometimes it is useful to refer back to a previous equation, like we're demonstr
 We can include figures using the \texttt{figure} environment. Whenever we include a figure or table, we \textit{must} make sure to actually refer to it in the main text, e.g.\ something like this: ``In figure \ref{fig:rel_err} we show \ldots''.
 \begin{figure}%[h!]
     \centering %Centers the figure
-    \includegraphics[scale=0.55]{imgs/rel_err.pdf} %Imports the figure.
+    \includegraphics[scale=0.55]{} %Imports the figure.
     \caption{Write a descriptive caption here that explains the content of the figure. Note the font size for the axis labels and ticks --- the size should approximately match the document font size.}
     \label{fig:rel_err}
 \end{figure}
