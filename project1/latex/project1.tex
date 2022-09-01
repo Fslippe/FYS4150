@@ -88,6 +88,7 @@
 \section*{Problem 1}
 \begin{align}
   - \frac{d^2u}{dx^2} = f(x)
+  \label{eq:poisson}
 \end{align}
 
 \begin{itemize}
@@ -98,8 +99,9 @@
 
 \begin{align}
   u(x) = 1 - (1 - e^{-10})x- e^{-10x}
+  \label{eq:u(x)}
 \end{align}
-Checking analytically that an exact solution to Eq. (1) is given by Eq. (2).
+Checking analytically that an exact solution to Eq. \ref{eq:poisson} is given by Eq. \ref{eq:u(x)}.
 
 \begin{align*}
   \frac{du}{dx} & = 1 - e^{-10} + 10e^{-10x} \\
@@ -163,7 +165,8 @@ This can be written in terms of the following matrix equation where we rewrite $
 \section*{Problem 5}
 
 \begin{enumerate}[label= \alph*)]
-  \item 
+  \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in adition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
+  \item Solving $\bold{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
 \end{enumerate}
 
 \section*{Problem 6}
