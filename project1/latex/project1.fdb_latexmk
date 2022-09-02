@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex project1"] 1662043069 "project1.aux" "project1.bbl" "project1" 1662044644
+["bibtex project1"] 1662043069 "project1.aux" "project1.bbl" "project1" 1662046477
   "/usr/local/texlive/2021/texmf-dist/bibtex/bst/revtex4-1/apsrev4-1.bst" 1602107945 71515 e333383ed72bf24aa6de7e8cabb55f84 ""
-  "project1.aux" 1662044644 3407 bde8b471b2cc87bb1b65c09c586adfe1 "pdflatex"
-  "project1Notes.bib" 1662044644 103 48ad29797468f16e2853d8797278d7af "pdflatex"
+  "project1.aux" 1662046476 3407 bde8b471b2cc87bb1b65c09c586adfe1 "pdflatex"
+  "project1Notes.bib" 1662046476 103 48ad29797468f16e2853d8797278d7af "pdflatex"
   (generated)
   "project1.blg"
   "project1.bbl"
-["pdflatex"] 1662044642 "project1.tex" "project1.pdf" "project1" 1662044644
+["pdflatex"] 1662046475 "project1.tex" "project1.pdf" "project1" 1662046477
   "../figures/x_u_plot.pdf" 1662042226 10741 317386b764db96335e5c40be66e8dbcb ""
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -233,14 +233,14 @@
   "/usr/local/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1632167961 2724743 b6633b263123d4f68ac29c048c99c217 ""
   "/usr/local/texlive/2021/texmf.cnf" 1616695596 577 4c1911a7228e554c6032256d3cf5567d ""
   "amsmath.tex" 0 -1 0 ""
-  "project1.aux" 1662044644 3407 bde8b471b2cc87bb1b65c09c586adfe1 "pdflatex"
+  "project1.aux" 1662046476 3407 bde8b471b2cc87bb1b65c09c586adfe1 "pdflatex"
   "project1.bbl" 1662043069 1983 c789b8b2e2ff60989c671635ad8473c2 "bibtex project1"
-  "project1.out" 1662044644 1121 c2e40ed3ff93fed3a6616d9b36c31d79 "pdflatex"
-  "project1.tex" 1662044642 9131 184f58db0447167d55247397087e97f8 ""
+  "project1.out" 1662046476 1121 c2e40ed3ff93fed3a6616d9b36c31d79 "pdflatex"
+  "project1.tex" 1662046474 9131 184f58db0447167d55247397087e97f8 ""
   (generated)
-  "project1.log"
-  "project1.aux"
   "amsmath.aux"
-  "project1Notes.bib"
-  "project1.out"
+  "project1.aux"
   "project1.pdf"
+  "project1Notes.bib"
+  "project1.log"
+  "project1.out"
