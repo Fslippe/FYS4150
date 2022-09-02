@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex project1"] 1662040710 "project1.aux" "project1.bbl" "project1" 1662040857
+["bibtex project1"] 1662040710 "project1.aux" "project1.bbl" "project1" 1662122065
   "/usr/share/texlive/texmf-dist/bibtex/bst/revtex/apsrev4-1.bst" 1547851249 71518 fec93f06df0c073f83d2330456bd19c2 ""
-  "project1.aux" 1662040857 3290 0a908bd76a84f8f86e1012fd20939c44 "pdflatex"
-  "project1Notes.bib" 1662040857 103 48ad29797468f16e2853d8797278d7af "pdflatex"
+  "project1.aux" 1662122064 3290 0a908bd76a84f8f86e1012fd20939c44 "pdflatex"
+  "project1Notes.bib" 1662122064 103 48ad29797468f16e2853d8797278d7af "pdflatex"
   (generated)
-  "project1.bbl"
   "project1.blg"
-["pdflatex"] 1662040857 "project1.tex" "project1.pdf" "project1" 1662040857
+  "project1.bbl"
+["pdflatex"] 1662122064 "project1.tex" "project1.pdf" "project1" 1662122065
   "../figures/x_u_plot.pdf" 1662035508 10741 317386b764db96335e5c40be66e8dbcb ""
   "/etc/texmf/web2c/texmf.cnf" 1661345369 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -224,14 +224,14 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1661346023 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1661346042 8255509 747e9c9606ecd35318c38f292d9a8ad8 ""
   "amsmath.tex" 0 -1 0 ""
-  "project1.aux" 1662040857 3290 0a908bd76a84f8f86e1012fd20939c44 "pdflatex"
+  "project1.aux" 1662122064 3290 0a908bd76a84f8f86e1012fd20939c44 "pdflatex"
   "project1.bbl" 1662040710 1983 c789b8b2e2ff60989c671635ad8473c2 "bibtex project1"
-  "project1.out" 1662040857 600 9b7afc1dcf671cdcb5229eaabe860254 "pdflatex"
-  "project1.tex" 1662040857 8685 cb25904ba0924510df985065625ad0e3 ""
+  "project1.out" 1662122064 600 9b7afc1dcf671cdcb5229eaabe860254 "pdflatex"
+  "project1.tex" 1662122064 8684 6a649cec918090498c276b7b53ee13ea ""
   (generated)
+  "project1Notes.bib"
+  "project1.pdf"
+  "project1.aux"
+  "project1.log"
   "project1.out"
   "amsmath.aux"
-  "project1.pdf"
-  "project1.log"
-  "project1.aux"
-  "project1Notes.bib"
