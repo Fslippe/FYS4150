@@ -13,7 +13,8 @@ double u_func(double x); // Declaration of u(x).
 
 // Filling u_vec with u(x) values for x in x_vec.
 int main() {
-  for (int i = 0; i < n-1; i++){
+  for (int i = 0; i < n-1; i++)
+  {
     u_vec(i) = u_func(x_vec(i));
   }
 //            -- Output to a datafile --
