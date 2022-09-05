@@ -165,16 +165,35 @@ This can be written in terms of the following matrix equation where we rewrite $
 \section*{Problem 5}
 
 \begin{enumerate}[label= \alph*)]
-<<<<<<< HEAD
-  \item
-=======
   \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in adition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
   \item Solving $\bold{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
->>>>>>> b4a1574ad2808bfd35dc1c1351eb43d36ca950de
 \end{enumerate}
 
 \section*{Problem 6}
+\begin{enumerate}[label= \alph*)]
+  \item We can use the Thomas algorithm to row reduce the matrix $A$ to give us a solution of the equation $A \vec{v} = \vec{g}$. This is done in two steps. We first define the three diagonals as three vectors. The sub diagonal $\vec{a}$ the diagonal $\vec{b}$ and the superdiagonal $\vec{c}$ where the $i$ element in theese vectors corresponds to the $i$ row of the matrix $A$.
+  \begin{enumerate}[label=\roman*)]
+    \item The first step is forwards substitution. We have to define the first index and then loop over the rest:
+    \begin{align*}
+      \tilde{b}_1 &= b_1 \\
+      \tilde{b}_i &= b_i - \frac{a_i}{b_{i -1} }c_{i-1} \quad \text{for }i=2,..,n
+    \end{align*}
+    \begin{align*}
+      \tilde{g}_1 &= g_1 \\
+      \tilde{g}_i &= g_i - \frac{a_i}{\tilde{b}_{i -1} }\tilde{g}_{i-1} \quad \text{for }i=2,..,n
+    \end{align*}
+    \item Second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
+    \begin{align*}
+      v_n &= \frac{\tilde{g}_n}{b_n} \\
+      v_i &= \frac{\tilde{g}_i - c_i v_ {i+1}}{\tilde{b}_i} \quad \text{for } i = n-1,...,1
+    \end{align*}
+  \end{enumerate}
+  \item We find the number of FLOPs for this algorithm by counting the number of floating point operations the computer has to do. For the first step we have 3 FLOPs (1 subtraction 1 division and one multiplication) for defining $\tilde{b}_i$ and  $\tilde{g}_i$ each. Since we loop this operation $n-1$ times we end up with a  totalt number of $6(n-1)$ FLOPs.
 
+  For back substitution we have 1 FLOP calculating $v_n$, and three FLOPs calculating $v_i$ $n-1$ times. This gives us a total of $3(n-1)+1$ FLOPs
+
+  The total FLOPs of the general algorithm is $9n-8$
+\end{enumerate}
 \section*{Problem 7}
 
 \section*{Problem 8}
