@@ -129,15 +129,15 @@ Here we have the stepsize $h$ and the truncation error $O$. The one-dimensional 
 \end{align}
 
 \section*{Problem 4}
-We can rewrite the discretized equation as a matrix equation for $n+2$ number of points with the marix $n\times 2$ matrix $A$. We rewrite the discretized Poisson funcion:
+We can rewrite the discretized equation as a matrix equation for $n+1$ number of points and $n-1$ unknown points ($v_0$ and $v_n$ are known) with the $n-1\times n-1$ matrix $\boldsymbol{A}$. We rewrite the discretized Poisson funcion:
 \begin{align*}
   2 v_1- v_2 &= f_1 h^2\\
   -v_{1} +2 v_2 - v_{3} &= f_2 h^2 \\
     \vdots \\
-  -v_{n-2} + 2 v_{n-1} - v_{n} &= f_{n-1} h^2\\
-  - v_{n} + 2 v_{n+1}  &= f_{n} h^2
+  -v_{n-3} + 2 v_{n-2} - v_{n-1} &= f_{n-2} h^2\\
+  - v_{n-2} + 2 v_{n-1}  &= f_{n-1} h^2
 \end{align*}
-This can be written in terms of the following matrix equation where we rewrite $f_i h^2$ for $i = 1,2,\dots n-2$ as $g_i$
+This can be written in terms of the following matrix equation where we rewrite $f_i h^2$ for $i = 1,2,\dots n-1$ as $g_i$
 \begin{align*}
   \begin{bmatrix}
     2 & -1 & 0 & 0 & \dots &0 \\
@@ -150,28 +150,28 @@ This can be written in terms of the following matrix equation where we rewrite $
     v_1 \\
     v_2 \\
     \vdots\\
-    v_{n-1}\\
-    v_{n}
+    v_{n-2}\\
+    v_{n-1}
   \end{bmatrix}
   =
   \begin{bmatrix}
     g_1 \\
     g_2 \\
     \vdots\\
-    g_{n-1}\\
-    g_{n}
+    g_{n-2}\\
+    g_{n-1}
   \end{bmatrix}
 \end{align*}
 \section*{Problem 5}
 
 \begin{enumerate}[label= \alph*)]
   \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in adition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
-  \item Solving $\bold{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
+  \item Solving $\boldsymbol{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
 \end{enumerate}
 
 \section*{Problem 6}
 \begin{enumerate}[label= \alph*)]
-  \item We can use the Thomas algorithm to row reduce the matrix $A$ to give us a solution of the equation $A \vec{v} = \vec{g}$. This is done in two steps. We first define the three diagonals as three vectors. The sub diagonal $\vec{a}$ the diagonal $\vec{b}$ and the superdiagonal $\vec{c}$ where the $i$ element in theese vectors corresponds to the $i$ row of the matrix $A$.
+  \item We can use the Thomas algorithm to row reduce the matrix $\boldsymbol{A}$ to give us a solution of the equation $\boldsymbol{A} \vec{v} = \vec{g}$. This is done in two steps. We first define the three diagonals as three vectors. The sub diagonal $\vec{a}$ the diagonal $\vec{b}$ and the superdiagonal $\vec{c}$ where the $i$ element in theese vectors corresponds to the $i$ row of the matrix $\boldsymbol{A}$. We define $n$ unknowns and the matrix $\boldsymbol{A}$ as $n\times n$
   \begin{enumerate}[label=\roman*)]
     \item The first step is forwards substitution. We have to define the first index and then loop over the rest:
     \begin{align*}
@@ -212,7 +212,7 @@ and here is one without numbering:
 Sometimes it is useful to refer back to a previous equation, like we're demonstrating here for equation \ref{eq:newton}.
 
 We can include figures using the \texttt{figure} environment. Whenever we include a figure or table, we \textit{must} make sure to actually refer to it in the main text, e.g.\ something like this: ``In figure \ref{fig:rel_err} we show \ldots''.
-\begin{figure}%[h!]
+\begin{figure}[h!]
   \centering %Centers the figure
   \includegraphics[scale=0.55]{} %Imports the figure.
   \caption{Write a descriptive caption here that explains the content of the figure. Note the font size for the axis labels and ticks --- the size should approximately match the document font size.}
@@ -224,7 +224,7 @@ By the way, don't worry too much about where LaTeX decides to place your figures
 
 
 Next up is a table, created using the \texttt{table} and \texttt{tabular} environments. We refer to it by table \ref{tab:output_table}.
-\begin{table}%[h!]
+\begin{table}[h!]
     \centering
     \begin{tabular}{c@{\hspace{1cm}} c}
         \hline
