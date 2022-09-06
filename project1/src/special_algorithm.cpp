@@ -11,7 +11,6 @@ int main() {
   int n = 10; // Number of steps
   double v0 = 0.;
   double vn = 0.;
-
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
   arma::vec g = arma::vec(n-1);
   arma::vec v = arma::vec(n+1);
@@ -48,7 +47,7 @@ arma::vec general_algorithm(arma::vec v, arma::vec g)
   int n_matrix = g.size();
 
   arma::vec g_tilde = arma::vec(n_matrix);
-  b_tilde[0] = b[0];
+  b_tilde = b;
   g_tilde[0] = g[0];
 
   for (int i = 1; i <= n_matrix-1; i++)
