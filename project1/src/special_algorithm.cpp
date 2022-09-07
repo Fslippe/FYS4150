@@ -4,17 +4,15 @@
 #include <fstream>
 #include <iomanip>
 
-arma::vec general_algorithm(arma::vec v, arma::vec g); // Declaration of u(x).
-
+arma::vec special_algorithm(arma::vec v, arma::vec g); // Declaration of u(x).
 
 int main() {
-  int n = 10; // Number of steps
-  double v0 = 0.;
-  double vn = 0.;
+  int n = 100; // Number of steps
+
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
   arma::vec g = arma::vec(n-1);
-  arma::vec v = arma::vec(n+1);
-  arma::vec u = arma::vec(n+1);
+  arma::vec v = arma::vec(n-1);
+  arma::vec v_full = arma::vec(n+1);
   double h = x[1] - x[0];
 
   for (int i = 0; i <= n-2; i++)
@@ -22,45 +20,62 @@ int main() {
     g[i] = 100*exp(-10*x[i+1])*h*h;
   }
 
-  v[0] = 0;
-  v[n-1] = 0;
+  v = special_algorithm(v, g);
 
-  v = general_algorithm(v, g);
-//            -- Output to a datafile --
-// filename
+  for (int i = 1; i <= n; i++)
+  {
+    v_full[i] = v[i-1];
+  }
+  v_full[0] = 0;
+  v_full[n] = 0;
+
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = x;
-  data.col(1) = v;
+  data.col(1) = v_full;
+  data.save("n100.dat");
 
-  //data.save("n10.dat");
   return 0;
 }
 
-arma::vec general_algorithm(arma::vec v, arma::vec g)
+//General algorithm to solve the matrix equation Au = g for a tridiagonal n x n matrix A and known g
+arma::vec special_algorithm(arma::vec v, arma::vec g)
 {
-  int a = -1;
-  int b = 2;
-  int c = -1;
-  double b_tilde = b - a/b*c;
-  double ab_tilde = a / b_tilde;
-
   int n_matrix = g.size();
+  double a = -1; double b = 2; double c = -1;
 
+  double w;
+
+  arma::vec c_tilde = arma::vec(n_matrix);
   arma::vec g_tilde = arma::vec(n_matrix);
-  b_tilde = b;
-  g_tilde[0] = g[0];
 
+
+  w = a/b;
+  b_tilde = b - w*c ;
   for (int i = 1; i <= n_matrix-1; i++)
   {
-    g_tilde[i] = g[i] - ab_tilde * g_tilde[i-1];
+
+    g_tilde[i] = g[i] - w*g_tilde[i-1];
   }
 
-  // Different index for v becuase of different length
-  v[n_matrix] = g_tilde[n_matrix-1] / b[n_matrix-1];
+  v[n_matrix-1] = g_tilde[n_matrix-1]/b_tilde;
 
-  for (int i = n_matrix-1; i >= 1; i--)
+  for (int i = n_matrix-2; i >= 0; i--)
   {
-    v[i] = (g_tilde[i-1] - c * v[i+1]) / b_tilde;
+    v[i] = g_tilde/b - c/b*v[i+1];
   }
+  std::string filename = "x_v.txt";
+
+  std::ofstream ofile;
+  ofile.open(filename);
+  int width = 12;
+  int prec  = 4;
+  // Loop
+  for (int i = 0; i <= n_matrix-1; i++)
+  {
+    ofile << std::setw(width) << std::setprecision(prec) << std::scientific << v(i)
+          << std::setw(width) << std::setprecision(prec) << std::scientific << v(i)
+          << std::endl;
+  }
+  ofile.close();
 return v;
 }

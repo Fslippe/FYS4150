@@ -7,7 +7,7 @@
 arma::vec general_algorithm(arma::vec v, arma::vec g, arma::vec a, arma::vec b, arma::vec c); // Declaration of u(x).
 
 int main() {
-  int n = 10000; // Number of steps
+  int n = 100; // Number of steps
 
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
   arma::vec g = arma::vec(n-1);
@@ -24,6 +24,7 @@ int main() {
   }
 
   v = general_algorithm(v, g, a, b, c);
+
   for (int i = 1; i <= n; i++)
   {
     v_full[i] = v[i-1];
@@ -34,17 +35,20 @@ int main() {
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = x;
   data.col(1) = v_full;
-  data.save("n10000.dat");
+  data.save("n100.dat");
 
   return 0;
 }
 
+//General algorithm to solve the matrix equation Au = g for a tridiagonal n x n matrix A and known g
 arma::vec general_algorithm(arma::vec v, arma::vec g, arma::vec a, arma::vec b, arma::vec c)
 {
   int n_matrix = a.size();
+  double w;
+
   arma::vec c_tilde = arma::vec(n_matrix);
   arma::vec g_tilde = arma::vec(n_matrix);
-  double w;
+
   c_tilde[0] = c[0]/b[0];
   g_tilde[0] = g[0]/b[0];
 
@@ -54,7 +58,6 @@ arma::vec general_algorithm(arma::vec v, arma::vec g, arma::vec a, arma::vec b, 
     c_tilde[i] = c[i]/w;
     g_tilde[i] = (g[i] - a[i]*g_tilde[i-1]) / w;
   }
-
 
   v[n_matrix-1] = g_tilde[n_matrix-1];
 
