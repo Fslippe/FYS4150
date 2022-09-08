@@ -165,7 +165,7 @@ This can be written in terms of the following matrix equation where we rewrite $
 \section*{Problem 5}
 
 \begin{enumerate}[label= \alph*)]
-  \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in adition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
+  \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in addition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
   \item Solving $\boldsymbol{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
 \end{enumerate}
 
@@ -182,7 +182,7 @@ This can be written in terms of the following matrix equation where we rewrite $
       \tilde{g}_1 &= \frac{g_1}{b_1} \\
       \tilde{g}_i &= \frac{g_i - a_i \tilde{g}_{i-1}}{w} \quad \text{for }i=2,..,n
     \end{align*}
-    \item Second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
+    \item The second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
     \begin{align*}
       v_n &= \tilde{g}_n \\
       v_i &= \tilde{g}_i - \tilde{c}_i v_ {i+1} \quad \text{for } i = n-1,...,1
