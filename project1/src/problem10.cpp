@@ -17,9 +17,9 @@ int main ()
   int runs = 1000 // Number of runs
 
 // loop for repeated runs of each choice of n
-double g_total = 0
-double s_total = 0
-for (int j = 1; j <= runs; j++)
+  double g_total = 0
+  double s_total = 0
+  for (int j = 1; j <= runs; j++)
   {
 
   clock_t t1_g = clock();  // Start
@@ -44,7 +44,7 @@ for (int j = 1; j <= runs; j++)
 
   clock_t t1_s = clock(); // Start
 
-  
+
   // special_algorithm here
 
 
@@ -56,12 +56,15 @@ for (int j = 1; j <= runs; j++)
   g_total += duration_seconds_g
   s_total += duration_seconds_s
   }
-// average out time mesurments
-double g_final = g_total / runs
-double s_final = s_total / runs
+  // average out time mesurments
+  double g_final = g_total / runs
+  double s_final = s_total / runs
   // write to file
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = g_final;
   data.col(1) = s_final;
   data.save("n100_time.dat");
+
+  return 0;
+
 }
