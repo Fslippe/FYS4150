@@ -162,7 +162,7 @@ This can be written in terms of the following matrix equation where we rewrite $
 \section*{Problem 5}
 
 \begin{enumerate}[label= \alph*)]
-  \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in addition to the boundary conditions. The relation bethween $n$ and $m$ is therfore $m=n+2$.
+  \item Since the vector $\vec{v*}$ of length $m$ represents a complete solution of the descretized Poisson equation it contains all values in $\vec{v}$ in addition to the boundary conditions. The relation between $n$ and $m$ is therfore $m=n+2$.
   \item Solving $\boldsymbol{A}\vec{v} = \vec{g}$ for $\vec{v}$ gives us all but the first an last value in $\vec{v*}$. So all but the boundary values.
 \end{enumerate}
 
@@ -170,7 +170,7 @@ This can be written in terms of the following matrix equation where we rewrite $
 \begin{enumerate}[label= \alph*)]
   \item We can use the Thomas algorithm to row reduce the matrix $\boldsymbol{A}$ to give us a solution of the equation $\boldsymbol{A} \vec{v} = \vec{g}$. This is done in two steps. We first define the three diagonals as three vectors. The sub diagonal $\vec{a}$ the diagonal $\vec{b}$ and the superdiagonal $\vec{c}$ where the $i$ element in theese vectors corresponds to the $i$ row of the matrix $\boldsymbol{A}$. We define $n$ unknowns and the matrix $\boldsymbol{A}$ as $n\times n$
   \begin{enumerate}[label=\roman*)]
-    \item The first step is forwards substitution. We define a numer $w$ for each step and overwrite the $i$ element of both $b$ and $g$ starting at index 2. This means overwrite the values in the original vectors $b$ and $g$, but at the same time we dont have to define new vectors to store new values. For large $n$ this will reduce both the computation time and memory usage for the data machine\\\\
+    \item The first step is forwards substitution. We define a number $w$ for each step and overwrite the $i$ element of both $b$ and $g$ starting at index 2. This means overwrite the values in the original vectors $b$ and $g$, but at the same time we dont have to define new vectors to store new values. For large $n$ this will reduce both the computation time and memory usage\\\\
     $\text{for }i=2,..,n$:
     \begin{align*}
       w &= \frac{a_i}{b_{i-1}} \\
@@ -191,7 +191,7 @@ This can be written in terms of the following matrix equation where we rewrite $
 \end{enumerate}
 \section*{Problem 7}
 \begin{enumerate}[label= b)]
-  \item Figure \ref{fig:analytical_compare} shows a plot comparing the exact solution for $u(x)$  in Eq. \ref{eq:u(x)} against the numeric solutions we get for the different values of $n_steps$.
+  \item Figure \ref{fig:analytical_compare} shows a plot comparing the exact solution for $u(x)$  in Eq. \ref{eq:u(x)} against the numeric solutions we get for the different values of $n_{steps}$.
   \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{../figures/analytical_compare.png}
@@ -244,7 +244,7 @@ This can be written in terms of the following matrix equation where we rewrite $
     \caption{}
     \label{fig:max_rel_error}
   \end{figure}
-As we can see from the plot in figure \ref{fig:max_rel_error}, our results show that the ideal stepsize is $n_steps = 10^5$ to minimize the maximum relative error. Hereby avoiding both major roundoff errors and major truncation errors.
+As we can see from the plot in figure \ref{fig:max_rel_error}, our results show that the ideal stepsize is $n_{steps} = 10^5$ to minimize the maximum relative error. Hereby avoiding both major roundoff errors and major truncation errors.
 \end{enumerate}
 \section*{Problem 9}
 \begin{enumerate}[label= \alph*)]
@@ -253,7 +253,7 @@ As we can see from the plot in figure \ref{fig:max_rel_error}, our results show 
     \item The first step is forwards substitution. We have to define $b_1 = 2$ and then loop over the rest:
     \begin{align*}
       b_i &= b_i + \frac{1}{b_{i-1}} \quad  \text{for }i=2,..,n \quad\\
-      g_i &= g_i + \frac{1}{b_{i-1}}g_{i-1} \quad  \text{for } i = 2,..,n \quad
+      g_i &= g_i + \frac{g_{i-1}}{b_{i-1}} \quad  \text{for } i = 2,..,n \quad
     \end{align*}
     \item The second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
     \begin{align*}
