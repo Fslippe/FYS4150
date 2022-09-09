@@ -186,33 +186,30 @@ This can be written in terms of the following matrix equation where we rewrite $
       v_i &= \frac{g_i - c_i v_ {i+1}}{b_i} \quad \text{for } i = n-1,...,1
     \end{align*}
   \end{enumerate}
-  \item We find the number of FLOPs for this algorithm by counting the number of floating point operations the computer has to do. For the first step we have 3 FLOPs (1 subtraction 1 division and one multiplication) for defining $\tilde{b}_i$ and  $\tilde{g}_i$ each. Since we loop this operation $n-1$ times we end up with a  totalt number of $6(n-1)$ FLOPs.
+  \item We find the number of FLOPs for this algorithm by counting the number of floating point operations the computer has to do. For the first step we have 3 FLOPs (1 subtraction 1 division and one multiplication) for defining $b_i$ and  $g_i$ each. Since we loop this operation $n-1$ times we end up with a  totalt number of $6(n-1)$ FLOPs.
 
-  For back substitution we have 1 FLOP calculating $v_n$, and three FLOPs calculating $v_i$ $n-1$ times. This gives us a total of $3(n-1)+1$ FLOPs
+  For back substitution we have 1 FLOP calculating $v_n$, and three FLOPs calculating $v_i$ $n-1$ times. This gives us $3(n-1)+1$ FLOPs
 
   The total FLOPs of the general algorithm is $9n-8$
 \end{enumerate}
 \section*{Problem 7}
-
 \section*{Problem 8}
-
 \section*{Problem 9}
-  For the special case we dont need to do new computations for every $i$ element of the vectors $\vec{a}$, $\vec{b}$ and $\vec{c}$.
-\begin{enumerate}[label=\roman*)]
-  \item The first step is forwards substitution. We have to define the first index and then loop over the rest. We define $w = b - a \tilde{c}$ to simplify the expressions:
-  \begin{align*}
-    \tilde{c}_1 &= \frac{c_1}{b_1} \\
-    \tilde{c}_i &= \frac{c_i}{w} \quad  \text{for }i=2,..,n-1 \quad
-  \end{align*}
-  \begin{align*}
-    \tilde{g}_1 &= \frac{g_1}{b_1} \\
-    \tilde{g}_i &= \frac{g_i - a_i \tilde{g}_{i-1}}{w} \quad \text{for }i=2,..,n
-  \end{align*}
-  \item Second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
-  \begin{align*}
-    v_n &= \tilde{g}_n \\
-    v_i &= \tilde{g}_i - \tilde{c}_i v_ {i+1} \quad \text{for } i = n-1,...,1
-  \end{align*}
+\begin{enumerate}[label= \alph*)]
+  \item For the special case we dont need to do new computations for every $i$ element of the vectors $\vec{a}$ and $\vec{c}$ and thus don't need to assign and use these variabeles.
+  \begin{enumerate}[label=\roman*)]
+    \item The first step is forwards substitution. We have to define $b_1 = 2$ and then loop over the rest:
+    \begin{align*}
+      b_i &= b_i + \frac{1}{b_{i-1}} \quad  \text{for }i=2,..,n \quad\\
+      g_i &= g_i + \frac{1}{b_{i-1}}g_{i-1} \quad  \text{for } i = 2,..,n \quad
+    \end{align*}
+    \item The second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
+    \begin{align*}
+      v_n &= \frac{g_n}{b_n} \\
+      v_i &= \frac{g_i + v_{i+1}}{b_i} \quad \text{for } i = n-1,...,1
+    \end{align*}
+  \end{enumerate}
+  \item Since we know that $a,c = -1$ we are abel to reduce the amount of FLOPs compared to the general algorithm. For the forward substitution we have $2(n-1)$ FLOPs to compute $b_i$ and the same for $g_i$. The back substitution requires 1 FLOP for $v_n$ and $2(n-1)$ FLOPs for $v_i$. This gives us a total of $6n-5$ FLOPs for the special algorithm.
 \end{enumerate}
 
 \section*{Problem 10}
