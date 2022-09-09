@@ -46,24 +46,18 @@ arma::vec general_algorithm(arma::vec v, arma::vec g, arma::vec a, arma::vec b, 
   int n_matrix = a.size();
   double w;
 
-  arma::vec c_tilde = arma::vec(n_matrix);
-  arma::vec g_tilde = arma::vec(n_matrix);
-
-  c_tilde[0] = c[0]/b[0];
-  g_tilde[0] = g[0]/b[0];
-
   for (int i = 1; i <= n_matrix-1; i++)
   {
-    w = b[i] - a[i]*c_tilde[i-1];
-    c_tilde[i] = c[i]/w;
-    g_tilde[i] = (g[i] - a[i]*g_tilde[i-1]) / w;
+    w = a[i] / b[i-1];
+    b[i] = b[i] - w* c[i-1];
+    g[i] = g[i] - w * g[i-1];
   }
 
-  v[n_matrix-1] = g_tilde[n_matrix-1];
+  v[n_matrix-1] = g[n_matrix-1] / b[n_matrix-1];
 
   for (int i = n_matrix-2; i >= 0; i--)
   {
-    v[i] = g_tilde[i]- c_tilde[i]*v[i+1];
+    v[i] = (g[i]- c[i]*v[i+1]) / b[i];
   }
 
 return v;
