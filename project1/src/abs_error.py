@@ -22,6 +22,10 @@ def max_error(file1, file2):
 
 a = -1/2
 
+A.load("special_n100.dat")
+plt.plot(A[:,0], A[:,1])
+plt.show()
+
 for i in range(20):
     a = -1/(2 - 1*a)
     print(a)
