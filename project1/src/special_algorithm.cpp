@@ -31,7 +31,7 @@ int main() {
     double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
     time[i] = duration_seconds;
   }
-  time.save("special_algorithm_time1000.dat");
+  time.save("data/special_algorithm_time1000.dat");
 
   for (int i = 1; i <= n; i++)
   {
@@ -43,7 +43,7 @@ int main() {
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = x;
   data.col(1) = v_full;
-  data.save("special_n100.dat");
+  data.save("data/special_n100.dat");
 
   return 0;
 }
