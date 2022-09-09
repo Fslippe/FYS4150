@@ -8,8 +8,8 @@
 arma::vec special_algorithm(arma::vec v, arma::vec g); // Declaration of u(x).
 
 int main() {
-  int n = 100; // Number of steps
-  int ti = 1;
+  int n = 1000; // Number of steps
+  int ti = 1000;
 
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
   arma::vec g = arma::vec(n-1);
