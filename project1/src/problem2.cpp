@@ -23,7 +23,7 @@ int main() {
   arma::mat xu = arma::mat(n+1, 2);
   xu.col(0) = x;
   xu.col(1) = u;
-  xu.save("data/x_u1000.dat");
+  xu.save("x_u1000.dat");
   std::cout << xu;
 
   return 0;

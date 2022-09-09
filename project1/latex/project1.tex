@@ -82,7 +82,7 @@
 
 \maketitle
 
-\textit{List a link to your github repository here!}
+\textit{Github repository: \url{https://github.com/Fslippe/FYS4150}}
 
 \section*{Problem 1}
 \begin{align}
@@ -108,7 +108,8 @@ Checking analytically that an exact solution to Eq. \ref{eq:poisson} is given by
 
 \section*{Problem 2}
 \begin{figure}[H]
-  \includegraphics{../figures/x_u_plot.pdf}
+  \centering
+  \includegraphics[.5\textwidth]{../figures/x_u_plot.pdf}
   \caption{Plot of $u(x)$.}
   \label{fig:x_u}
 \end{figure}
@@ -214,7 +215,26 @@ This can be written in terms of the following matrix equation where we rewrite $
     \caption{}
     \label{fig:rel_error}
   \end{figure}
-  \item Table ?? shows the maximum relative error for $n_steps$, up to $n_steps = 10^7$
+  \item
+  \begin{table}
+    \caption{maximum relative error for different number of steps ($n$)}
+    \label{tab:table}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+      \hline
+      n  & 10 & $10^2$ & $10^3$ & $10^4$ & $10^5$& $10^6$ &$10^7$ \\
+      \hline
+      max($\epsilon_i$) &
+      $7.93\times 10^{-2}$ &
+      $8.33\times 10^{-4}$ &
+      $8.33\times10^{-6}$  &
+      $8.33\times10^{-8}$ &
+      $1.44\times10^{-9}$  &
+      $8.40\times10^{-7}$  &
+      $2.98\times10^{-6}$\\
+      \hline
+    \end{tabular}
+  \end{table}
+  Table \ref{tab:table} shows the maximum relative error for $n_{steps}$, up to $n_{steps} = 10^7$
 
   %% TABLE here
 

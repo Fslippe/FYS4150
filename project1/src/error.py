@@ -23,7 +23,9 @@ def rel_error(file1, file2, steps):
 def max_error(file1, file2):
     A.load(file1)
     B.load(file2)
-    return  pa.max(pa.abs((B[:,1] - A[:,1]) / B[:,1]))
+    max = pa.max(pa.abs((B[:,1] - A[:,1]) / B[:,1]))
+    print(max[0])
+    return max
 
 abs_error("data/n10.dat", "data/x_u10.dat", 10)
 abs_error("data/n100.dat", "data/x_u100.dat", 100)
