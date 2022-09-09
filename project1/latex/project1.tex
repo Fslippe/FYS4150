@@ -173,19 +173,17 @@ This can be written in terms of the following matrix equation where we rewrite $
 \begin{enumerate}[label= \alph*)]
   \item We can use the Thomas algorithm to row reduce the matrix $\boldsymbol{A}$ to give us a solution of the equation $\boldsymbol{A} \vec{v} = \vec{g}$. This is done in two steps. We first define the three diagonals as three vectors. The sub diagonal $\vec{a}$ the diagonal $\vec{b}$ and the superdiagonal $\vec{c}$ where the $i$ element in theese vectors corresponds to the $i$ row of the matrix $\boldsymbol{A}$. We define $n$ unknowns and the matrix $\boldsymbol{A}$ as $n\times n$
   \begin{enumerate}[label=\roman*)]
-    \item The first step is forwards substitution. We have to define the first index and then loop over the rest. We define $w = b_i - a_i \tilde{c}_{i-1} $ to simplify the expressions:
+    \item The first step is forwards substitution. We define a numer $w$ for each step and overwrite the $i$ element of both $b$ and $g$ starting at index 2. This means overwrite the values in the original vectors $b$ and $g$, but at the same time we dont have to define new vectors to store new values. For large $n$ this will reduce both the computation time and memory usage for the data machine\\\\
+    $\text{for }i=2,..,n$:
     \begin{align*}
-      \tilde{c}_1 &= \frac{c_1}{b_1} \\
-      \tilde{c}_i &= \frac{c_i}{w} \quad  \text{for }i=2,..,n-1 \quad
-    \end{align*}
-    \begin{align*}
-      \tilde{g}_1 &= \frac{g_1}{b_1} \\
-      \tilde{g}_i &= \frac{g_i - a_i \tilde{g}_{i-1}}{w} \quad \text{for }i=2,..,n
+      w &= \frac{a_i}{b_{i-1}} \\
+      b_i &= b_i - wc_{i-1} \\
+      g_i &= g_i - wg_{i-1}
     \end{align*}
     \item The second and last step is back substitution where we find an expression for $\vec{v}$. We start at our last element and work our way backwards:
     \begin{align*}
-      v_n &= \tilde{g}_n \\
-      v_i &= \tilde{g}_i - \tilde{c}_i v_ {i+1} \quad \text{for } i = n-1,...,1
+      v_n &= \frac{g_n}{b_n} \\
+      v_i &= \frac{g_i - c_i v_ {i+1}}{b_i} \quad \text{for } i = n-1,...,1
     \end{align*}
   \end{enumerate}
   \item We find the number of FLOPs for this algorithm by counting the number of floating point operations the computer has to do. For the first step we have 3 FLOPs (1 subtraction 1 division and one multiplication) for defining $\tilde{b}_i$ and  $\tilde{g}_i$ each. Since we loop this operation $n-1$ times we end up with a  totalt number of $6(n-1)$ FLOPs.
