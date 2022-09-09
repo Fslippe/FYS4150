@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex project1"] 1662723481 "project1.aux" "project1.bbl" "project1" 1662724956
+["bibtex project1"] 1662723481 "project1.aux" "project1.bbl" "project1" 1662725305
   "/usr/local/texlive/2021/texmf-dist/bibtex/bst/revtex4-1/apsrev4-1.bst" 1602107945 71515 e333383ed72bf24aa6de7e8cabb55f84 ""
   "project1.aux" 1662724956 3407 3c79442a876739127759fd16a315cd47 "pdflatex"
   "project1Notes.bib" 1662724956 103 48ad29797468f16e2853d8797278d7af "pdflatex"
   (generated)
   "project1.blg"
   "project1.bbl"
-["pdflatex"] 1662724954 "project1.tex" "project1.pdf" "project1" 1662724956
+["pdflatex"] 1662724954 "project1.tex" "project1.pdf" "project1" 1662725305
   "../figures/x_u_plot.pdf" 1662626491 13292 a5f38f855a69a2879fb5e379b531eed9 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -243,11 +243,11 @@
   "project1.aux" 1662724956 3407 3c79442a876739127759fd16a315cd47 "pdflatex"
   "project1.bbl" 1662723481 1983 c789b8b2e2ff60989c671635ad8473c2 "bibtex project1"
   "project1.out" 1662724956 1121 c2e40ed3ff93fed3a6616d9b36c31d79 "pdflatex"
-  "project1.tex" 1662724954 12421 9e545e2a64f32000f7708dfaf90e1c54 ""
+  "project1.tex" 1662725305 12421 9e545e2a64f32000f7708dfaf90e1c54 ""
   (generated)
-  "amsmath.aux"
-  "project1Notes.bib"
   "project1.log"
   "project1.aux"
   "project1.out"
+  "amsmath.aux"
   "project1.pdf"
+  "project1Notes.bib"
