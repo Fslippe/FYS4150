@@ -89,19 +89,16 @@
   - \frac{d^2u}{dx^2} = f(x)
   \label{eq:poisson}
 \end{align}
-
 \begin{itemize}
   \item source term: $f(x) = 100e^{-10x}$
   \item $x$ range $x \in [0,1]$
   \item boundary conditions: $u(0) = 0$ and $u(1) = 0$
 \end{itemize}
-
 \begin{align}
   u(x) = 1 - (1 - e^{-10})x- e^{-10x}
   \label{eq:u(x)}
 \end{align}
-Checking analytically that an exact solution to Eq. \ref{eq:poisson} is given by Eq. \ref{eq:u(x)}.
-
+Checking analytically that an exact solution to Eq. \ref{eq:poisson} is given by Eq. \ref{eq:u(x)}:
 \begin{align*}
   \frac{du}{dx} & = 1 - e^{-10} + 10e^{-10x} \\
   \frac{d^2u}{dx^2} & = -100e^{-10x} \\
@@ -193,6 +190,33 @@ This can be written in terms of the following matrix equation where we rewrite $
 \end{enumerate}
 \section*{Problem 7}
 \section*{Problem 8}
+\begin{enumerate}[label= \alph*)]
+  \item Figure \ref{fig:abs_error} show the logarithm of the absolute error as a function of $x_i$. The different graphs show $\log_{10}(\Delta_i)$ for differen stepsizes.
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=\textwidth]{../figures/abs_error.pdf}
+      \caption{}
+      \label{fig:abs_error}
+  \end{figure}
+  \item Figure \ref{fig:rel_error} below, shows the logarithm of the relative error for $x_i$. Again presented with a graph for each stepsize.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../figures/rel_error.pdf}
+    \caption{}
+    \label{fig:rel_error}
+  \end{figure}
+  \item Table ?? shows the maximum relative error for $n_steps$, up to $n_steps = 10^7$
+
+  %% TABLE here
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../figures/max_rel_error.pdf}
+    \caption{}
+    \label{fig:max_rel_error}
+  \end{figure}
+As we can see from the plot in figure \ref{fig:max_rel_error}, our results show that the ideal stepsize is $n_steps = 10^5$ to minimize the maximum relative error. Hereby avoiding both major roundoff errors and major truncation errors.
+\end{enumerate}
 \section*{Problem 9}
 \begin{enumerate}[label= \alph*)]
   \item For the special case we dont need to do new computations for every $i$ element of the vectors $\vec{a}$ and $\vec{c}$ and thus don't need to assign and use these variabeles.
@@ -212,6 +236,7 @@ This can be written in terms of the following matrix equation where we rewrite $
 \end{enumerate}
 
 \section*{Problem 10}
+The plots presented below show results from run timing tests done for the general and special algorithm. The test has been run 1000 times for each stepsize $n=10^i$ for $i=1,...,6$. Figure \ref{fig:std_time} shows the standard deviation for these same tests.
 \begin{figure}[H]
   \begin{subfigure}{.5 \textwidth}
     \centering
