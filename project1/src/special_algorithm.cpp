@@ -8,7 +8,7 @@
 arma::vec special_algorithm(arma::vec v, arma::vec g); // Declaration of u(x).
 
 int main() {
-  int n = 1000; // Number of steps
+  int n = 10; // Number of steps
   int ti = 1000;
 
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
@@ -31,7 +31,7 @@ int main() {
     double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
     time[i] = duration_seconds;
   }
-  time.save("data/special_algorithm_time1000.dat");
+  time.save("data/special_algorithm_time10.dat");
 
   for (int i = 1; i <= n; i++)
   {
@@ -43,7 +43,7 @@ int main() {
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = x;
   data.col(1) = v_full;
-  data.save("data/special_n100.dat");
+  data.save("data/special_n.dat");
 
   return 0;
 }
@@ -57,9 +57,8 @@ arma::vec special_algorithm(arma::vec v, arma::vec g)
   b[0] = 2;
   for (int i = 1; i <= n_matrix-1; i++)
   {
-    w = -1/b[i-1];
-    b[i] = 2 + w;
-    g[i] = g[i] - w * g[i-1];
+    b[i] = 2 + 1/b[i-1];
+    g[i] = g[i] + g[i-1]/b[i-1];
   }
 
   v[n_matrix-1] = g[n_matrix-1] / b[n_matrix-1];
