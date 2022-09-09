@@ -8,8 +8,8 @@
 arma::vec general_algorithm(arma::vec v, arma::vec g, arma::vec a, arma::vec b, arma::vec c); // Declaration of u(x).
 
 int main() {
-  int n = 10000000; // Number of steps
-  int ti = 1; // number of time
+  int n = 10; // Number of steps
+  int ti = 1000; // number of time
 
   arma::vec x = arma::linspace(0, 1, n+1); //Declare and will with random uniform values.
   arma::vec g = arma::vec(n-1);
@@ -34,7 +34,7 @@ int main() {
     double duration_seconds = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
     time[i] = duration_seconds;
   }
-  time.save("general_algorithm_time10.dat");
+  time.save("data/general_algorithm_time10.dat");
 
 
   for (int i = 1; i <= n; i++)
@@ -47,7 +47,7 @@ int main() {
   arma::mat data = arma::mat(n+1, 2);
   data.col(0) = x;
   data.col(1) = v_full;
-  data.save("n10000000.dat");
+  data.save("data/n10000000.dat");
 
   return 0;
 }
