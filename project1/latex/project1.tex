@@ -17,14 +17,13 @@
 \usepackage{graphicx}         % include graphics such as plots
 \usepackage{xcolor}           % set colors
 \usepackage{hyperref}         % automagic cross-referencing (this is GODLIKE)
+\usepackage{subcaption}
 \usepackage{listings}         % display code
-\usepackage{subfigure}        % imports a lot of cool and useful figure commands
 \usepackage{float}
 \usepackage{enumitem}
 %\usepackage[section]{placeins}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
-\usepackage{subfigure}
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
@@ -213,17 +212,24 @@ This can be written in terms of the following matrix equation where we rewrite $
 \end{enumerate}
 
 \section*{Problem 10}
-
 \begin{figure}[H]
-  \centering
-  \includegraphics[width=.7\textwidth]{../figures/mean_time.pdf}
-  \caption{}
-  \label{fig:mean_time}
+  \begin{subfigure}{.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/mean_time.pdf}
+    \caption{}
+    \label{fig:mean_time}
+  \end{subfigure}
+  \begin{subfigure}{.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/mean_time_rel.pdf}
+    \caption{}
+    \label{fig:mean_time_rel}
+  \end{subfigure}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.7\textwidth]{../figures/std_time.pdf}
+  \includegraphics[width=.8\textwidth]{../figures/std_time.pdf}
   \caption{}
   \label{fig:std_time}
 \end{figure}
