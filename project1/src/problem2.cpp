@@ -5,7 +5,7 @@
 #include <iomanip>
 
 int main() {
-  int n = 10;
+  int n = 10000000;
   // Defining a vector of x values.
   arma::vec x = arma::linspace(0,1,n+1); //Declare and will with random uniform values.
   arma::vec u = arma::vec(n+1); //Initialize vector but don't fill.
@@ -22,7 +22,7 @@ int main() {
   arma::mat xu = arma::mat(n+1, 2);
   xu.col(0) = x;
   xu.col(1) = u;
-  xu.save("x_u10.dat");
+  xu.save("x_u10000000.dat");
 
   return 0;
 }

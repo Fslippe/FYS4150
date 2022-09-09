@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pyarma as pa
-plt.rcParams.update({'font.size': 22})
+#plt.rcParams.update({'font.size': 22})
 A = pa.mat()
 B = pa.mat()
 
@@ -9,34 +9,28 @@ def abs_error(file1, file2, steps):
     A.load(file1)
     B.load(file2)
     plt.plot(A[:,0], np.log10(pa.abs(B[:,1] - A[:,1])), label="Steps: %i" %(steps))
+    plt.xlabel("$x$")
+    plt.ylabel("$\log_{10}(\Delta_i)$")
 
 def rel_error(file1, file2, steps):
     A.load(file1)
     B.load(file2)
     plt.plot(A[:,0], np.log10(pa.abs((B[:,1] - A[:,1]) / B[:,1])), label="Steps: %i" %(steps))
+    plt.xlabel("$x$")
+    plt.ylabel("$\log_{10}(\epsilon_i)$")
 
 def max_error(file1, file2):
     A.load(file1)
     B.load(file2)
     return  pa.max(pa.abs((B[:,1] - A[:,1]) / B[:,1]))
 
-a = -1/2
-
-A.load("special_n100.dat")
-plt.plot(A[:,0], A[:,1])
-plt.show()
-
-for i in range(20):
-    a = -1/(2 - 1*a)
-    print(a)
 abs_error("n10.dat", "x_u10.dat", 10)
 abs_error("n100.dat", "x_u100.dat", 100)
 abs_error("n1000.dat", "x_u1000.dat", 1000)
 abs_error("n10000.dat", "x_u10000.dat", 10000)
-
-
 plt.title("Logarithm of the absolute error")
 plt.legend()
+plt.savefig("../figures/abs_error.pdf")
 plt.show()
 
 rel_error("n10.dat", "x_u10.dat", 10)
@@ -45,13 +39,24 @@ rel_error("n1000.dat", "x_u1000.dat", 1000)
 rel_error("n10000.dat", "x_u10000.dat", 10000)
 plt.title("Logarithm of the relative error")
 plt.legend()
+plt.savefig("../figures/rel_error.pdf")
+
 plt.show()
 
 e_10 = max_error("n10.dat", "x_u10.dat")
 e_100 = max_error("n100.dat", "x_u100.dat")
 e_1000 = max_error("n1000.dat", "x_u1000.dat")
 e_10000 = max_error("n10000.dat", "x_u10000.dat")
-plt.plot([10, 100, 1000, 10000], [np.log(e_10[0,:]), np.log(e_100[0,:]), np.log(e_1000[0,:]), np.log(e_10000[0,:])])
-plt.ylabel("log($max(\epsilon$))")
+e_100000 = max_error("n100000.dat", "x_u100000.dat")
+e_1000000 = max_error("n1000000.dat", "x_u1000000.dat")
+e_10000000 = max_error("n10000000.dat", "x_u10000000.dat")
+
+plt.plot([1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7], [(e_10[0,:]), (e_100[0,:]), (e_1000[0,:]), (e_10000[0,:]), e_100000[0,:], e_1000000[0,:], e_10000000[0,:]], marker="o", linestyle="--")
+plt.ylabel("$max(\epsilon$)")
+plt.title("$max(\epsilon_i)$ for differnt n on a logarithmic scale")
 plt.xlabel("n")
+plt.xscale("log")
+plt.yscale("log")
+plt.savefig("../figures/max_rel_error.pdf")
+
 plt.show()
