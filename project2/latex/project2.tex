@@ -43,10 +43,27 @@
 
 \maketitle
 
-\textit{Github repository: \url{https://github.com/Fslippe/FYS4150}}
-
+\textit{Github repository: \url{https://github.com/Fslippe/FYS4150/tree/main/project2}}
+\\
+\\
+Second order differential equation describing our buckling beam situation:
+\begin{align}
+    \gamma \frac{d^2u(x)}{dx^2} = - F u(x)
+    \label{eq:diff}
+\end{align}
+Troughout this project we will be working with the scaled equation:
+\begin{align}
+    \frac{d^2u(\hat{x})}{d \hat{x}^2} = - \lambda u(\hat{x})
+    \label{eq:scaled}
+\end{align}
+Where $\hat{x} \equiv x / L$ is a dimensionless variable, $\hat{x} \in [0,1]$ and $\lambda = \frac{FL^2}{\gamma}$.
 \section*{Problem 1}
-
+Using the defenintion $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written Eq. \ref*{eq:scaled}.
+\begin{align*}
+    \gamma \frac{d^2u(x)}{dx^2} &= - F u(x) \\
+    \frac{d^2u(x)}{dx^2} &= - \frac{F}{\gamma} u(x)
+    % ... fill
+\end{align*}
 \section*{Problem 2}
 
 \section*{Problem 3}
