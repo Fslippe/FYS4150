@@ -1,23 +1,47 @@
 #include <armadillo>
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <iomanip>
 
 arma::mat create_tridiagonal(int N, double a, double d, double e);
 arma::mat create_symmetric_tridiagonal(int N, double a, double d);
+arma::vec analytic_eigenval(int N, double a, double d);
+arma::mat analytic_eigenvector(int N, double a, double d);
+
 
 int main()
 {
 // set up tridiagonal A for N=6
-int N = 6
+int N = 6;
 int n = N + 1;
-double h = 1./n
-double a = -1./(h*h)
-double d = 2./(h*h)
-arma::mat A = create_symmetric_tridiagonal(N,a,d);
+double h = 1./n;
+double a = -1./(h*h);
+double d = 2./(h*h);
+arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
 // solve eigenvaule problem using Armadillo’s arma::eig_sym
+arma::vec eigval;
+arma::mat eigvec;
+eig_sym(eigval, eigvec, A);
+
+// arma::normalise for comparing
+eigval = arma::normalise(eigval);
+eigvec = arma::normalise(eigvec);
+arma::vec analytic_eigval = arma::normalise(analytic_eigenval(N, a, d));
+arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
 
 //checks that the eigenvalues and eigenvectors from Armadillo agrees with the analytical result for N=6
-// arma::normalise when comparing
-  return 0;
+ eigval.print();
+ std::cout << arma::endl;
+ analytic_eigval.print();
+ std::cout << arma::endl;
+ eigvec.raw_print();
+ std::cout << arma::endl;
+ analytic_eigvec.raw_print();
+ std::cout << arma::endl;
+ 
+ return 0;
 }
 
 // Creates a tridiagonal matrix
@@ -54,13 +78,13 @@ arma::vec analytic_eigenval(int N, double a, double d)
 
 //Calculates analytic eigenvectors
 // not done
-arma::mat analytic_eigenvec(int N, double a, double d)
+arma::mat analytic_eigenvector(int N, double a, double d)
 {
   const double pi = 2*acos(0.0);
   arma::mat eig_mat = arma::mat(N,N); 
   for(int i = 1; i <= N; ++i)
   {
-        eig_vec.col(i-1) = ;
+        eig_mat.col(i-1) = 0;
   }
-  return eig_vec;
+  return eig_mat;
 }
