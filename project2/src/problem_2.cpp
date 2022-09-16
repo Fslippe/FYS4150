@@ -31,15 +31,22 @@ eigvec = arma::normalise(eigvec);
 arma::vec analytic_eigval = arma::normalise(analytic_eigenval(N, a, d));
 arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
 
-//checks that the eigenvalues and eigenvectors from Armadillo agrees with the analytical result for N=6
+//Print eigenvalues and eigenvectors to see of Armadillo agrees with the analytical result
  eigval.print();
  std::cout << arma::endl;
  analytic_eigval.print();
  std::cout << arma::endl;
- eigvec.raw_print();
+ eigvec.print();
  std::cout << arma::endl;
- analytic_eigvec.raw_print();
+ analytic_eigvec.print();
  std::cout << arma::endl;
+
+// this bool test could work? not working
+//  std::cout  << std::boolalpha  
+  //  << "Numeric and analytic eigenvalues match: "  
+  //  << (eigval == analytic_eigval) << std::endl;  
+  //  << "Numeric and analytic eigenvectors match: "  
+  //  << (eigvec == analytic_eigvec) << endl;
  
  return 0;
 }
@@ -71,20 +78,24 @@ arma::vec analytic_eigenval(int N, double a, double d)
   arma::vec eig_val = arma::vec(N); 
   for(int i = 1; i <= N; ++i)
   {
-        eig_val(i-1) = d + 2*a*cos(i*pi/(N+1));
+    eig_val(i-1) = d + 2*a*cos(i*pi/(N+1));
   }
   return eig_val;
 }
 
 //Calculates analytic eigenvectors
-// not done
 arma::mat analytic_eigenvector(int N, double a, double d)
 {
   const double pi = 2*acos(0.0);
-  arma::mat eig_mat = arma::mat(N,N); 
+  arma::mat eig_mat = arma::mat(N,N);
   for(int i = 1; i <= N; ++i)
   {
-        eig_mat.col(i-1) = 0;
+    arma::vec col_v = arma::vec(N);
+    for(int j = 1; j <= N; ++j)
+    {
+      col_v(j-1) = sin((i*j*pi) / (N+1));
+    }
+    eig_mat.col(i-1) = col_v;
   }
   return eig_mat;
 }
