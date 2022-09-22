@@ -45,7 +45,7 @@ int main()
   //eigvec = abs(eigvec) - abs(analytic_eigvec);
   eigvec.raw_print();
 
-  // this bool test could work? not working
+  // bool test
   std::cout << "Checking if armadillo eigenvectors match analytic soulutions\n";
   for (int i = 0; i < N; i++) {
     assert((abs(eigval(i)) - abs(analytic_eigval(i)) < 1e-15));
