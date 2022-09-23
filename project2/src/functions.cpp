@@ -84,23 +84,26 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
     double t;
     if (tau > 0)
     {
-       t = - tau + std::sqrt(1. + tau*tau);
+       //t = - tau + sqrt(1. + tau*tau);
+       t = 1. / (tau + sqrt(1 + tau*tau));
     }
     else
     {
-        t = - tau - std::sqrt(1. + tau*tau);
+        //t = - tau - sqrt(1. + tau*tau);
+        t = -1. / (-tau + sqrt(1 + tau*tau));
     }
-    double c = 1 / std::sqrt(1.+t*t);
+    double c = 1 / sqrt(1.+t*t);
     double s = c * t;
 
+    double A_kk = A(k,k);
     A(k,k) = A(k,k)*c*c - 2*A(k,l)*c*s + A(l,l)*s*s;
-    A(l,l) = A(l,l)*c*c - 2*A(k,l)*c*s + A(k,k)*s*s;
+    A(l,l) = A(l,l)*c*c - 2*A(k,l)*c*s + A_kk*s*s;
     A(k,l) = 0;
     A(l,k) = 0;
 
     for (int i = 0; i <= N-1; i++)
     {
-        if (i != k && i != l)
+        if (i != k || i != l)
         {
             A_ik = A(i,k);
             A(i,k) = A(i,k)*c -A(i,l)*s;
@@ -108,8 +111,9 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
             A(i,l) = A(i,l)*c + A_ik*s;
             A(l,i) = A(i,l);
         }
+        double R_ik = R(i,k);
         R(i,k) = R(i,k)*c - R(i,l)*s;
-        R(i,l) = R(i,l)*c + R(i,k)*s;
+        R(i,l) = R(i,l)*c + R_ik*s;
     }
         double maxval = max_offdiag_symmetric(A, k, l);
  }
@@ -123,6 +127,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
     iterations = 0;
     arma::mat R = arma::mat(n, n, arma::fill::eye);
     double maxval = max_offdiag_symmetric(A, k, l);
+    
     // test prints 
     R.print();
     std::cout << maxval << std::endl;
@@ -130,10 +135,21 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
     jacobi_rotate(A, R, k, l);
     std::cout << "1 rot" << std::endl;
     R.print();
+    A.print();
+    std::cout << maxval << std::endl;
     jacobi_rotate(A, R, k, l);
     std::cout << "2 rot" << std::endl;
     R.print();
-    
+     A.print();
+    std::cout << maxval << std::endl;
+    jacobi_rotate(A, R, k, l);
+    std::cout << "3 rot" << std::endl;
+    R.print();
+    jacobi_rotate(A, R, k, l);
+    std::cout << "4 rot" << std::endl;
+    R.print();
+
+    // actual loop
     while(fabs(A(k,l))>= eps && iterations < maxiter)
     {
       jacobi_rotate(A, R, k, l);
