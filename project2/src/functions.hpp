@@ -117,11 +117,21 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
 
  void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors, const int maxiter, int& iterations, bool& converged)
  {
-    int k=0; int l=1;
+    int k=0; int l=1; iterations = 0; arma::mat& R = eye(n_rows.A,n_cols.A) 
     double maxval = max_offdiag_symmetric(A, k, l);
-    while (abs(A(k,l))> eps)
+    while (abs(A(k,l))>= eps && iterations < maxiter)
     {
-        void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);  
+        void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l); 
+        iterations += 1;
     }
-    
- }
+  
+  eig_sym(eigvalues, eigvectors, A);
+  eigenvalues = arma::sort_index(eigenvalues);
+  eigenvectors = arma::sort_index(eigenvectors);
+  
+  if (iterations < maxiter)
+  {
+    bool converged == true;
+  }
+  
+  }
