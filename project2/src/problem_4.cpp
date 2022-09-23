@@ -16,7 +16,7 @@ int main()
   arma::vec eigval = arma::vec(N);
   arma::mat eigvec = arma::mat(N,N);
   double eps = 1e-8;
-  int maxiter = 1e6;
+  int maxiter = 10000;
   int iterations = 0;
   bool converged;
 
