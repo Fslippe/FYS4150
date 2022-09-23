@@ -13,9 +13,15 @@ int main()
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
   // solve eigenvaule problem using Armadillo’s arma::eig_sym
-  arma::vec eigval;
-  arma::mat eigvec;
-  eig_sym(eigval, eigvec, A);
+  arma::vec eigval = arma::vec(N);
+  arma::mat eigvec = arma::mat(N,N);
+  double eps = 1e-12;
+  int maxiter = 1e6;
+  int iterations = 0;
+  bool converged;
+
+  jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
+  //eig_sym(eigval, eigvec, A);
 
   // arma::normalise for comparing
   eigval = arma::normalise(eigval);
@@ -24,23 +30,25 @@ int main()
   arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
 
   //Print eigenvalues and eigenvectors to see of Armadillo agrees with the analytical result
+  std::cout << "EIGENVALUE\n";
   eigval.print();
   std::cout << arma::endl;
   analytic_eigval.print();
   std::cout << arma::endl;
+  std::cout << "EIGENVECTOR\n";
+
   eigvec.raw_print();
   std::cout << arma::endl;
   analytic_eigvec.raw_print();
   std::cout << arma::endl;
   //eigvec = abs(eigvec) - abs(analytic_eigvec);
-  eigvec.raw_print();
 
   // bool test
   std::cout << "Checking if armadillo eigenvectors match analytic soulutions\n";
   for (int i = 0; i < N; i++) {
-    assert((abs(eigval(i)) - abs(analytic_eigval(i)) < 1e-15));
+    assert((fabs(eigval(i)) - fabs(analytic_eigval(i)) < 1e-15));
     for (int j = 0; j < N; j++) {
-      assert(abs(eigvec(i,j)) - abs(analytic_eigvec(i,j)) < 1e-15);
+      assert(fabs(eigvec(i,j)) - fabs(analytic_eigvec(i,j)) < 1e-15);
     }
   }
   std::cout << "Check successfull\n";

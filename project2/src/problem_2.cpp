@@ -48,9 +48,9 @@ int main()
   // bool test
   std::cout << "Checking if armadillo eigenvectors match analytic soulutions\n";
   for (int i = 0; i < N; i++) {
-    assert((abs(eigval(i)) - abs(analytic_eigval(i)) < 1e-15));
+    assert((fabs(eigval(i)) - fabs(analytic_eigval(i)) < 1e-15));
     for (int j = 0; j < N; j++) {
-      assert(abs(eigvec(i,j)) - abs(analytic_eigvec(i,j)) < 1e-15);
+      assert(fabs(eigvec(i,j)) - fabs(analytic_eigvec(i,j)) < 1e-15);
     }
   }
   std::cout << "Check successfull\n";
