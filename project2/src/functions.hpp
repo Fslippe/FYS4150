@@ -121,7 +121,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
     double maxval = max_offdiag_symmetric(A, k, l);
     while (abs(A(k,l))> eps)
     {
-        void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);  
+        void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);
     }
-    
+
  }

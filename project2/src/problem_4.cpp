@@ -12,7 +12,7 @@ arma::mat analytic_eigenvector(int N, double a, double d);
 arma::vec analytic_eigenval(int N, double a, double d);
 
 // Determine the the max off-diagonal element of a symmetric matrix A
-// - Saves the matrix element indicies to k and l 
+// - Saves the matrix element indicies to k and l
 // - Returns absolute value of A(k,l) as the function return value
 double max_offdiag_symmetric(const arma::mat& A, int& k, int& l);
 
@@ -32,7 +32,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);
 // - Stops if it the number of iterations reaches "maxiter"
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors, 
+void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
 
 
@@ -80,7 +80,3 @@ int main()
   std::cout << "Check successfull\n";
  return 0;
 }
-
-
-
-
