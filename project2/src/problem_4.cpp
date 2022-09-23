@@ -12,16 +12,15 @@ int main()
   double d = 2./(h*h);
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
-  // solve eigenvaule problem using Armadillo’s arma::eig_sym
+  // solve eigenvaule problem using Jacobi roatation algorithm
   arma::vec eigval = arma::vec(N);
   arma::mat eigvec = arma::mat(N,N);
-  double eps = 1e-12;
+  double eps = 1e-8;
   int maxiter = 1e6;
   int iterations = 0;
   bool converged;
 
   jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
-  //eig_sym(eigval, eigvec, A);
 
   // arma::normalise for comparing
   eigval = arma::normalise(eigval);
@@ -30,17 +29,22 @@ int main()
   arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
 
   //Print eigenvalues and eigenvectors to see of Armadillo agrees with the analytical result
-  std::cout << "EIGENVALUE\n";
+  std::cout << "JACOBI EIGENVALUE\n";
   eigval.print();
   std::cout << arma::endl;
+   std::cout << "ANALYTIC EIGENVALUE\n";
   analytic_eigval.print();
   std::cout << arma::endl;
-  std::cout << "EIGENVECTOR\n";
 
+  std::cout << "JACOBI EIGENVECTOR\n";
   eigvec.raw_print();
   std::cout << arma::endl;
+   std::cout << "ANALYTIC EIGENVECTOR\n";
   analytic_eigvec.raw_print();
   std::cout << arma::endl;
+
+  std::cout << "Iterations:\n";
+  std::cout << iterations <<std::endl;
   //eigvec = abs(eigvec) - abs(analytic_eigvec);
 
   // bool test

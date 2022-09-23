@@ -59,7 +59,6 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   assert(A.is_square());
 
   double maxval = std::abs(A(k,l)); //(i,j) (row, col)
-  std::cout << maxval << "\n";
 
   int col_n = 1;
 
@@ -77,21 +76,21 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   return maxval;
  }
 
- void jacobi_rotate(arma::mat& A, arma::mat& R, int& k, int& l)
+ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
  {
-    double tau = (A(l,l) - A(k,k)) / (2 * A(k,l));
+    double tau = (A(l,l) - A(k,k)) / (2. * A(k,l));
     double A_ik;
     int N = A.n_rows;
     double t;
     if (tau > 0)
     {
-       t = - tau + sqrt(1 + tau*tau);
+       t = - tau + std::sqrt(1. + tau*tau);
     }
     else
     {
-        t = - tau - sqrt(1 + tau*tau);
+        t = - tau - std::sqrt(1. + tau*tau);
     }
-    double c = 1 / sqrt(1+t*t);
+    double c = 1 / std::sqrt(1.+t*t);
     double s = c * t;
 
     A(k,k) = A(k,k)*c*c - 2*A(k,l)*c*s + A(l,l)*s*s;
@@ -117,18 +116,31 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
 
 
 
- void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigval, arma::mat& eigvec, const int maxiter, int& iterations, bool& converged)
+ void jacobi_eigensolver(arma::mat& A, double eps, arma::vec eigval, arma::mat eigvec, const int maxiter, int iterations, bool converged)
  {
     int n = A.n_rows;
-    int k=0; int l=1; iterations = 0; arma::mat R = arma::mat(n, n, arma::fill::eye);
+    int k=0; int l=1;
+    iterations = 0;
+    arma::mat R = arma::mat(n, n, arma::fill::eye);
     double maxval = max_offdiag_symmetric(A, k, l);
-    while (abs(A(k,l))>= eps && iterations < maxiter)
-    {
-        void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);
-        iterations += 1;
-    }
+    // test prints 
+    R.print();
+    std::cout << maxval << std::endl;
 
-    eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort_index(vec)); } );
+    jacobi_rotate(A, R, k, l);
+    std::cout << "1 rot" << std::endl;
+    R.print();
+    jacobi_rotate(A, R, k, l);
+    std::cout << "2 rot" << std::endl;
+    R.print();
+    
+    while(fabs(A(k,l))>= eps && iterations < maxiter)
+    {
+      jacobi_rotate(A, R, k, l);
+      iterations += 1;
+    }
+    //eigvec = R;
+    //eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort_index(vec)); } );
     eigval = arma::conv_to<arma::vec>::from(arma::sort_index(A.diag()));
 
     if (iterations < maxiter)
@@ -136,6 +148,6 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
       bool converged = true;
       std::cout << "converged\n"; 
     }
-
+    
 
     }
