@@ -15,6 +15,7 @@ int main()
                 {0, 1, -0.7, 0},
                 {0, -0.7, 1, 0},
                 {0.5, 0, 0, 1}};
+  
 
   double max = max_offdiag_symmetric(A, k, l);
 
@@ -32,7 +33,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   assert(A.is_square());
 
   double maxval = std::abs(A(k,l)); //(i,j) (row, col)
-  std::cout << maxval << "\n";
+  //std::cout << maxval << "\n";
 
   int col_n = 1;
 
@@ -40,6 +41,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   {
     for (int j = 0; j < i; ++j) //loops over columns until the subdiagonal
     {
+      std::cout << A(i,j) << std::endl;
       if(std::abs(A(i,j)) > maxval)
       {
         k = i; l = j;
