@@ -5,6 +5,9 @@
 #include <fstream>
 #include <iomanip>
 
+//Create a dense symetric matrix with random elements
+arma::mat create_dense_symetric(int N);
+
 // Create a symetric tridiagonal matrix with size N x N
 // diagonal d
 // sub- and super-diagonal a
@@ -35,11 +38,9 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);
 // - Runs jacobo_rotate until max off-diagonal element < eps
 // - Writes the eigenvalues as entries in the vector "eigenvalues"
 // - Writes the eigenvectors as columns in the matrix "eigenvectors"
-
-
 //   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
 // - Stops if it the number of iterations reaches "maxiter"
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-void jacobi_eigensolver(arma::mat& A, double eps, arma::vec eigenvalues, arma::mat eigenvectors,
-                        const int maxiter, int iterations, bool converged);
+void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
+                        const int maxiter, int& iterations, bool& converged);

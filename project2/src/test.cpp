@@ -65,24 +65,21 @@ int main()
   // solve eigenvaule problem using Jacobi roatation algorithm
   arma::vec eigval = arma::vec(N);
   arma::mat eigvec = arma::mat(N,N);
-  double eps = 1e-8;
+  double eps = 1e-9;
   int maxiter = N*N*N;
   int iterations = 0;
   bool converged;
 
   Jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
 
-  // The returned eigenvalues and eigenvectors are sorted using arma::sort_index
-  eigval = arma::conv_to<arma::vec>::from(arma::sort_index(eigval));
-  eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort_index(vec)); } );
-
-  // arma::normalise for comparing
-  eigval = sort(arma::normalise(eigval)); //needs to be resorted for some reason
+  // The returned eigenvalues and eigenvectors are sorted using arma::sort
+  eigval = sort(arma::normalise(eigval));
   eigvec = arma::normalise(eigvec);
+  eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
 
-  arma::vec analytic_eigval = arma::normalise(Analytic_eigenval(N, a, d));
+  arma::vec analytic_eigval = arma::normalise(sort(Analytic_eigenval(N, a, d)));
   arma::mat analytic_eigvec = arma::normalise(Analytic_eigenvector(N, a, d));
-  //analytic_eigvec = arma::normalise(analytic_eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort_index(vec)); } ));
+  analytic_eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
 
 
   //Print eigenvalues and eigenvectors to see if jacobi agrees with the analytical result
@@ -105,7 +102,7 @@ int main()
   //eigvec = abs(eigvec) - abs(analytic_eigvec);
 
   // bool test
-  std::cout << "Checking if armadillo eigenvectors match analytic soulutions\n";
+  std::cout << "Checking if eigenvectors and eigenvalues match analytic soulutions\n";
   for (int i = 0; i < N; i++) {
     assert((fabs(eigval(i)) - fabs(analytic_eigval(i)) < 1e-15));
     for (int j = 0; j < N; j++) {
@@ -198,20 +195,20 @@ double Max_offdiag_symmetric(const arma::mat& A, int &k, int &l)
  {
     double tau = (A(l,l) - A(k,k)) / (2. * A(k,l));
     int N = A.n_rows;
-    double s, c,t;
+    double s, c, t;
+    double tmp_element;
+
     if (A(k,l) != 0.)
     {
-           if (tau > 0)
+        if (tau > 0)
         {
-        t = - tau + sqrt(1. + tau*tau);
-        //t = 1. / (tau + sqrt(1 + tau*tau));
+          t = - tau + sqrt(1. + tau*tau);
         }
         else
         {
-            t = - tau - sqrt(1. + tau*tau);
-            //t = -1. / (-tau + sqrt(1 + tau*tau));
+          t = - tau - sqrt(1. + tau*tau);
         }
-        c = 1 / sqrt(1.+t*t);
+        c = 1 / sqrt(1. + t*t);
         s = c * t;
     }
     else
@@ -220,10 +217,9 @@ double Max_offdiag_symmetric(const arma::mat& A, int &k, int &l)
         s = 0.;
     }
 
-    double A_kk, A_ll, A_ik, A_il, R_ik, R_il;
-    A_kk = A(k,k);
-    A(k,k) = A_kk*c*c - 2*A(k,l)*c*s + A_ll*s*s;
-    A(l,l) = A_ll*c*c + 2*A(k,l)*c*s + A_kk*s*s;
+    tmp_element = A(k,k);
+    A(k,k) = A(k,k)*c*c - 2*A(k,l)*c*s + A(l,l)*s*s;
+    A(l,l) = A(l,l)*c*c + 2*A(k,l)*c*s + tmp_element*s*s;
     A(k,l) = 0;
     A(l,k) = 0;
 
@@ -233,20 +229,16 @@ double Max_offdiag_symmetric(const arma::mat& A, int &k, int &l)
     {
         if(i != k && i != l)
         {
-            //std::cout << "looping if i = " << i << std::endl;
-
-            A_ik = A(i,k);
-            A_il = A(i,l);
-            A(i,k) = A_ik*c - A_il*s;
+            tmp_element = A(i,k);
+            A(i,k) = tmp_element*c - A(i,l)*s;
             A(k,i) = A(i,k);
-            A(i,l) = A_il*c + A_ik*s;
+            A(i,l) = A(i,l)*c + tmp_element*s;
             A(l,i) = A(i,l);
         }
 
-        R_ik = R(i,k);
-        R_il = R(i,l);
-        R(i,k) = R_ik*c - R_il*s;
-        R(i,l) = R_il*c + R_ik*s;
+        tmp_element = R(i,k);
+        R(i,k) = tmp_element*c - R(i,l)*s;
+        R(i,l) = R(i,l)*c + tmp_element*s;
     }
     return;
  }
@@ -262,14 +254,12 @@ double Max_offdiag_symmetric(const arma::mat& A, int &k, int &l)
 
     while(std::abs(max)>= eps && iterations < maxiter)
     {
-      max = Max_offdiag_symmetric(A, k, l);
       Jacobi_rotate(A, R, k, l);
-      std::cout << A << "\n";
-      //std::cout << k << "\n"<< l << "\n\n";
-      //std::cout << "it's loopy" << std::endl;
       iterations += 1.;
-      //std::cout << iterations << std::endl;
+      max = Max_offdiag_symmetric(A, k, l);
     }
+
+
     eigval = A.diag();
     eigvec = R;
 
