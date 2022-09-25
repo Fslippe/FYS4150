@@ -22,7 +22,7 @@ def main():
     list = np.arange(min_matrix_size, max_matrix_size, stepsize)
     run(list=list, compile=False)
 
-    """Importing data and plotting"""
+    """Importing data, plotting and saving figures"""
     N = pa.mat()
     N.load("data/N.dat")
     iterations = pa.mat()
@@ -32,8 +32,8 @@ def main():
     plt.ylabel("Iterations")
     plt.xscale("log")
     plt.yscale("log")
-    #plt.savefig("../figures/N_iter_log.pdf")
-    #plt.savefig("../figures/N_iter_log_dense.pdf")
+    plt.savefig("../figures/N_iter_log.pdf")
+    plt.savefig("../figures/N_iter_log_dense.pdf")
     plt.show()
 
 if __name__ == '__main__':

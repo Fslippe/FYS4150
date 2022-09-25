@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iomanip>
 
-
 //Create a dense symetric matrix with random elements
 arma::mat create_dense_symetric(int N);
 

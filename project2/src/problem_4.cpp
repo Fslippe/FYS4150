@@ -12,6 +12,7 @@ int main()
   double a = -1./(h*h);
   double d = 2./(h*h);
   arma::mat A = create_symmetric_tridiagonal(N, a, d);
+
   // solve eigenvaule problem using Jacobi roatation algorithm
   arma::vec eigval = arma::vec(N);
   arma::mat eigvec = arma::mat(N,N);
@@ -19,12 +20,12 @@ int main()
   int maxiter = N*N*N;
   int iterations = 0;
   bool converged;
-
   jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
 
   // The returned eigenvalues and eigenvectors are sorted using arma::sort
   sort_normalise(eigval, eigvec);
-  
+
+  //sorting and normalising analytic
   arma::vec analytic_eigval = arma::normalise(sort(analytic_eigenval(N, a, d)));
   arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
   analytic_eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
@@ -34,7 +35,7 @@ int main()
   std::cout << "JACOBI EIGENVALUE\n";
   eigval.print();
   std::cout << arma::endl;
-   std::cout << "ANALYTIC EIGENVALUE\n";
+  std::cout << "ANALYTIC EIGENVALUE\n";
   analytic_eigval.print();
   std::cout << arma::endl;
 
@@ -47,7 +48,6 @@ int main()
 
   std::cout << "Iterations:\n";
   std::cout << iterations <<std::endl;
-  //eigvec = abs(eigvec) - abs(analytic_eigvec);
 
   // bool test
   std::cout << "Checking if eigenvectors and eigenvalues match analytic soulutions\n";
