@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 
+
 //Create a dense symetric matrix with random elements
 arma::mat create_dense_symetric(int N);
 
@@ -44,3 +45,8 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l);
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
 void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged);
+
+
+// Sorting and normalising eigenvalues and eigenvectors
+// using arma::sort and arma::normalise
+void sort_normalise(arma::vec& eigval, arma::mat& eigvec);

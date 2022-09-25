@@ -164,3 +164,11 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
       std::cout << "converged\n";
     }
 }
+
+
+void sort_normalise(arma::vec& eigval, arma::mat& eigvec)
+{
+  eigval = sort(arma::normalise(eigval));
+  eigvec = arma::normalise(eigvec);
+  eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
+}

@@ -2,6 +2,7 @@
 // Compile and linking with:
 // g++ problem_4.cpp functions.cpp -o problem4 -larmadillo
 
+
 int main()
 {
   // set up tridiagonal A for N=6
@@ -22,10 +23,8 @@ int main()
   jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
 
   // The returned eigenvalues and eigenvectors are sorted using arma::sort
-  eigval = sort(arma::normalise(eigval));
-  eigvec = arma::normalise(eigvec);
-  eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
-
+  sort_normalise(eigval, eigvec);
+  
   arma::vec analytic_eigval = arma::normalise(sort(analytic_eigenval(N, a, d)));
   arma::mat analytic_eigvec = arma::normalise(analytic_eigenvector(N, a, d));
   analytic_eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
