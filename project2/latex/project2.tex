@@ -25,7 +25,7 @@
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
 
-\hypersetup{ 
+\hypersetup{
     colorlinks,
     linkcolor={red!50!black},
     citecolor={blue!50!black},
@@ -35,9 +35,9 @@
 
 \begin{document}
 
-\title{Project 2}      
-\author{Alessio Canclini, Filip von der Lippe}          
-\date{\today}                             
+\title{Project 2}
+\author{Alessio Canclini, Filip von der Lippe}
+\date{\today}
 \noaffiliation                            % ignore this, but keep it.
 
 
@@ -49,11 +49,11 @@
 We are working with:
 \begin{itemize}
     \item A horizontal beam of length $L$.
-    
+
     \item We let $u(x)$ be the vertical displacement of the beam at horizontal position $x$, with $x \in [0,L]$.
 
     \item A force $F$ is applied at the endpoint $(x = L)$, directed into the beam, i.e. towards $x = 0$.
-    
+
     \item The beam is fastened with pin endpoints, meaning that $u(0) = 0$ and $u(L) = 0$, but the endpoints are allowed to rotate $(u'(x) \neq 0)$.
 \end{itemize}
 Second order differential equation describing our buckling beam situation:
@@ -94,6 +94,23 @@ We also know that $x = \hat{x}L$, so $u(x) = u(\hat{x}L) = u(\hat{x}) + u(L) = u
 \section*{Problem 4}
 
 \section*{Problem 5}
+\begin{enumerate}[label=\alph*)]
+  \item By running the jacobi algorithm for different choices of $N$ we can see how the number of jacobi rotation scales with increasing matrix sizes. This is done by reducing all elements to less than $\epsilon = 10^{-9}$.
+  \begin{figure}[H]
+    \begin{subfigure}{.5 \textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../figures/N_iter_log.pdf}
+      \caption{Iterations for increasing tridiagonal matrix sizes. Both on a logarithmic scale}
+      \label{fig:N_iter_log}
+    \end{subfigure}
+    \begin{subfigure}{.5 \textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../figures/N_iter_log_dense.pdf}
+      \caption{Iterations for increasing dense matrix sizes. Both on a logarithmic scale}
+      \label{fig:N_iter_log_dense}
+    \end{subfigure}
+  \end{figure}
+\end{enumerate}
 
 \section*{Problem 6}
 

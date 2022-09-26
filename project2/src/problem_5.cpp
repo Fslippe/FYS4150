@@ -1,25 +1,38 @@
 #include "functions.hpp"
 // g++ problem_5.cpp functions.cpp -o problem5 -larmadillo
 // This file requires commandline arguments to run
-// to run for any integer like N=10 and N=20 run ./problem5 10 20
+// to run for any integer and tridiagona like N=10 and N=20 run ./problem5 10 20 tri
 
 int main(int argc, char** argv)
 {
   //lists for matrix size N and iterations
-  arma::vec N_list = arma::vec(argc-1);
-  arma::vec iter_list = arma::vec(argc-1);
+  arma::vec N_list = arma::vec(argc-2);
+  arma::vec iter_list = arma::vec(argc-2);
+  std::string matrix;
 
-  for (int i = 1; i < argc; i++) {
+  for (int i = 1; i < argc-1; i++) {
     //setting up the A matrix for N equal commandline argument i
     int N = atoi(argv[i]);
     int n = N + 1;
-    double h = 1./n;
-    double a = -1./(h*h);
-    double d = 2./(h*h);
 
-    //setting up either dense or triagonal symetric matrix
-    //arma::mat A = create_dense_symetric(N);
-    arma::mat A = create_symmetric_tridiagonal(N, a, d);
+    arma::mat A;
+
+    // setting up either dense or triagonal symetric matrix
+    // if last commandlien argument equals tri: setting up tridiagonal
+    // Else setting up dense matrix
+    if (argv[argc-1] == std::string("tri"))
+    {
+      double h = 1./n;
+      double a = -1./(h*h);
+      double d = 2./(h*h);
+      A = create_symmetric_tridiagonal(N, a, d);
+      matrix = "Used Tridiagonal matrix\n";
+    }
+    else
+    {
+      A = create_dense_symetric(N);
+      matrix = "Used Dense matrix\n";
+    }
 
     // solve eigenvaule problem using Jacobi roatation algorithm
     arma::vec eigval = arma::vec(N);
@@ -35,6 +48,8 @@ int main(int argc, char** argv)
     iter_list[i-1] = iterations;
   }
   //saving iteration and matrix list to files
+  std::cout << matrix;
+
   N_list.save("data/N.dat");
   iter_list.save("data/iterations.dat");
 
