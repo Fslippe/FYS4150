@@ -89,27 +89,57 @@ We also know that $x = \hat{x}L$, so $u(x) = u(\hat{x}L) = u(\hat{x}) + u(L) = u
 \end{align*}
 
 \section*{Problem 5}
-\begin{enumerate}[label=\alph*)]
-  \item By running the jacobi algorithm for different choices of $N$ we can see how the number of jacobi rotation scales with increasing matrix sizes. This is done by reducing all elements to less than $\epsilon = 10^{-9}$.
-  \begin{figure}[H]
-    \begin{subfigure}{.5 \textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../figures/N_iter_log.pdf}
-      \caption{Iterations for increasing tridiagonal matrix sizes. Both on a logarithmic scale}
-      \label{fig:N_iter_log}
-    \end{subfigure}
-    \begin{subfigure}{.5 \textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../figures/N_iter_log_dense.pdf}
-      \caption{Iterations for increasing dense matrix sizes. Both on a logarithmic scale}
-      \label{fig:N_iter_log_dense}
-    \end{subfigure}
-  \end{figure}
-\end{enumerate}
-We will now look at how many similarity transformations we need
-before we reach a result where all non-diagonal matrix elements
-are close to zero.
-\section*{Problem 6}
+We will now look at how many similarity transformations we need 
+before we reach a result where all non-diagonal matrix elements 
+are close to zero. \\
 
+Running our program for different choices of $N$
+gives us the following scaling data in figure \ref{fig:N_iter_log_both}.
+We obeserve that the number of required transformations $T$ are 
+square proportional to the matrix size $N$. So $T = N^2$. \\
+
+In figure \ref{fig:N_iter_log_both} we see that our program shows the close to
+the same scaling behavior for both tridiagonal and dense matrixes. 
+This is as expected, since our tridiagonal matrix is is 
+no longer tridiagonal after the first jacobi rotation of our algorithm. 
+Therfore the tridiagonal matrix is treated just like a dens matrix after a few
+rotations in this case.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.\textwidth]{../figures/N_iter_log_both.pdf}
+    \caption{Transformation scaling data for a matrixes on a Log scale.}
+    \label{fig:N_iter_log_both}
+\end{figure}
+
+
+
+\section*{Problem 6}
+Solving the equation $\bf{A} \vec{v} = \lambda \vec{v}$ for a discretization 
+of $\hat{x}$ with steps $n = 10$ steps gives us the three eigenvectors in figure
+\ref{}
+
+\begin{figure}[H]
+    \begin{subfigure}{.5 \textwidth}
+    \centering
+       \includegraphics[width=1.12\textwidth]{../figures/eigvec_10_0.pdf}
+       \caption{Transformation scaling data for a tridiagonal matrix}
+       \label{fig:eigvec_10_0}
+   \end{subfigure}
+   \begin{subfigure}{.5 \textwidth}
+       \centering
+       \includegraphics[width=1.12\textwidth]{../figures/eigvec_10_1.pdf}
+       \caption{Transformation scaling data for a dense matrix}
+       \label{fig:eigvec_10_1}
+   \end{subfigure}
+
+   \begin{subfigure}{.5 \textwidth}
+       \includegraphics[width=1.12\textwidth]{../figures/eigvec_10_2.pdf}
+       \caption{Transformation scaling data for a tridiagonal matrix}
+       \label{fig:eigvec_10_2}
+   \end{subfigure}
+   \caption{Eigenvectors corresponding to the three lowest eigenvalues for $n=10$.}
+   \label{fig:eigvec_10}
+\end{figure}
 
 \end{document}
