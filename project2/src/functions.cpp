@@ -69,7 +69,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   assert(N > 1);
   assert(A.is_square());
 
-  double maxval = 0.; //std::abs(A(k,l)); //(i,j) (row, col)
+  double maxval = std::abs(A(k,l)); //std::abs(A(k,l)); //(i,j) (row, col)
 
   for (int i = 1; i < N; ++i) //Loops over rows
   {

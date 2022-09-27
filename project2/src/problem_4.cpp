@@ -2,7 +2,6 @@
 // Compile and linking with:
 // g++ problem_4.cpp functions.cpp -o problem4 -larmadillo
 
-
 int main()
 {
   // set up tridiagonal A for N=6

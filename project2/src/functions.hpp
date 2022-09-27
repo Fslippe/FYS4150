@@ -26,7 +26,7 @@ arma::vec analytic_eigenval(int N, double a, double d);
 // Determine the the max off-diagonal element of a symmetric matrix A
 // - Saves the matrix element indicies to k and l
 // - Returns absolute value of A(k,l) as the function return value
-double max_offdiag_symmetric(const arma::mat& A, int& k, int& l);
+double max_offdiag_symmetric(const arma::mat& A, int& k, int &l);
 
 // Performs a single Jacobi rotation, to "rotate away"
 // the off-diagonal element at A(k,l).

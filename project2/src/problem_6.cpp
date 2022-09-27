@@ -1,5 +1,9 @@
 #include "functions.hpp"
+// Compile and linking with:
 // g++ problem_6.cpp functions.cpp -o problem6 -larmadillo
+// This program takes in a command line argument to run
+// Write n - the nuber of discretizations after run comand:
+// ./problem6 20
 
 int main(int argc, char** argv)
 {

@@ -1,7 +1,11 @@
 #include "functions.hpp"
+// Compile and linking with:
 // g++ problem_5.cpp functions.cpp -o problem5 -larmadillo
 // This file requires commandline arguments to run
-// to run for any integer and tridiagona like N=10 and N=20 run ./problem5 10 20 tri
+// to run for any integer and a tridiagonal matrix  like N=10 and N=20:
+// run ./problem5 10 20 tri
+// Same N for dense matrix:
+// run ./problem5 10 20 dense
 
 int main(int argc, char** argv)
 {
