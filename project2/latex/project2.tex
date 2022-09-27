@@ -46,6 +46,23 @@
 \textit{Github repository: \url{https://github.com/Fslippe/FYS4150/tree/main/project2}}
 \\
 \\
+\section*{Introduction}
+The main purpose og this project is to familiarize ourselves with the topics
+of equation scaling, code testing and numerical solutions to eigenvalue problems. 
+The eigenvalue problem we will be workning with is a special case of a 
+one-dimensional buckling beam. \\
+In problem 1 we will show how our initial second order differential equation
+is scaled. Problems 2 through 4 focus on writing and testing the Jacobi roration algorithm we 
+will be using to solve our eigenvalue problem. These do not appear in the report, 
+but can be found in the Github repository linked above. In problem 5 we look at the 
+algorithms scaling behavior, specifically how the the number of similarity transformations 
+is related to the size $N$ of the input matrix. Finally in problem 6 we use the constructed code 
+to solve our eigenvalue problem and make a plot of the three eigenvectors corresponding to the 
+three lowest eigenvalues, visualizing the solutions to the differential equation for our buckling beam. \\
+\\
+\\
+
+
 We are working with:
 \begin{itemize}
     \item A horizontal beam of length $L$.
@@ -71,7 +88,10 @@ Where $\hat{x} \equiv x / L$ is a dimensionless variable, $\hat{x} \in [0,1]$ an
 \section*{Problem 1}
 Using the defenintion $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written as Eq. \ref*{eq:scaled}.
 \begin{align*}
-    \gamma \frac{d^2u(x)}{dx^2} &= - F u(x) \\
+    \gamma \frac{d^2u(x)}{dx^2} &= - F u(x)
+\end{align*}
+Dividing both sides by $\gamma$.
+\begin{align*}
     \frac{d^2u(x)}{dx^2} &= - \frac{F}{\gamma} u(x)
 \end{align*}
 Multiplying both sides by $L^2$.
