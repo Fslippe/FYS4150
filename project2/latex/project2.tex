@@ -47,18 +47,18 @@
 \\
 \\
 \section*{Introduction}
-The main purpose og this project is to familiarize ourselves with the topics
+The main purpose of this project is to familiarize ourselves with the topics
 of equation scaling, code testing and numerical solutions to eigenvalue problems. 
-The eigenvalue problem we will be workning with is a special case of a 
+The eigenvalue problem we will be working with is a special case of a 
 one-dimensional buckling beam. \\
-In problem 1 we will show how our initial second order differential equation
-is scaled. Problems 2 through 4 focus on writing and testing the Jacobi roration algorithm we 
-will be using to solve our eigenvalue problem. These do not appear in the report, 
-but can be found in the Github repository linked above. In problem 5 we look at the 
-algorithms scaling behavior, specifically how the the number of similarity transformations 
-is related to the size $N$ of the input matrix. Finally in problem 6 we use the constructed code 
-to solve our eigenvalue problem and make a plot of the three eigenvectors corresponding to the 
-three lowest eigenvalues, visualizing the solutions to the differential equation for our buckling beam. \\
+Problem 1 demonstrates how the initial second order differential equation
+is scaled. Problems 2 through 4 focus on writing and testing the Jacobi rotation algorithm which we 
+will be using to solve the eigenvalue problem. These do not appear in the report, 
+but can be found in the Github repository linked above. Problem 5 looks at the 
+algorithm´s scaling behavior, specifically how the the number of similarity transformations 
+is related to the size $N$ of the input matrix. Finally in problem 6 the constructed code is used 
+to solve the eigenvalue problem and make a plot of the three eigenvectors corresponding to the 
+three lowest eigenvalues, visualizing the solutions to the differential equation for the buckling beam. \\
 \\
 \\
 
@@ -67,18 +67,18 @@ We are working with:
 \begin{itemize}
     \item A horizontal beam of length $L$.
 
-    \item We let $u(x)$ be the vertical displacement of the beam at horizontal position $x$, with $x \in [0,L]$.
+    \item Let $u(x)$ be the vertical displacement of the beam at horizontal position $x$, with $x \in [0,L]$.
 
     \item A force $F$ is applied at the endpoint $(x = L)$, directed into the beam, i.e. towards $x = 0$.
 
     \item The beam is fastened with pin endpoints, meaning that $u(0) = 0$ and $u(L) = 0$, but the endpoints are allowed to rotate $(u'(x) \neq 0)$.
 \end{itemize}
-Second order differential equation describing our buckling beam situation:
+Second order differential equation describing the buckling beam situation:
 \begin{align}
     \gamma \frac{d^2u(x)}{dx^2} = - F u(x)
     \label{eq:diff}
 \end{align}
-Troughout this project we will be working with the scaled equation:
+Throughout this project we will be working with the scaled equation:
 \begin{align}
     \frac{d^2u(\hat{x})}{d \hat{x}^2} = - \lambda u(\hat{x})
     \label{eq:scaled}
@@ -86,7 +86,7 @@ Troughout this project we will be working with the scaled equation:
 Where $\hat{x} \equiv x / L$ is a dimensionless variable, $\hat{x} \in [0,1]$ and $\lambda = \frac{FL^2}{\gamma}$.
 
 \section*{Problem 1}
-Using the defenintion $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written as Eq. \ref*{eq:scaled}.
+Using the definintion $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written as Eq. \ref*{eq:scaled}.
 \begin{align*}
     \gamma \frac{d^2u(x)}{dx^2} &= - F u(x)
 \end{align*}
@@ -109,20 +109,20 @@ We also know that $x = \hat{x}L$, so $u(x) = u(\hat{x}L) = u(\hat{x}) + u(L) = u
 \end{align*}
 
 \section*{Problem 5}
-We will now look at how many similarity transformations we need 
-before we reach a result where all non-diagonal matrix elements 
-are close to zero. \\
+We will now look at how many similarity transformations are needed 
+before a result where all non-diagonal matrix elements 
+are close to zero is reached. \\
 
-Running our program for different choices of $N$
+Running the program for different choices of $N$
 gives us the following scaling data in figure \ref{fig:N_iter_log_both}.
 We obeserve that the number of required transformations $T$ are 
 square proportional to the matrix size $N$. So $T = N^2$. \\
 
-In figure \ref{fig:N_iter_log_both} we see that our program shows the close to
+Figure \ref{fig:N_iter_log_both} demonstrates that the program shows close to
 the same scaling behavior for both tridiagonal and dense matrixes. 
-This is as expected, since our tridiagonal matrix is is 
-no longer tridiagonal after the first jacobi rotation of our algorithm. 
-Therfore the tridiagonal matrix is treated just like a dens matrix after a few
+This is as expected, since the tridiagonal matrix is is 
+no longer tridiagonal after the first Jacobi rotation of the algorithm. 
+Therfore the tridiagonal matrix is treated just like a dense matrix after a few
 rotations in this case.
 
 \begin{figure}[H]
@@ -138,7 +138,7 @@ rotations in this case.
 \begin{enumerate}[label= \alph*)]
     \item 
     Solving the equation $\bf{A} \vec{v} = \lambda \vec{v}$ for a discretization 
-    of $\hat{x}$ with steps $n = 10$ steps gives us the three eigenvectors in figure
+    of $\hat{x}$ with steps $n = 10$, steps gives us the three eigenvectors in figure
     \ref{fig:eigvec_10}
 
     \begin{figure}[H]
@@ -158,7 +158,7 @@ rotations in this case.
         \caption{}
         \label{fig:eigvec_10_2}
     \end{subfigure}
-    \caption{Eigenvectors corresponding to the three lowest eigenvalues for $n=10$. Shows the vector $v_i$ elements against the corresponding positions
+    \caption{Eigenvectors corresponding to the three lowest eigenvalues for $n=10$. Plots show the vector $v_i$ elements against the corresponding positions
 }
     \label{fig:eigvec_10}
     \end{figure}
