@@ -69,7 +69,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
   assert(N > 1);
   assert(A.is_square());
 
-  double maxval = std::abs(A(k,l)); //std::abs(A(k,l)); //(i,j) (row, col)
+  double maxval = (A(k,l));
 
   for (int i = 1; i < N; ++i) //Loops over rows
   {
@@ -142,7 +142,8 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
  void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigval, arma::mat& eigvec, const int maxiter, int& iterations, bool& converged)
  {
     int n = A.n_rows;
-    int k, l;
+    int k = 1;
+    int l = 0;
 
     arma::mat R = arma::mat(n, n, arma::fill::eye);
     double max = max_offdiag_symmetric(A, k, l);
