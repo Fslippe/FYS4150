@@ -117,10 +117,44 @@ This finally gives us Eq. \ref*{eq:scaled}:
 Where $\lambda = \frac{F L^2}{\gamma}$.
 
 \section*{Problem 2}
+Before implementing the Jacobi rotation algorithm we write a short program 
+that creates a tridiagonal matrix $\textbf{A}$ of size $N$. The eigenvalue 
+equation $\textbf{A} \vec{v} = \lambda \vec{v}$ is the solved using Armadillo's \textcolor{magenta}{\texttt{arma::eig\_sym}}. 
+This program is the tested for $N = 6$ and the Armadillo eigenvalues are compared to the analytical solution. 
+Having confirmed that these helper functions work we can move on to the next step of the project.
 
 \section*{Problem 3}
+\begin{enumerate}[label= \alph*)]
+    \item     
+    To implement the Jacobi rotation algorithm we need a function that can identify the larges (in absolute value) 
+    off-diagonal element of a matrix. We therefore write a suitable \texttt{max\_offdiag\_symetric} function in C++ (see "functions.cpp" in GitHub repo). 
+
+    \item 
+    To ensure that this section of the code works we write a test code that runs the \texttt{max\_offdiag\_symetric} function 
+    for the matrix:
+    \begin{align*}
+        A = \begin{bmatrix}
+            1 & 0 & 0 & 0.5 \\
+            0 & 1 & -0.7 & 0 \\
+            0 & -0.7 & 1 & 0 \\
+            0.5 & 0 & 0 & 1 
+        \end{bmatrix}
+    \end{align*}
+    Returning the expected result of $0.7$ as the largest (in absolute value) 
+    off-diagonal element of a matrix confirms that the function works as it should. 
+\end{enumerate}
 
 \section*{Problem 4}
+\begin{enumerate}[label= \alph*)]
+    \item Having working functions that execute individual steps of the total algorithm we can 
+    now write e full code implementation of Jacobi's rotation algorithm to solve the eigenvalue 
+    equtaion $\textbf{A} \vec{v} = \lambda \vec{v}$. We first write a \texttt{jacobi\_rotate} 
+    function that executes one single Jacobi rotation. This and the previous \texttt{max\_offdiag\_symetric} 
+    function are then used to create the final \texttt{jacobi\_eigensolver}.
+    \item Letting $\textbf{A} = 6 \cross 6$ we run the \texttt{jacobi\_eigensolver} function and run 
+    it through an assertion test to confirm that eigenvalues and eigenvectors produced by \texttt{jacobi\_eigensolver} 
+    match the aanalytical results for $N = 6$.
+\end{enumerate}
 
 \section*{Problem 5}
 We will now look at how many similarity transformations are needed 
@@ -129,20 +163,23 @@ are close to zero is reached. \\
 
 Running the program for different choices of $N$
 gives us the following scaling data in figure \ref{fig:N_iter_log_both}.
-We obeserve that the number of required transformations $T$ are 
+We observe that the straight line in our log-log plot in figure \ref{fig:N_iter_log_both} 
+has a slope of 2. This leads us to the conclusion that the number of required transformations $T$ are 
 square proportional to the matrix size $N$. So $T = N^2$. \\
 
 Figure \ref{fig:N_iter_log_both} demonstrates that the program shows close to
-the same scaling behavior for both tridiagonal and dense matrixes. 
-This is as expected, since the tridiagonal matrix is is 
+the same scaling behavior for both tridiagonal and dense matrices. 
+This is as expected, since the tridiagonal matrix is 
 no longer tridiagonal after the first Jacobi rotation of the algorithm. 
-Therfore the tridiagonal matrix is treated just like a dense matrix after a few
+Therefore the tridiagonal matrix is treated just like a dense matrix after a few
 rotations in this case.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.\textwidth]{../figures/N_iter_log_both.pdf}
-    \caption{Transformation scaling data for a matrixes on a Log scale.}
+    \caption{The plot shows transformation scaling data for different matrix sizes on a log-log scale. 
+    The blue line represents the Jacobi rotation algorithms' behavior for a tridiagonal matrix, 
+    whereas the orange line represents the Jacobi rotation algorithms' behavior for a dense matrix.}
     \label{fig:N_iter_log_both}
 \end{figure}
 
