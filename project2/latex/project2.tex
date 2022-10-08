@@ -119,18 +119,18 @@ Where $\lambda = \frac{F L^2}{\gamma}$.
 \section*{Problem 2}
 Before implementing the Jacobi rotation algorithm we write a short program
 that creates a tridiagonal matrix $\textbf{A}$ of size $N$. The eigenvalue
-equation $\textbf{A} \vec{v} = \lambda \vec{v}$ is the solved using Armadillo's \textcolor{magenta}{\texttt{arma::eig\_sym}}.
-This program is the tested for $N = 6$ and the Armadillo eigenvalues are compared to the analytical solution.
+equation $\textbf{A} \vec{v} = \lambda \vec{v}$ is then solved using Armadillo's \textcolor{magenta}{\texttt{arma::eig\_sym}}.
+This program is then tested for $N = 6$ and the Armadillo eigenvalues are compared to the analytical solution.
 Having confirmed that these helper functions work we can move on to the next step of the project.
 
 \section*{Problem 3}
 \begin{enumerate}[label= \alph*)]
     \item
-    To implement the Jacobi rotation algorithm we need a function that can identify the larges (in absolute value)
+    To implement the Jacobi rotation algorithm we need a function that can identify the largest (in absolute value)
     off-diagonal element of a matrix. We therefore write a suitable \texttt{max\_offdiag\_symetric} function in C++ (see "functions.cpp" in GitHub repo).
 
     \item
-    To ensure that this section of the code works we write a test code that runs the \texttt{max\_offdiag\_symetric} function
+    To ensure that this section of the code works we write a test code ("problem\_3.cpp") that runs the \texttt{max\_offdiag\_symetric} function
     for the matrix:
     \begin{align*}
         A = \begin{bmatrix}
@@ -141,19 +141,19 @@ Having confirmed that these helper functions work we can move on to the next ste
         \end{bmatrix}
     \end{align*}
     Returning the expected result of $0.7$ as the largest (in absolute value)
-    off-diagonal element of a matrix confirms that the function works as it should.
+    off-diagonal element of the matrix confirms that the function works as it should.
 \end{enumerate}
 
 \section*{Problem 4}
 \begin{enumerate}[label= \alph*)]
     \item Having working functions that execute individual steps of the total algorithm we can
-    now write e full code implementation of Jacobi's rotation algorithm to solve the eigenvalue
-    equtaion $\textbf{A} \vec{v} = \lambda \vec{v}$. We first write a \texttt{jacobi\_rotate}
+    now write a full code implementation of Jacobi's rotation algorithm to solve the eigenvalue
+    equation $\textbf{A} \vec{v} = \lambda \vec{v}$. We first write a \texttt{jacobi\_rotate}
     function that executes one single Jacobi rotation. This and the previous \texttt{max\_offdiag\_symetric}
     function are then used to create the final \texttt{jacobi\_eigensolver}.
     \item Letting $\textbf{A} = 6 \cross 6$ we run the \texttt{jacobi\_eigensolver} function and run
     it through an assertion test to confirm that eigenvalues and eigenvectors produced by \texttt{jacobi\_eigensolver}
-    match the aanalytical results for $N = 6$.
+    match the analytical results for $N = 6$.
 \end{enumerate}
 
 \section*{Problem 5}
