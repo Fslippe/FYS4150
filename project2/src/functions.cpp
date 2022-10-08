@@ -88,14 +88,15 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
  // Performs a single Jacobi rotation, to "rotate away"
  void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l)
  {
-    double tau = (A(l,l) - A(k,k)) / (2. * A(k,l));
+
     int N = A.n_rows;
     double s, c, t;
     double tmp_element;
 
     if (A(k,l) != 0.)
     {
-        if (tau > 0)
+        double tau = (A(l,l) - A(k,k)) / (2. * A(k,l));
+        if (tau >= 0)
         {
           t = - tau + sqrt(1. + tau*tau);
         }
@@ -113,10 +114,10 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
     }
 
     tmp_element = A(k,k);
-    A(k,k) = A(k,k)*c*c - 2*A(k,l)*c*s + A(l,l)*s*s;
+    A(k,k) = tmp_element*c*c - 2*A(k,l)*c*s + A(l,l)*s*s;
     A(l,l) = A(l,l)*c*c + 2*A(k,l)*c*s + tmp_element*s*s;
-    A(k,l) = 0;
-    A(l,k) = 0;
+    A(k,l) = 0.;
+    A(l,k) = 0.;
 
     //A.print();
     //std::cout << "k: " << k << ", l: " << l << std::endl;
@@ -169,7 +170,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l)
 
 void sort_normalise(arma::vec& eigval, arma::mat& eigvec)
 {
-  eigval = sort(arma::normalise(eigval));
+  eigval = sort(eigval);
   eigvec = arma::normalise(eigvec);
   eigvec = eigvec.each_col( [](arma::vec& vec){vec = arma::conv_to<arma::vec>::from(arma::sort(vec)); } );
 }

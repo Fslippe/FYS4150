@@ -25,7 +25,8 @@ int main(int argc, char** argv)
 
   //jacobi and analytic solver
   jacobi_eigensolver(A, eps, eigval, eigvec, maxiter, iterations, converged);
-  arma::mat analytic_eigvec = analytic_eigenvector(N, a, d);
+  arma::mat analytic_eigvec = normalise(analytic_eigenvector(N, a, d));
+  eigvec = arma::normalise(eigvec);
 
   // Finding index of 3 smallest eigenvalues
   // adding maximum to avoid finding same index several times
@@ -55,9 +56,17 @@ int main(int argc, char** argv)
     for (int j = 0; j < N; j++)
     {
       v.col(i)[0] = 0;
-      v.col(i)[j+1] = analytic_eigvec.col(idx[i])[j];
       u.col(i)[0] = 0;
-      u.col(i)[j+1] = analytic_eigvec.col(idx[i])[j];
+      v.col(i)[j+1] = eigvec.col(idx[i])[j];
+
+      if (eigvec.col(idx[i])[0] < 0 & analytic_eigvec.col(i)[0] > 0)
+      {
+        u.col(i)[j+1] = analytic_eigvec.col(i)[j]*-1;
+      }
+      else
+      {
+        u.col(i)[j+1] = analytic_eigvec.col(i)[j];
+      }
     }
   }
 

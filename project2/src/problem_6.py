@@ -24,13 +24,14 @@ def plot_compare(n):
     v = pa.mat()
     v.load("data/v.dat")
     u = pa.mat()
-    u.load("data/v.dat")
+    u.load("data/u.dat")
     x = pa.mat()
     x.load("data/x.dat")
     lmb = pa.mat()
     lmb.load("data/eigval.dat")
 
     for i in range(3):
+        plt.figure()
         plt.title("$n=$%i     $\lambda=$%.2f" %(n, lmb[i]))
         plt.plot(x, u[:,i], label="analytic")
         plt.plot(x, v[:,i], "--", label="jacobi")
@@ -38,7 +39,7 @@ def plot_compare(n):
         plt.xlabel("$\hat{x}$")
         plt.ylabel("eigenvector")
         plt.savefig("../figures/eigvec_%i_%i.pdf" %(n, i))
-        plt.show()
+    plt.show()
 
 def main():
     n = 10
