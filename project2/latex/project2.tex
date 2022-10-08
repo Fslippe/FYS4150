@@ -53,10 +53,10 @@ The eigenvalue problem we will be working with is a special case of a
 one-dimensional buckling beam. \\
 Problem 1 demonstrates how the initial second order differential equation
 is scaled. Problems 2 through 4 focus on writing and testing the Jacobi rotation algorithm which
-will be used to solve the eigenvalue problem. These do not appear in the report,
-but can be found in the Github repository linked above. Problem 5 looks at the
-algorithm's scaling behavior, specifically how the the number of similarity transformations
-is related to the size $N$ of the input matrix. Finally in problem 6 the constructed code is used
+will be used to solve the eigenvalue problem. The code can be found in the Github repository linked above.
+Problem 5 looks at the
+algorithm's scaling behavior, specifically how the number of similarity transformations
+is related to the size $N$ of the input matrix. Finally, in problem 6 the constructed code is used
 to solve the eigenvalue problem and make a plot of the three eigenvectors corresponding to the
 three lowest eigenvalues, visualizing the solutions to the differential equation for the buckling beam. \\
 \\
@@ -171,7 +171,7 @@ Figure \ref{fig:N_iter_log_both} demonstrates that the program shows close to
 the same scaling behavior for both tridiagonal and dense matrices.
 This is as expected, since the tridiagonal matrix is
 no longer tridiagonal after the first Jacobi rotation of the algorithm.
-Therefore the tridiagonal matrix is treated just like a dense matrix after a few
+Therefore, the tridiagonal matrix is treated just like a dense matrix after a few
 rotations in this case.
 
 \begin{figure}[H]
