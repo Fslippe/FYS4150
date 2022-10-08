@@ -48,16 +48,16 @@
 \\
 \section*{Introduction}
 The main purpose of this project is to familiarize ourselves with the topics
-of equation scaling, code testing and numerical solutions to eigenvalue problems. 
-The eigenvalue problem we will be working with is a special case of a 
+of equation scaling, code testing and numerical solutions to eigenvalue problems.
+The eigenvalue problem we will be working with is a special case of a
 one-dimensional buckling beam. \\
 Problem 1 demonstrates how the initial second order differential equation
 is scaled. Problems 2 through 4 focus on writing and testing the Jacobi rotation algorithm which
-will be used to solve the eigenvalue problem. These do not appear in the report, 
-but can be found in the Github repository linked above. Problem 5 looks at the 
-algorithm's scaling behavior, specifically how the the number of similarity transformations 
-is related to the size $N$ of the input matrix. Finally in problem 6 the constructed code is used 
-to solve the eigenvalue problem and make a plot of the three eigenvectors corresponding to the 
+will be used to solve the eigenvalue problem. These do not appear in the report,
+but can be found in the Github repository linked above. Problem 5 looks at the
+algorithm's scaling behavior, specifically how the the number of similarity transformations
+is related to the size $N$ of the input matrix. Finally in problem 6 the constructed code is used
+to solve the eigenvalue problem and make a plot of the three eigenvectors corresponding to the
 three lowest eigenvalues, visualizing the solutions to the differential equation for the buckling beam. \\
 \\
 \\
@@ -91,11 +91,11 @@ Using the definition $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can 
 First applying the chain rule on the differential operator $\frac{d}{dx}$. This gives us:
 
 \begin{align*}
-    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{d\hat{x}^2}{dx^2} 
+    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{d\hat{x}^2}{dx^2}
 \end{align*}
 Then using that $\left(\frac{\hat{x}}{x} \right)^2 = \frac{1}{L^2}$.
 \begin{align*}
-    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{1}{L^2} 
+    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{1}{L^2}
 \end{align*}
 Putting this into Eq. \ref*{eq:diff} we have:
 \begin{align*}
@@ -117,68 +117,68 @@ This finally gives us Eq. \ref*{eq:scaled}:
 Where $\lambda = \frac{F L^2}{\gamma}$.
 
 \section*{Problem 2}
-Before implementing the Jacobi rotation algorithm we write a short program 
-that creates a tridiagonal matrix $\textbf{A}$ of size $N$. The eigenvalue 
-equation $\textbf{A} \vec{v} = \lambda \vec{v}$ is the solved using Armadillo's \textcolor{magenta}{\texttt{arma::eig\_sym}}. 
-This program is the tested for $N = 6$ and the Armadillo eigenvalues are compared to the analytical solution. 
+Before implementing the Jacobi rotation algorithm we write a short program
+that creates a tridiagonal matrix $\textbf{A}$ of size $N$. The eigenvalue
+equation $\textbf{A} \vec{v} = \lambda \vec{v}$ is the solved using Armadillo's \textcolor{magenta}{\texttt{arma::eig\_sym}}.
+This program is the tested for $N = 6$ and the Armadillo eigenvalues are compared to the analytical solution.
 Having confirmed that these helper functions work we can move on to the next step of the project.
 
 \section*{Problem 3}
 \begin{enumerate}[label= \alph*)]
-    \item     
-    To implement the Jacobi rotation algorithm we need a function that can identify the larges (in absolute value) 
-    off-diagonal element of a matrix. We therefore write a suitable \texttt{max\_offdiag\_symetric} function in C++ (see "functions.cpp" in GitHub repo). 
+    \item
+    To implement the Jacobi rotation algorithm we need a function that can identify the larges (in absolute value)
+    off-diagonal element of a matrix. We therefore write a suitable \texttt{max\_offdiag\_symetric} function in C++ (see "functions.cpp" in GitHub repo).
 
-    \item 
-    To ensure that this section of the code works we write a test code that runs the \texttt{max\_offdiag\_symetric} function 
+    \item
+    To ensure that this section of the code works we write a test code that runs the \texttt{max\_offdiag\_symetric} function
     for the matrix:
     \begin{align*}
         A = \begin{bmatrix}
             1 & 0 & 0 & 0.5 \\
             0 & 1 & -0.7 & 0 \\
             0 & -0.7 & 1 & 0 \\
-            0.5 & 0 & 0 & 1 
+            0.5 & 0 & 0 & 1
         \end{bmatrix}
     \end{align*}
-    Returning the expected result of $0.7$ as the largest (in absolute value) 
-    off-diagonal element of a matrix confirms that the function works as it should. 
+    Returning the expected result of $0.7$ as the largest (in absolute value)
+    off-diagonal element of a matrix confirms that the function works as it should.
 \end{enumerate}
 
 \section*{Problem 4}
 \begin{enumerate}[label= \alph*)]
-    \item Having working functions that execute individual steps of the total algorithm we can 
-    now write e full code implementation of Jacobi's rotation algorithm to solve the eigenvalue 
-    equtaion $\textbf{A} \vec{v} = \lambda \vec{v}$. We first write a \texttt{jacobi\_rotate} 
-    function that executes one single Jacobi rotation. This and the previous \texttt{max\_offdiag\_symetric} 
+    \item Having working functions that execute individual steps of the total algorithm we can
+    now write e full code implementation of Jacobi's rotation algorithm to solve the eigenvalue
+    equtaion $\textbf{A} \vec{v} = \lambda \vec{v}$. We first write a \texttt{jacobi\_rotate}
+    function that executes one single Jacobi rotation. This and the previous \texttt{max\_offdiag\_symetric}
     function are then used to create the final \texttt{jacobi\_eigensolver}.
-    \item Letting $\textbf{A} = 6 \cross 6$ we run the \texttt{jacobi\_eigensolver} function and run 
-    it through an assertion test to confirm that eigenvalues and eigenvectors produced by \texttt{jacobi\_eigensolver} 
+    \item Letting $\textbf{A} = 6 \cross 6$ we run the \texttt{jacobi\_eigensolver} function and run
+    it through an assertion test to confirm that eigenvalues and eigenvectors produced by \texttt{jacobi\_eigensolver}
     match the aanalytical results for $N = 6$.
 \end{enumerate}
 
 \section*{Problem 5}
-We will now look at how many similarity transformations are needed 
-before a result where all non-diagonal matrix elements 
+We will now look at how many similarity transformations are needed
+before a result where all non-diagonal matrix elements
 are close to zero is reached. \\
 
 Running the program for different choices of $N$
 gives us the following scaling data in figure \ref{fig:N_iter_log_both}.
-We observe that the straight line in our log-log plot in figure \ref{fig:N_iter_log_both} 
-has a slope of 2. This leads us to the conclusion that the number of required transformations $T$ are 
+We observe that the straight line in our log-log plot in figure \ref{fig:N_iter_log_both}
+has a slope of 2. This leads us to the conclusion that the number of required transformations $T$ are
 square proportional to the matrix size $N$. So $T = N^2$. \\
 
 Figure \ref{fig:N_iter_log_both} demonstrates that the program shows close to
-the same scaling behavior for both tridiagonal and dense matrices. 
-This is as expected, since the tridiagonal matrix is 
-no longer tridiagonal after the first Jacobi rotation of the algorithm. 
+the same scaling behavior for both tridiagonal and dense matrices.
+This is as expected, since the tridiagonal matrix is
+no longer tridiagonal after the first Jacobi rotation of the algorithm.
 Therefore the tridiagonal matrix is treated just like a dense matrix after a few
 rotations in this case.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.\textwidth]{../figures/N_iter_log_both.pdf}
-    \caption{The plot shows transformation scaling data for different matrix sizes on a log-log scale. 
-    The blue line represents the Jacobi rotation algorithms' behavior for a tridiagonal matrix, 
+    \caption{The plot shows transformation scaling data for different matrix sizes on a log-log scale.
+    The blue line represents the Jacobi rotation algorithms' behavior for a tridiagonal matrix,
     whereas the orange line represents the Jacobi rotation algorithms' behavior for a dense matrix.}
     \label{fig:N_iter_log_both}
 \end{figure}
@@ -187,8 +187,8 @@ rotations in this case.
 \newpage
 \section*{Problem 6}
 \begin{enumerate}[label= \alph*)]
-    \item 
-    Solving the equation $\bf{A} \vec{v} = \lambda \vec{v}$ for a discretization 
+    \item
+    Solving the equation $\bf{A} \vec{v} = \lambda \vec{v}$ for a discretization
     of $\hat{x}$ with steps $n = 10$, steps gives us the three eigenvectors in figure
     \ref{fig:eigvec_10}
 
@@ -214,9 +214,9 @@ rotations in this case.
     \label{fig:eigvec_10}
     \end{figure}
 \newpage
-    \item 
+    \item
     Figure \ref{fig:eigvec_100} shows the same plots for discretization of with $n = 100$ steps.
-    
+
 
     \begin{figure}[H]
         \centering
@@ -239,6 +239,7 @@ rotations in this case.
     \label{fig:eigvec_100}
     \end{figure}
 
+  We see that the analytic and numerical solutions match and that using 100 steps gives us a smoother plot of the possible shapes of the buckling beam. We see that the solutions are sine waves of different frequency where a higher magnitude of eigenvalue corresponds to a higher frequency. These solution are the vertical displacement of the buckling beam.
 \end{enumerate}
 
 \end{document}

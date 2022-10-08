@@ -57,15 +57,16 @@ int main(int argc, char** argv)
     {
       v.col(i)[0] = 0;
       u.col(i)[0] = 0;
-      v.col(i)[j+1] = eigvec.col(idx[i])[j];
 
-      if (eigvec.col(idx[i])[0] < 0 & analytic_eigvec.col(i)[0] > 0)
+      u.col(i)[j+1] = analytic_eigvec.col(i)[j];
+
+      if ((eigvec.col(idx[i])[0] > 0 and (analytic_eigvec.col(i)[0] < 0)) or ((eigvec.col(idx[i])[0] < 0 and (analytic_eigvec.col(i)[0] > 0))))
       {
-        u.col(i)[j+1] = analytic_eigvec.col(i)[j]*-1;
+        v.col(i)[j+1] = eigvec.col(idx[i])[j]*-1;
       }
       else
       {
-        u.col(i)[j+1] = analytic_eigvec.col(i)[j];
+        v.col(i)[j+1] = eigvec.col(idx[i])[j];
       }
     }
   }
