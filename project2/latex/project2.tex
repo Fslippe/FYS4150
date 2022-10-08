@@ -86,27 +86,41 @@ Throughout this project we will be working with the scaled equation:
 Where $\hat{x} \equiv x / L$ is a dimensionless variable, $\hat{x} \in [0,1]$ and $\lambda = \frac{FL^2}{\gamma}$.
 
 \section*{Problem 1}
-Using the definintion $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written as Eq. \ref*{eq:scaled}.
+Using the definition $\hat{x} \equiv x / L$ to show that Eq. \ref*{eq:diff} can be written as Eq. \ref*{eq:scaled}.
+
+First applying the chain rule on the differential operator $\frac{d}{dx}$. This gives us:
+
 \begin{align*}
-    \gamma \frac{d^2u(x)}{dx^2} &= - F u(x)
+    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{d\hat{x}^2}{dx^2} 
 \end{align*}
-Dividing both sides by $\gamma$.
+Then using that $\left(\frac{\hat{x}}{x} \right)^2 = \frac{1}{L^2}$.
 \begin{align*}
-    \frac{d^2u(x)}{dx^2} &= - \frac{F}{\gamma} u(x)
+    \frac{d^2}{dx^2} = \frac{d^2}{d\hat{x}^2} \frac{1}{L^2} 
 \end{align*}
-Multiplying both sides by $L^2$.
+Putting this into Eq. \ref*{eq:diff} we have:
 \begin{align*}
-    \frac{d^2u(x)L^2}{dx^2} &= - \frac{FL^2}{\gamma} u(x) \\
-    \frac{d^2u(x)}{d\frac{x^2}{L^2}} &= - \frac{FL^2}{\gamma} u(x)
+    \gamma \frac{d^2 u(x)}{d\hat{x}^2} \frac{1}{L^2} &= - F u(x)
 \end{align*}
-Using that $\hat{x} \equiv x / L$ so that $\hat{x}^2 \equiv x^2 / L^2$.
+Then dividing both sides by $\gamma$ and multiplying by $L^2$.
 \begin{align*}
-    \frac{d^2u(x)}{d\hat{x}} &= - \frac{FL^2}{\gamma} u(x)
+    \frac{d^2u(x)}{dx^2} &= - \frac{F L^2}{\gamma} u(x)
 \end{align*}
-We also know that $x = \hat{x}L$, so $u(x) = u(\hat{x}L) = u(\hat{x}) + u(L) = u(\hat{x})$. Since $u(L) = 0$. Finally, using $\lambda = \frac{FL^2}{\gamma}$ gives us the dimensionless Eq. \ref*{eq:scaled}:
+Inserting $x = \hat{x}L$ we can rename $u(\hat{x}L)$ to $\hat{u}(\hat{x})$ and again rename this $u(\hat{x})$.
 \begin{align*}
-    \frac{d^2u(\hat{x})}{d\hat{x}} &= - \lambda u(\hat{x})
+    \frac{d^2u(\hat{x}L)}{dx^2} &= - \frac{F L^2}{\gamma} u(\hat{x}L) \\
+    \frac{d^2u(\hat{x})}{dx^2} &= - \frac{F L^2}{\gamma} u(\hat{x})
 \end{align*}
+This finally gives us Eq. \ref*{eq:scaled}:
+\begin{align*}
+    \frac{d^2u(\hat{x})}{d \hat{x}^2} = - \lambda u(\hat{x})
+\end{align*}
+Where $\lambda = \frac{F L^2}{\gamma}$.
+
+\section*{Problem 2}
+
+\section*{Problem 3}
+
+\section*{Problem 4}
 
 \section*{Problem 5}
 We will now look at how many similarity transformations are needed 
