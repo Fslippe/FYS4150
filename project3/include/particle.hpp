@@ -8,17 +8,15 @@
 
 class particle
 {
-  private:
-
+  public:
+    // Member variables
     int charge_;
     double mass_;
     arma::vec position_;
     arma::vec velocity_;
 
-  public:
-
     // Constructor
-    particle(int charge_in, double mass_in, arma::vec position_in, aram::vec velocity_in);
+    particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in);
 
     // Method that returns the charge
     int charge();
@@ -27,10 +25,10 @@ class particle
     double mass();
 
     // Method that returns the position
-    double position();
+    arma::vec position();
 
     // Method that returns the velocity
-    double velocity();
+    arma::vec velocity();
 
     // Method that returns a string with info in the form "charge mass position velocity"
     std::string info();

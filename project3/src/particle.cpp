@@ -2,7 +2,6 @@
 
 #include "particle.hpp"
 
-
 // Constructor
 particle::particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in)
 {
@@ -25,13 +24,13 @@ double particle::mass()
 }
 
 // Method that returns the position
-int particle::position()
+arma::vec particle::position()
 {
   return position_;
 }
 
 // Method that returns the velocity
-int particle::velocity()
+arma::vec particle::velocity()
 {
   return velocity_;
 }
@@ -39,6 +38,9 @@ int particle::velocity()
 // Method that returns a string with info in the form "charge mass position velocity"
 std::string particle::info()
 {
-  std::string info_string = std::to_string(charge_) + " " + std::to_string(mass_) + " " + std::to_string(position_) + " " + std::to_string(velocity_);
+  std::ostringstream r,v;
+  r << position_;
+  v << velocity_;
+  std::string info_string = std::to_string(charge_) + " " + std::to_string(mass_) + " " + r.str() + " " + v.str();
   return info_string;
 }
