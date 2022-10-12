@@ -20,7 +20,7 @@ class PenningTrap
 
 
     //Method that adds a particle to the Penning trap
-    void add_p(Particle p_in);
+    void add_particle(Particle p_in);
 
     // Method that returns the ecternal electric field
     arma::vec ext_el_field();
