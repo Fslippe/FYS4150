@@ -1,4 +1,4 @@
-// particle class
+// Particle class
 
 #ifndef __particle_hpp__  
 #define __particle_hpp__
@@ -6,17 +6,17 @@
 #include <string>
 #include <armadillo>
 
-class particle
+class Particle
 {
   public:
     // Member variables
-    int charge_;
-    double mass_;
-    arma::vec position_;
-    arma::vec velocity_;
+    int q;
+    double m;
+    arma::vec r;
+    arma::vec v;
 
     // Constructor
-    particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in);
+    Particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in);
 
     // Method that returns the charge
     int charge();

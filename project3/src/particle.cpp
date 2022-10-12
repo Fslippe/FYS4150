@@ -1,46 +1,46 @@
-// Definitions for the functions in the particle class
+// Definitions for the functions in the Particle class
 
 #include "particle.hpp"
 
 // Constructor
-particle::particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in)
+Particle::Particle(int charge_in, double mass_in, arma::vec position_in, arma::vec velocity_in)
 {
-  charge_ = charge_in;
-  mass_ = mass_in;
-  position_ = position_in;
-  velocity_ = velocity_in;
+  q = charge_in;
+  m = mass_in;
+  r = position_in;
+  v = velocity_in;
 }
 
 // Method that returns the charge
-int particle::charge()
+int Particle::charge()
 {
-  return charge_;
+  return q;
 }
 
 // Method that returns the mass
-double particle::mass()
+double Particle::mass()
 {
-  return mass_;
+  return m;
 }
 
 // Method that returns the position
-arma::vec particle::position()
+arma::vec Particle::position()
 {
-  return position_;
+  return r;
 }
 
 // Method that returns the velocity
-arma::vec particle::velocity()
+arma::vec Particle::velocity()
 {
-  return velocity_;
+  return v;
 }
 
 // Method that returns a string with info in the form "charge mass position velocity"
-std::string particle::info()
+std::string Particle::info()
 {
-  std::ostringstream r,v;
-  r << position_;
-  v << velocity_;
-  std::string info_string = std::to_string(charge_) + " " + std::to_string(mass_) + " " + r.str() + " " + v.str();
+  std::ostringstream r_print,v_print;
+  r_print << r;
+  v_print << v;
+  std::string info_string = std::to_string(q) + " " + std::to_string(m) + " " + r_print.str() + " " + v_print.str();
   return info_string;
 }
