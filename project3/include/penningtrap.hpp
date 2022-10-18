@@ -5,6 +5,7 @@
 
 #include <string>
 #include <armadillo>
+#include "particle.hpp"
 
 class PenningTrap
 {
