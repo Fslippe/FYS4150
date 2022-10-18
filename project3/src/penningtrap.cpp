@@ -41,7 +41,7 @@ arma::vec PenningTrap::ext_el_field(double x, double y, double z, double V_0, do
 // Method that returns the external magnetic field
 arma::vec PenningTrap::ext_mag_field()
 {
-  return aram::vec(0, 0, B_0)
+  return arma::vec(0, 0, B_0)
 }
 
 // Method that returns the force due to the interaction among particles
