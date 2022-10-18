@@ -89,50 +89,58 @@
 
 % ===========================================
 \section{Introduction}
-\textit{The main purpose of the introduction section is to provide context and motivation for the work, like we have done above. It is also common --- and quite useful --- to use the last paragraph of the introduction to outline the rest of the report, to tell the reader what they should expect in the different sections. We will do this next.}
+The purpose of this report is to study the effects of a Penning trap. This is a device used to store or "trap" charged particles 
+using static electric and magnetic fields as shown in figure \ref*{fig:Penning_trap}. These particles can then be used for a variety of experiments. Examples of this are the ALPHA, AEgIS and BASE 
+experiments at CERN, these use Penning traps to control antimatter.
 
+Materials to construct a physical Penning trap are very costly, we will therefore 
+be using a numerical approach to simulate a Penning trap. To implement such a simulation 
+we will be working with a system of coupled non-linear differential equations. These are very 
+difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous 
+Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the 
+material cost, the complexity of the equations also leads us to the use of numerical methods.
+
+Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be 
+implemented in C++, but can be written in any programming language.
+
+In section \ref*{sec:results} we present... 
+
+A detailed discussion of the algorithms' and results in presented in section \ref*{sec:discussion}, 
+followed by a summary and potential for further experiments in section \ref*{sec:conclusion}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/Penning_trap.pdf}
+    \caption{}
+    \label{fig:Penning_trap}
+\end{figure}
 
 % ===========================================
 \section{Methods}\label{sec:methods}
-%
-\textit{The main purpose of the ``Methods'' (or ``Theory'', or ``Algorithms'') section is to provide the reader with the necessary background knowledge to understand the work you will present.\footnote{Note that to get correct quotation marks in LaTeX, you cannot simply use the quotation mark symbol on your keyboard. Check the \texttt{.tex} file for this document to see the correct approach.} It should in general be sufficiently detailed for the reader to understand and reproduce what you have done. However, sometimes it can be a good idea to relegate the discussion of some technical topic to an appendix, to avoid too long discussions of what might be a a fairly minor or technical detail. You are of course free to divide this section into subsections, which we will do below.}
+The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account. 
+The following equations allow us to express the time evolution of the particles motion:
 
-Let $f$ be a continuous and differentiable function, $f: [a,b] \to \mathbb{R}$. Say we want to integrate this function over the entire interval $[a,b]$. To this end, we employ the midpoint rule for integration, which is defined by the equation~\cite{midpoint_rule}
-%
 \begin{equation}
-    I = \int_a^b f(x)\dd x \approx h\sum_{i=1}^{n} f(x_i).
-\end{equation}
-Here $n$ denotes a number of subintervals of the range $[a,b]$, each of length $h = (b-a)/n$, and $x_i$ is the midpoint of subinterval $i$, given by
+    \textbf{E} = - \nabla V
+\end{equation}\label{eq:el_field}
+$\textbf{E}$ is the electric field and $V$ the electric potential.
+
 \begin{equation}
-   x_i = a + \left(i-\frac{1}{2}\right) h,
-\end{equation}
-for $i = 1, 2, \ldots, n$. This equation can be written out explicitly (although in this case it is a bit silly):
-%
+    \textbf{E(r)} = k_e \sum_{j=1}^{n} q_j \frac{\textbf{r} - \textbf{r}_j}{|\textbf{r} - \textbf{r}_j|^3}
+\end{equation}\label{eq:el_at_r}
+$\textbf{E(r)}$ is the electric field at a point \textbf{r}. This is set up by point charges ${q_1,...,q_n}$ at points ${\textbf{r}_1,...,\textbf{r}_n}$.
+
 \begin{equation}
-    \begin{split}
-        \int_a^b f(x)\dd x & \approx h \sum_{i=1}^{n} f(x_i) \\
-                                    \\
-                                    & = h\left(f(x_1) + \cdots + f(x_{n})\right).
-    \end{split}
+    \textbf{F} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
 \end{equation}
-%
-\textit{Note the following: We have provided a definition for every single variable that appears in the equations. Always do this --- it greatly improves the transparency and readability of your work! Once a variable is defined, you can reuse it throughout the rest of the report without stating its definition. (This of course assumes that you use consistent notation, so that a symbol does not suddenly change meaning in the middle of your report.)}
+This is the $\textbf{Lonretz force}$, the force $\textbf{F}$ on a particle 
+with charge $q$, an electric field \textbf{E} and magnetic field \textbf{B}.
 
-\textit{Also, note that we cited a source for our claim. There is no need to provide references for trivial or very well-known results, like Newton's second law, but you should cite material that is vital for your report.}
-
-\textit{Finally, please note the following two details on how to write equations: First, remember that equations are regarded as part of a sentence, meaning that you should follow the standard rules for punctuation. This typically means that your equations should be followed by a comma or a period. Second, make sure that you do not unintentionally include blank lines before or after the equation in your \texttt{.tex} file. LaTeX interprets blank lines as the beginning of a new paragraph, and will therefore indent the text after the equation. If you prefer having a bit of ``air'' in your LaTeX document, use empty comment line.}
-
-To test our integration algorithm we will use it to integrate the polynomial $f(x) = x^3$ over the interval $[a,b] = [0,1]$. This is a suitable test case, since the integral has a known analytical solution,
 \begin{equation}
-    \int_0^1 x^3 \dd x = \frac{1}{4}.
+    m \ddot{\textbf{r}} = \sum_i \textbf{F}_i
 \end{equation}
-In assessing the performance of our approach we will consider the relative error $\epsilon$, defined as
-\begin{equation}
-    \epsilon = \abs{ \frac{I - I_{\text{approx}}}{I} },
-\end{equation}
-where $I$ denotes the exact integral and $I_\text{approx}$ denotes the approximation obtained with our implementation of the midpoint rule algorithm.
-
-
+This is Newton's second law. Here $m$ is the mass of the particle and $\ddot{\textbf{r}} \equiv \frac{d^2 \textbf{r}}{dt^2}$. 
+Expressing that the sum of forces equals mass times acceleration.
 % ===========================================
 \subsection*{The algorithm}
 %
