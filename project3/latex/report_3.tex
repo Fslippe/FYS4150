@@ -89,23 +89,23 @@
 
 % ===========================================
 \section{Introduction}
-The purpose of this report is to study the effects of a Penning trap. This is a device used to store or "trap" charged particles 
-using static electric and magnetic fields as shown in figure \ref*{fig:Penning_trap}. These particles can then be used for a variety of experiments. Examples of this are the ALPHA, AEgIS and BASE 
+The purpose of this report is to study the effects of a Penning trap. This is a device used to store or "trap" charged particles
+using static electric and magnetic fields as shown in figure \ref*{fig:Penning_trap}. These particles can then be used for a variety of experiments. Examples of this are the ALPHA, AEgIS and BASE
 experiments at CERN, these use Penning traps to control antimatter.
 
-Materials to construct a physical Penning trap are very costly, we will therefore 
-be using a numerical approach to simulate a Penning trap. To implement such a simulation 
-we will be working with a system of coupled non-linear differential equations. These are very 
-difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous 
-Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the 
+Materials to construct a physical Penning trap are very costly, we will therefore
+be using a numerical approach to simulate a Penning trap. To implement such a simulation
+we will be working with a system of coupled non-linear differential equations. These are very
+difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous
+Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the
 material cost, the complexity of the equations also leads us to the use of numerical methods.
 
-Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be 
+Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be
 implemented in C++, but can be written in any programming language.
 
-In section \ref*{sec:results} we present... 
+In section \ref*{sec:results} we present...
 
-A detailed discussion of the algorithms' and results in presented in section \ref*{sec:discussion}, 
+A detailed discussion of the algorithms' and results in presented in section \ref*{sec:discussion},
 followed by a summary and potential for further experiments in section \ref*{sec:conclusion}.
 
 \begin{figure}[H]
@@ -117,7 +117,7 @@ followed by a summary and potential for further experiments in section \ref*{sec
 
 % ===========================================
 \section{Methods}\label{sec:methods}
-The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account. 
+The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account.
 The following equations allow us to express the time evolution of the particles motion:
 
 \begin{equation}
@@ -133,13 +133,13 @@ $\textbf{E(r)}$ is the electric field at a point \textbf{r}. This is set up by p
 \begin{equation}
     \textbf{F} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
 \end{equation}
-This is the $\textbf{Lonretz force}$, the force $\textbf{F}$ on a particle 
+This is the $\textbf{Lonretz force}$, the force $\textbf{F}$ on a particle
 with charge $q$, an electric field \textbf{E} and magnetic field \textbf{B}.
 
 \begin{equation}
     m \ddot{\textbf{r}} = \sum_i \textbf{F}_i
 \end{equation}
-This is Newton's second law. Here $m$ is the mass of the particle and $\ddot{\textbf{r}} \equiv \frac{d^2 \textbf{r}}{dt^2}$. 
+This is Newton's second law. Here $m$ is the mass of the particle and $\ddot{\textbf{r}} \equiv \frac{d^2 \textbf{r}}{dt^2}$.
 Expressing that the sum of forces equals mass times acceleration.
 % ===========================================
 \subsection*{The algorithm}
@@ -147,10 +147,10 @@ Expressing that the sum of forces equals mass times acceleration.
 The algorithm for the midpoint rule is summarized in algorithm~\ref{algo:midpointrule}. The basic idea behind the algorithm is to divide the integration range into to $n$ small subintervals of length $h$, and on each such subinterval approximate the function $f(x)$ by a constant function. The value for this constant function is taken to be the value of $f(x)$ evaluated at the midpoint of the given subinterval --- hence the name of the method.
 %
 \begin{figure}
-% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+    % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
     \begin{algorithm}[H]
-    \caption{Midpoint rule for integration}
-    \label{algo:midpointrule}
+        \caption{Midpoint rule for integration}
+        \label{algo:midpointrule}
         \begin{algorithmic}
             \Procedure{Midpoint rule}{$f, a, b, n$}
             \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
@@ -180,10 +180,10 @@ To test the midpoint rule algorithm, we perform the integration of $f(x)$ using 
         \hline
         Number of subintervals & Integral value \\
         \hline
-        $10^1$  &  0.3086 \\
-        $10^2$  &  0.2550 \\
-        $10^3$  &  0.2505 \\
-        $10^4$  &  0.2500 \\
+        $10^1$                 & 0.3086         \\
+        $10^2$                 & 0.2550         \\
+        $10^3$                 & 0.2505         \\
+        $10^4$                 & 0.2500         \\
         % $10$  &  0.3086 \\
         % $100$  &  0.2550 \\
         % $1 000$  &  0.2505 \\
