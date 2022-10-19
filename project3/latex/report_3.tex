@@ -136,7 +136,7 @@ $\textbf{E}$ is the electric field and $V$ the electric potential.
 \begin{equation}\label{eq:el_at_r}
     \textbf{E(r)} = k_e \sum_{j=1}^{n} q_j \frac{\textbf{r} - \textbf{r}_j}{|\textbf{r} - \textbf{r}_j|^3}
 \end{equation}
-$\textbf{E(r)}$ is the electric field at a point \textbf{r}. This is set up by point charges ${q_1,...,q_n}$ at points ${\textbf{r}_1,...,\textbf{r}_n}$.
+$\textbf{E(r)}$ is the electric field at a point \textbf{r}. This is set up by point charges ${q_1,...,q_n}$ at points ${\textbf{r}_1,...,\textbf{r}_n}$. This comes from \textbf{Coulomb's law}, stating the magnitude of force between to point charges. $k_e \approx 8.988 \cdot 10^9 N m^2 C^{-2}$ is the Coulomb constant.  
 
 \begin{equation}\label{eq:lorentz}
     \textbf{F} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
@@ -164,11 +164,11 @@ to the surrounding ring (b).
 $\textbf{B}$ is the homogenous magnetic field and is dictated by the field strength $B_0$. With $B_0 > 0$. 
 
 Now starting from Newton's second law and using the equations above we can express the time evolution of the particles motion.
-The sum of forces will be the Lonretz force, putting Eq. \ref*{eq:lorentz} into Eq. \ref*{eq:N2L} leads to:
+The sum of forces will be the Lonretz force, putting eq. \ref*{eq:lorentz} into eq. \ref*{eq:N2L} leads to:
 \begin{equation}\label{eq:N2L_lorentz}
     m \ddot{\textbf{r}} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
 \end{equation}
-Here $\ddot{\textbf{r}} = (\ddot{x},\ddot{y},\ddot{z})$ and $\textbf{v} = (\dot{x},\dot{y},\dot{z})$. Putting Eq. \ref*{eq:el_potential} into Eq. \ref*{eq:el_field} gives us:
+Here $\ddot{\textbf{r}} = (\ddot{x},\ddot{y},\ddot{z})$ and $\textbf{v} = (\dot{x},\dot{y},\dot{z})$. Putting eq. \ref*{eq:el_potential} into eq. \ref*{eq:el_field} gives us:
 \begin{equation}\label{eq:el_calculated}
     \textbf{E} = \left( x \frac{v_0}{d^2}, y \frac{v_0}{d^2}, -2z \frac{v_0}{d^2} \right)
 \end{equation}
@@ -176,7 +176,7 @@ Now looking at $q \textbf{v} \cross \textbf{B}$ we have:
 \begin{equation}\label{eq:cross_calculated}
     (q \dot{x},q \dot{y},q \dot{z}) \cross (0, 0, B_0) = (B_0 q \dot{y}, -B_0 q \dot{x}, 0)
 \end{equation}
-Finally using results from Eq. \ref*{eq:el_calculated} and \ref*{eq:cross_calculated} in Eq. \ref*{eq:N2L_lorentz} results in:
+Finally using results from eq. \ref*{eq:el_calculated} and \ref*{eq:cross_calculated} in eq. \ref*{eq:N2L_lorentz} results in:
 \begin{equation*}
     m \begin{pmatrix}
         \ddot{x} \\ \\ \ddot{y} \\ \\ \ddot{z}
@@ -194,36 +194,87 @@ Rewriting this as a set of equations leaves us with:
     \ddot{y} + w_0 \dot{x} - \frac{1}{2}& w_z^2 y = 0 \label{eq:a_y}\\
     \ddot{z} + w_z^2& z = 0 \label{eq:a_z}
 \end{align}
-Where $w_0 = \frac{qB_0}{m}$ and $w_z^2 = \frac{2qV_0}{md^2}$. Taking a closer look at Eq. \ref*{eq:a_z} we see that the general solution is:
+Where $w_0 = \frac{qB_0}{m}$ and $w_z^2 = \frac{2qV_0}{md^2}$. Taking a closer look at eq. \ref*{eq:a_z} we see that the general solution is:
 \begin{equation}
     z = A \cos(w_z^2 t) + B \sin(w_z^2 t)
 \end{equation}
-Eq. \ref*{eq:a_x} and \ref*{eq:a_y} are coupled, thus introducing a challenge. This can be resolved by introducing a complex function $f(t) = x(t) + iy(t)$ and rewriting them as a single differential equation.
+eq. \ref*{eq:a_x} and \ref*{eq:a_y} are coupled, thus introducing a challenge. This can be resolved by introducing a complex function $f(t) = x(t) + iy(t)$ and rewriting them as a single differential equation. By introducing the complex function we have:
+\begin{align}
+    f(t) = x(t) + iy(t) \\
+    \dot{f}(t) = \dot{x}(t) + i\dot{y}(t) \\
+    \ddot{f}(t) = \ddot{x}(t) + i\ddot{y}(t)
+\end{align}
+Now multiplying eq. \ref*{eq:a_y} by $i$ gives:
+\begin{equation}
+    i\ddot{y} + iw_0 \dot{x} - i\frac{1}{2} w_z^2 y = 0 \label{eq:a_iy}
+\end{equation}
+eq. \ref*{eq:a_x} and \ref*{eq:a_iy} can then be summed:
+\begin{equation}
+    \ddot{x}+ i\ddot{y} - w_0 \dot{y} + iw_0 \dot{x} - \frac{1}{2} w_z^2 x - i\frac{1}{2} w_z^2 y= 0
+\end{equation}
+Finally, substituting for $f(t)$, $\dot{f}(t)$ and $\ddot{f}(t)$ shows that eq. \ref*{eq:a_x} and \ref*{eq:a_y} can be rewritten as a single differential equation for $f$:
+\begin{equation}
+    \ddot{f} + i w_0 \dot{f} - \frac{1}{2} w_z^2 f = 0 \label{eq:single_diff}
+\end{equation}
+
+The general solution to eq. \ref*{eq:single_diff} is:
+\begin{equation}
+    f(t) = A_+ e^{-i(w_+ t + \phi_+)} + A_- e^{-i(w_- t + \phi_-)} \label{eq:general_sol_f}
+\end{equation}
+where the amplitudes $A_+$ and $A_-$ are positive, $\phi_+$ and $\phi_-$ are constant phases, and
+\begin{equation}
+    w_\pm = \frac{w_0 \pm \sqrt{w_0^2 - 2 w_z^2}}{2}
+\end{equation}
+To obtain a bounded solution for the radial movement ($xy$-plane) of the particle we need to introduce some constraints on $w_0$ and $w_z$. In other words we will introduce some constraints that will ensure that $|f(t)| < \infty$ as $t \rightarrow \infty$.
+
+Studying eq. \ref*{eq:general_sol_f} one notices that $|f(t)| \rightarrow \infty$ only if $w_\pm$ is complex. To avoid this, we introduce the limitation $w_0^2 - 2 w_z^2 \geq 0$. Rearranging this and remembering that $w_0 = \frac{qB_0}{m}$ and $w_z^2 = \frac{2qV_0}{md^2}$ leaves us with:
+\begin{equation}
+    \frac{q}{m} \geq \frac{4 V_0}{B_0^2 d^2}
+\end{equation}
+A constraint, that if satisfied, keeps the particle within the Penning trap.
 
 % ===========================================
-\subsection*{The algorithm}
+\subsection*{The algorithms}
 %
 % The algorithm for the midpoint rule is summarized in algorithm~\ref{algo:midpointrule}. The basic idea behind the algorithm is to divide the integration range into to $n$ small subintervals of length $h$, and on each such subinterval approximate the function $f(x)$ by a constant function. The value for this constant function is taken to be the value of $f(x)$ evaluated at the midpoint of the given subinterval --- hence the name of the method.
 % %
-% \begin{figure}
-% % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
-%     \begin{algorithm}[H]
-%     \caption{Midpoint rule for integration}
-%     \label{algo:midpointrule}
-%         \begin{algorithmic}
-%             \Procedure{Midpoint rule}{$f, a, b, n$}
-%             \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
-%             \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
-%             \For{$i = 1, 2, \ldots, n$}
-%             \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
-%             \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
-%             \EndFor
-%             \State $I \leftarrow Ih$  \Comment{Finalize the computation}
-%             \EndProcedure
-%         \end{algorithmic}
-%     \end{algorithm}
-% \end{figure}
+\begin{figure}[H]
+% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+    \begin{algorithm}[H]
+    \caption{Forward Euler method}
+    \label{algo:midpointrule}
+        \begin{algorithmic}
+            \Procedure{Midpoint rule}{$f, a, b, n$}
+            \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
+            \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
+            \For{$i = 1, 2, \ldots, n$}
+            \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
+            \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+            \EndFor
+            \State $I \leftarrow Ih$  \Comment{Finalize the computation}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+\end{figure}
 
+\begin{figure}[H]
+    % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+        \begin{algorithm}[H]
+        \caption{Runge-Kutta fourth order method}
+        \label{algo:midpointrule}
+            \begin{algorithmic}
+                \Procedure{Midpoint rule}{$f, a, b, n$}
+                \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
+                \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
+                \For{$i = 1, 2, \ldots, n$}
+                \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
+                \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+                \EndFor
+                \State $I \leftarrow Ih$  \Comment{Finalize the computation}
+                \EndProcedure
+            \end{algorithmic}
+        \end{algorithm}
+    \end{figure}
 % \textit{As demonstrated in algorithm~\ref{algo:midpointrule}, it is conventional to present algorithms in a way that is independent of any specific programming language. This ensures that it is the logic behind the algorithm that remains in focus, rather than the syntax of a particular programming language. In algorithm~\ref{algo:midpointrule} we have also demonstrated a common notation: The right-to-left arrow ($\leftarrow$) means that we assign the value of everything on the right to the variable on the left. This is nothing but how the ``='' symbol functions in most programming languages, but the arrow notation makes it clear that we are in fact assigning a value, rather than stating that two things are equal.}
 
 
