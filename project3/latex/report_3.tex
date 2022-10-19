@@ -103,7 +103,7 @@ be using a numerical approach to simulate a Penning trap. To implement such a si
 we will be working with a system of coupled non-linear differential equations. These are very
 difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous
 Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the
-material cost, the complexity of the equations therefore also leads us to the use of numerical methods.
+material cost, the complexity of the equations therefore also motivates the use of numerical methods.
 
 Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be
 implemented in C++, but can be written in any programming language.
@@ -147,7 +147,7 @@ with charge $q$, an electric field \textbf{E}, magnetic field \textbf{B} and vel
 \begin{equation}\label{eq:N2L}
     m \ddot{\textbf{r}} = \sum_i \textbf{F}_i
 \end{equation}
-This is Newton's second law. Here $m$ is the mass of the particle and $\ddot{\textbf{r}} \equiv \frac{d^2 \textbf{r}}{dt^2}$. 
+Eq. \ref*{eq:N2L} is Newton's second law. Here $m$ is the mass of the particle and $\ddot{\textbf{r}} \equiv \frac{d^2 \textbf{r}}{dt^2}$ (the acceleration). 
 Famously expressing that the sum of forces equals mass times acceleration.
 
 \begin{equation}\label{eq:el_potential}
@@ -176,7 +176,7 @@ Now looking at $q \textbf{v} \cross \textbf{B}$ we have:
 \begin{equation}\label{eq:cross_calculated}
     (q \dot{x},q \dot{y},q \dot{z}) \cross (0, 0, B_0) = (B_0 q \dot{y}, -B_0 q \dot{x}, 0)
 \end{equation}
-Finally using results from eq. \ref*{eq:el_calculated} and \ref*{eq:cross_calculated} in eq. \ref*{eq:N2L_lorentz} results in:
+Finally substituting for $\textbf{E}$ and $q \textbf{v} \cross \textbf{B}$ in eq. \ref*{eq:N2L_lorentz} results in:
 \begin{equation*}
     m \begin{pmatrix}
         \ddot{x} \\ \\ \ddot{y} \\ \\ \ddot{z}
@@ -227,11 +227,13 @@ where the amplitudes $A_+$ and $A_-$ are positive, $\phi_+$ and $\phi_-$ are con
 \end{equation}
 To obtain a bounded solution for the radial movement ($xy$-plane) of the particle we need to introduce some constraints on $w_0$ and $w_z$. In other words we will introduce some constraints that will ensure that $|f(t)| < \infty$ as $t \rightarrow \infty$.
 
-Studying eq. \ref*{eq:general_sol_f} one notices that $|f(t)| \rightarrow \infty$ only if $w_\pm$ is complex. To avoid this, we introduce the limitation $w_0^2 - 2 w_z^2 \geq 0$. Rearranging this and remembering that $w_0 = \frac{qB_0}{m}$ and $w_z^2 = \frac{2qV_0}{md^2}$ leaves us with:
+Studying eq. \ref*{eq:general_sol_f} one notices that $|f(t)| \rightarrow \infty$ only if $w_\pm$ is complex. To avoid this, we introduce the limitation $w_0^2 - 2 w_z^2 \geq 0$, avoiding any negative values inside the square root and consequently limiting the result to real numbers. Rearranging this and remembering that $w_0 = \frac{qB_0}{m}$ and $w_z^2 = \frac{2qV_0}{md^2}$ leaves us with:
 \begin{equation}
     \frac{q}{m} \geq \frac{4 V_0}{B_0^2 d^2}
 \end{equation}
 A constraint, that if satisfied, keeps the particle within the Penning trap.
+
+
 
 % ===========================================
 \subsection*{The algorithms}
