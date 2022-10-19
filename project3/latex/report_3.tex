@@ -98,17 +98,17 @@ This electric field restricts the particles' movement in the $z$ direction and t
 hiders particles escaping in the $xy$-plane (radial direction) if it is strong enough. The magnetic field is set by 
 a cylinder magnet (c) (figure \ref*{fig:Penning_trap} again only shows the ring cross-section). 
 
-Materials to construct a physical Penning trap are very costly, we will therefore 
-be using a numerical approach to simulate a Penning trap. To implement such a simulation 
-we will be working with a system of coupled non-linear differential equations. These are very 
-difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous 
-Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the 
+Materials to construct a physical Penning trap are very costly, we will therefore
+be using a numerical approach to simulate a Penning trap. To implement such a simulation
+we will be working with a system of coupled non-linear differential equations. These are very
+difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous
+Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the
 material cost, the complexity of the equations also leads us to the use of numerical methods.
 
-Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be 
+Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be
 implemented in C++, but can be written in any programming language.
 
-In section \ref*{sec:results} we present... 
+In section \ref*{sec:results} we present...
 
 A detailed discussion of the algorithms' and results is presented in section \ref*{sec:discussion}, 
 followed by a summary and potential for further experiments in section \ref*{sec:conclusion}.
@@ -124,7 +124,7 @@ followed by a summary and potential for further experiments in section \ref*{sec
 
 % ===========================================
 \section{Methods}\label{sec:methods}
-The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account. 
+The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account.
 The following equations allow us to express the time evolution of the particles motion:
 
 \begin{equation}
