@@ -38,9 +38,9 @@ arma::vec Particle::velocity()
 // Method that returns a string with info in the form "charge mass position velocity"
 std::string Particle::info()
 {
-  std::ostringstream r_print,v_print;
+  std::ostringstream r_print, v_print;
   r_print << r;
   v_print << v;
-  std::string info_string = std::to_string(q) + " " + std::to_string(m) + " " + r_print.str() + " " + v_print.str();
+  std::string info_string = "Charge: " + std::to_string(q) + "\n\nMass: " + std::to_string(m) + "\n\nPosition:\n" + r_print.str() + "\nVelocity:\n" + v_print.str();
   return info_string;
 }
