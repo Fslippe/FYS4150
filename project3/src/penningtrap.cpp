@@ -3,15 +3,14 @@
 #include "penningtrap.hpp"
 #include "particle.hpp"
 
-const double k_e = 1.38064903*std::pow(10, -23);
+const double k_e = 1.38935333*std::pow(10, 5); 
 
 // Constructor
-PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, std::vector<Particle> particle_objects_in)
+PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 {
   double B_0 = B0_in;
   double V_0 = V0_in;
   double d = d_in;
-  std::vector<Particle> p = particle_objects_in;
 }
 
 // Add a particle to the trap
@@ -25,16 +24,17 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
 {
   //Analytic gradient:
   double E_x = -r[0]*V_0/(d*d);
+  std::cout << r[0] <<  "   "<< B_0 << "   "<< V_0 << "   "<< d << "   "<< "\n";
   double E_y = -r[1]*V_0/(d*d);
   double E_z = 2*r[2]*V_0/(d*d);
-  arma::vec E_ext = arma::vec((-E_x, -E_y, -E_z));
+  arma::vec E_ext = arma::vec({-E_x, -E_y, -E_z});
   return E_ext;
 }
 
 // External magnetic field at point r=(x,y,z)
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
-  return arma::vec(0, 0, B_0);
+  return arma::vec({0, 0, B_0});
 }
 
 // Force on particle_i from particle_j
@@ -54,8 +54,7 @@ arma::vec PenningTrap::total_force_external(int i)
 {
   arma::vec B = external_B_field(p[i].position());
   arma::vec E = external_E_field(p[i].position());
-  arma::vec F_ext =  p[i].charge() * E
-  + p[i].charge()*arma::cross( p[i].velocity(), B);
+  arma::vec F_ext = p[i].charge() * E + p[i].charge()*arma::cross( p[i].velocity(), B);
 
   return F_ext;
 }
@@ -64,11 +63,13 @@ arma::vec PenningTrap::total_force_external(int i)
 arma::vec PenningTrap::total_force_particles(int i)
 {
   int n = p.size();
-  arma::vec F_p = arma::vec(3);
-
+  arma::vec F_p = arma::zeros(3);
   for (int j = 0; j < n; j++)
   {
-    F_p = F_p + force_particle(i, j);
+    if (i != j)
+    {
+      F_p += force_particle(i, j);
+    }
   }
 
   return F_p;
@@ -78,6 +79,9 @@ arma::vec PenningTrap::total_force_particles(int i)
 arma::vec PenningTrap::total_force(int i)
 {
   arma::vec F_tot = total_force_particles(i) + total_force_external(i);
+  total_force_particles(i).print();
+  total_force_external(i).print();
+
   return F_tot;
 }
 
@@ -130,9 +134,20 @@ void PenningTrap::evolve_RK4(double dt)
 void PenningTrap::evolve_forward_Euler(double dt)
 {
   int n = p.size();
+  arma::vec tmp_vel;
+
   for (int i = 0; i < n; i++)
   {
-    p[i].velocity() += p[i].velocity()[i]*dt;
-    p[i].position() += p[i].velocity()[i]*dt;
+
+    tmp_vel = p[i].velocity();
+    std::cout << i << "\n";
+
+    arma::vec v = p[i].velocity() + total_force(i) / p[i].mass()*dt;
+
+    p[i].position() += tmp_vel*dt;
+    arma::vec r = p[i].position() + tmp_vel*dt;
+    p[i] = Particle(p[i].charge(), p[i].mass(), r, v);
+    (p[i].position()).print();
+
   }
 }

@@ -19,7 +19,7 @@ class PenningTrap
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
     // Constructor
-    PenningTrap(double B0_in, double V0_in, double d_in, std::vector<Particle> particle_objects);
+    PenningTrap(double B0_in, double V0_in, double d_in);
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
