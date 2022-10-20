@@ -100,30 +100,30 @@ void PenningTrap::evolve_RK4(double dt)
     tmp_vel = p[i].velocity();
 
     //K_1
-    arma::vec kr_1 = p[i].velocity();
+    arma::vec kr_1 = p[i].v;
     arma::vec kv_1 = total_force(i) / p[i].mass();
 
     //K_2
-    p[i].position() += dt2*kr_1;
-    p[i].velocity() += dt2*kv_1;
-    arma::vec kr_2 = p[i].velocity();
+    p[i].r += dt2*kr_1;
+    p[i].v += dt2*kv_1;
+    arma::vec kr_2 = p[i].v;
     arma::vec kv_2 = total_force(i) / p[i].mass();
 
     //K_3
-    p[i].position() += dt2*kr_2;
-    p[i].velocity() += dt2*kv_2;
-    arma::vec kr_3 = p[i].velocity();
+    p[i].r += dt2*kr_2;
+    p[i].v += dt2*kv_2;
+    arma::vec kr_3 = p[i].v;
     arma::vec kv_3 = total_force(i) / p[i].mass();
 
     //K_4
-    p[i].position() += dt*kr_3;
-    p[i].velocity() += dt*kv_3;
-    arma::vec kr_4 = p[i].velocity();
+    p[i].r += dt*kr_3;
+    p[i].v += dt*kv_3;
+    arma::vec kr_4 = p[i].v;
     arma::vec kv_4 = total_force(i) / p[i].mass();
 
     //evolve
-    p[i].position() = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
-    p[i].velocity() = tmp_vel + dt6 * (kv_1 + 2*kv_2 + 2*kv_3 + kv_4);
+    p[i].r = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
+    p[i].v = tmp_vel + dt6 * (kv_1 + 2*kv_2 + 2*kv_3 + kv_4);
   }
 }
 
@@ -138,7 +138,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
   for (int i = 0; i < n; i++)
   {
     tmp_vel = p[i].velocity();
-    p[i].v = p[i].velocity() + total_force(i) / p[i].mass()*dt;
-    p[i].r = p[i].position() + tmp_vel*dt;
+    p[i].v += total_force(i) / p[i].mass()*dt;
+    p[i].r += tmp_vel*dt;
   }
 }
