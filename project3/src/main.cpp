@@ -13,13 +13,21 @@ int main()
   double q_ca = 1; //elementary charge
   arma::vec r0 = arma::vec({20, 0., 20});
   arma::vec v0 = arma::vec({0.,25,0.});
-  Particle p = Particle(q_ca, m_ca, r0, v0);
-  std::cout << d << "\n\n\n";
+  Particle p_in = Particle(q_ca, m_ca, r0, v0);
+  arma::vec r0_2 = arma::vec({10, 0., 10});
+  arma::vec v0_2 = arma::vec({0.,25,5.});
+  Particle p_in_2 = Particle(q_ca, m_ca, r0_2, v0_2);
   PenningTrap pt = PenningTrap(B0, V0, d);
-  pt.add_particle(p);
-  std::cout << p.info();
+  pt.add_particle(p_in);
+  pt.add_particle(p_in_2);
+
+  std::cout << pt.p[0].info();
+  std::cout << pt.p[1].info();
 
   pt.evolve_forward_Euler(5.);
+  std::cout << pt.p[0].info();
+  std::cout << pt.p[1].info();
+
 
 
 
