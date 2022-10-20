@@ -233,8 +233,40 @@ Studying eq. \ref*{eq:general_sol_f} one notices that $|f(t)| \rightarrow \infty
 \end{equation}
 A constraint, that if satisfied, keeps the particle within the Penning trap.
 
-
-
+Now to express the upper and lower bounds of the particles' distance from the origin in the $xy$-plane 
+we start with eq. \ref*{eq:general_sol_f}. Through Taylor expansion of $e^{ix}$ we arrive at Euler's formula:
+\begin{equation*}
+    e^{ix} = \cos(x) + i \sin(x)
+\end{equation*} 
+Introducing $u =  w_+ t + \phi_+$ and $v = w_- t + \phi_-$, and using 
+Euler's formula, eq. \ref*{eq:general_sol_f} can be rewritten as:
+\begin{equation*}
+    f(t) = A_+\left(\cos(u) - i \sin(u) \right) + A_-\left(\cos(v) - i \sin(v) \right)
+\end{equation*}
+The physical coordinates can then be found as $x(t) = \Re f(t)$ and  $y(t) = \Im f(t)$. Giving us:
+\begin{align*}
+    x(t) &= A_+ \cos(u) + A_- \cos(v) \\
+    y(t) &= -A_+ \sin(u) - A_- \sin(v)
+\end{align*}
+Since our $xy$-plane is a circle, the distance from the origin can be expressed as the radius $R = \sqrt{x^2 + y^2}$. 
+Substituting for $x$ and $y$ we have:
+\begin{align*}
+    R = \sqrt{(A_+ \cos(u) + A_- \cos(v))^2} \\ \overline{+ (-A_+ \sin(u) - A_- \sin(v))^2}
+\end{align*}
+After expanding and rearranging we have:
+\begin{align*}
+   R = \sqrt{A_+^2(\cos^2(u) + \sin^2(u)) + A_-^2(\cos^2(v) + \sin^2(v))} \\ \overline{ + 2 A_+ A_- (cos(u)\cos(v) + \sin(u)\sin(v))}
+\end{align*}
+Recognizing that $cos^2(u) + \sin^2(u) = 1$ and $cos(u)\cos(v) + \sin(u)\sin(v) = \cos(u-v)$ this can be simplified to:
+\begin{align*}
+    R = \sqrt{A_+^2 + A_-^2 + 2 A_+ A_- \cos(u-v)}
+\end{align*}
+We know that $\cos$ is a function with an upper bound of $1$ and lower bound of $-1$. 
+The possible bounds for $R$ are consequently:
+\begin{align*}
+    R_+ &= \sqrt{A_+^2 +2A_+ A_- + A_-^2} = A_+ + A_- \\
+    R_- &= \sqrt{A_+^2 -2A_+ A_- + A_-^2} = |A_+ - A_-|
+\end{align*}
 % ===========================================
 \subsection*{The algorithms}
 %
