@@ -102,10 +102,10 @@ arma::vec PenningTrap::force_particle(int i, int j)
 {
   arma::vec r_diff = p[i].position() - p[j].position();
 
-  arma::vec E = k_e * p[j].charge() * r_diff /
-  std::pow(std::sqrt(r_diff[0]*r_diff[0] + r_diff[0]*r_diff[0] + r_diff[0]*r_diff[0]), 3);
-  arma::vec F_int = p[i].charge() * E;
-
+  arma::vec E_i = k_e * p[j].charge() * r_diff /
+  std::pow(std::sqrt(r_diff[0]*r_diff[0] + r_diff[1]*r_diff[1] + r_diff[2]*r_diff[2]), 3);
+  arma::vec F_int = p[i].charge() * E_i;
+  
   return F_int;
 }
 
@@ -115,7 +115,6 @@ arma::vec PenningTrap::total_force_external(int i)
   arma::vec B = external_B_field(p[i].position());
   arma::vec E = external_E_field(p[i].position());
   arma::vec F_ext = p[i].charge() * E + p[i].charge()*arma::cross( p[i].velocity(), B);
-  //std::cout << "EXTERNAL" << i  << E << "\n";
   return F_ext;
 }
 
@@ -131,7 +130,6 @@ arma::vec PenningTrap::total_force_particles(int i)
       F_p += force_particle(i, j);
     }
   }
-  //std::cout << "PARTICLES" << F_p/p[i].mass() << "\n";
   return F_p;
 }
 
