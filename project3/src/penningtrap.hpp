@@ -16,10 +16,11 @@ class PenningTrap
     double V_0; // applied potetial
     double d; // characteristic dimension
     bool interaction;
+
     double V_0_d2; // V_0 / (d*d)
     double f; // amplitude_in
     double omega_v; // frequency_in
-    //double B_0 = B_0_in;
+    
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
     // Constructor
