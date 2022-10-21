@@ -251,11 +251,11 @@ The physical coordinates can then be found as $x(t) = \Re f(t)$ and  $y(t) = \Im
 Since our $xy$-plane is a circle, the particle's distance from the origin can be expressed as the radius $R = \sqrt{x^2 + y^2}$. 
 Substituting for $x$ and $y$ we have:
 \begin{align*}
-    R = \sqrt{(A_+ \cos(u) + A_- \cos(v))^2} \\ \overline{+ (-A_+ \sin(u) - A_- \sin(v))^2}
+    R = &[ (A_+ \cos(u) + A_- \cos(v))^2 \\ &+ (-A_+ \sin(u) - A_- \sin(v))^2 ]^{1/2}
 \end{align*}
 After expanding and rearranging we have:
 \begin{align*}
-   R = \sqrt{A_+^2(\cos^2(u) + \sin^2(u)) + A_-^2(\cos^2(v) + \sin^2(v))} \\ \overline{ + 2 A_+ A_- (cos(u)\cos(v) + \sin(u)\sin(v))}
+   R = &[A_+^2(\cos^2(u) + \sin^2(u)) + A_-^2(\cos^2(v) + \sin^2(v)) \\ &+ 2 A_+ A_- (cos(u)\cos(v) + \sin(u)\sin(v))]^{1/2}
 \end{align*}
 Recognizing that $cos^2(u) + \sin^2(u) = 1$ and $cos(u)\cos(v) + \sin(u)\sin(v) = \cos(u-v)$ this can be simplified to:
 \begin{align*}
@@ -269,6 +269,8 @@ The possible bounds for $R$ are consequently:
 \end{align*}
 % ===========================================
 \subsection*{The algorithms}
+To evolve our Penning trap system in time the following algorithms will be implemented to solve our particles' equations of motion. 
+
 %
 % The algorithm for the midpoint rule is summarized in algorithm~\ref{algo:midpointrule}. The basic idea behind the algorithm is to divide the integration range into to $n$ small subintervals of length $h$, and on each such subinterval approximate the function $f(x)$ by a constant function. The value for this constant function is taken to be the value of $f(x)$ evaluated at the midpoint of the given subinterval --- hence the name of the method.
 % %
@@ -276,39 +278,66 @@ The possible bounds for $R$ are consequently:
 % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
     \begin{algorithm}[H]
     \caption{Forward Euler method}
-    \label{algo:midpointrule}
+    \label{algo:EUL}
         \begin{algorithmic}
-            \Procedure{Midpoint rule}{$f, a, b, n$}
-            \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
-            \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
-            \For{$i = 1, 2, \ldots, n$}
-            \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
-            \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+            \Procedure{Forward Euler}{$y_0, h$}
+            \State $y' = f(t_i,y_i)$        \Comment{Single fist-order diff. eq.}
+            \State $n = 1 / h$ \Comment{Compute number of steps}
+            \\
+            \For{$i = 0, 1, 2, \ldots, n$}
+            \State $y_{i+1} = x_i + h f_i$  \Comment{Value for next time step} 
             \EndFor
-            \State $I \leftarrow Ih$  \Comment{Finalize the computation}
             \EndProcedure
         \end{algorithmic}
     \end{algorithm}
 \end{figure}
-
+The forward Euler method has Global error of $\mathcal{O}(h)$, 
+making it at first order method.
 \begin{figure}[H]
     % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
         \begin{algorithm}[H]
         \caption{Runge-Kutta fourth order method}
-        \label{algo:midpointrule}
+        \label{algo:RK4}
             \begin{algorithmic}
-                \Procedure{Midpoint rule}{$f, a, b, n$}
-                \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
-                \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
-                \For{$i = 1, 2, \ldots, n$}
-                \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
-                \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+                \Procedure{Runge-Kutta fourth order}{$y_0, h$}
+                \State $y' = f(t_i,y_i)$        \Comment{Single fist-order diff. eq.}
+                \State $n = 1 / h$ \Comment{Compute number of steps}
+                \\
+                \For{$i = 0, 1, 2, \ldots, n$}
+                \State $k_1 = hf(t_i,y_i)$  \Comment{Intermediate step 1}
+                \State $k_2 = hf(t_i + h/2, y_i +k_1/2)$  \Comment{Intermediate step 2}
+                \State $k_3 = hf(t_i + h/2, y_i + k_2/2)$ \Comment{Intermediate step 3}
+                \State $k_4 = hf(t_i + h, y_i + k_3)$ \Comment{Intermediate step 4}
+                \State $y_{i+1} = y_i + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$ \Comment{Final algorithm}
                 \EndFor
-                \State $I \leftarrow Ih$  \Comment{Finalize the computation}
                 \EndProcedure
             \end{algorithmic}
         \end{algorithm}
     \end{figure}
+    Similarly to the forward Euler scheme, Runge-Kutta fourth order (RK4) is based on Taylor expansion, but by adding several intermediate 
+    steps to the computation of $y_{i+1}$ it generally yields better solutions for ODEs. RK4 has a global error of $\mathcal{O}(h^4)$.
+
+    The RK4 scheme will be our main method as this is a "gold standard" in numerical analysis. 
+    Early tests with one single particle will be confirmed by an analytical solution, but for comparison of more complex 
+    scenarios the simple forward Euler scheme will also be implemented.
+
+    The Penning trap with time evolving algorithms will be implemented in an object-oriented C++ code, the plots are generated using Python.
+    
+    \subsection*{Particles}
+    Our charged particles will be singly-charged Calcium ions $(Ca^+)$ with a mass of $40.077 u$.
+    \begin{itemize}
+        \item Particle 1:
+            \subitem $(x_0,y_0,z_0) = (20, 0, 20) \mu m$
+            \subitem $(v_{x,0}, v_{y,0}, v_{z,0}) = (0, 25, 0) \mu m / \mu s$  
+        \item Particle 2:
+            \subitem $(x_0,y_0,z_0) = (25, 25, 0) \mu m$
+            \subitem $(v_{x,0}, v_{y,0}, v_{z,0}) = (0, 40, 5) \mu m / \mu s$  
+    \end{itemize}
+    Simulations with one particle will use Particle 1 whilst simulations with two particles will use both Particle 1 and Particle 2.
+    For further simulations with 100 particles, Armadillo's \texttt{vec::randu()} function will be used to generate random initial 
+    positions and velocities for each particle.
+
+    \subsection*{Numbers and units}
 % \textit{As demonstrated in algorithm~\ref{algo:midpointrule}, it is conventional to present algorithms in a way that is independent of any specific programming language. This ensures that it is the logic behind the algorithm that remains in focus, rather than the syntax of a particular programming language. In algorithm~\ref{algo:midpointrule} we have also demonstrated a common notation: The right-to-left arrow ($\leftarrow$) means that we assign the value of everything on the right to the variable on the left. This is nothing but how the ``='' symbol functions in most programming languages, but the arrow notation makes it clear that we are in fact assigning a value, rather than stating that two things are equal.}
 
 
