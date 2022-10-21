@@ -29,6 +29,7 @@ std::vec PenningTrap::analytic(std::vec t)
   else
   {
     std::cout << 'Too many particles! \n The analytic solution is only designed for a singel particle.' << "\n";
+    break;
   }
   
     return std::vec(x, y, z)
