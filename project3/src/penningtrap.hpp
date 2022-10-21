@@ -15,11 +15,12 @@ class PenningTrap
     double B_0; // magnetic field strength
     double V_0; // applied potetial
     double d; // characteristic dimension
+    bool interaction;
     //double B_0 = B_0_in;
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
     // Constructor
-    PenningTrap(double B0_in, double V0_in, double d_in);
+    PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in);
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
@@ -47,6 +48,10 @@ class PenningTrap
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
+
+
+    arma::mat analytic(arma::vec t);
+
 };
 
 #endif

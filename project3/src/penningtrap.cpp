@@ -6,11 +6,12 @@
 const double k_e = 1.38935333*std::pow(10, 5); 
 
 // Constructor
-PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
+PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in)
 {
   B_0 = B0_in;
   V_0 = V0_in;
   d = d_in;
+  interaction = interaction_in;
 }
 
 // Add a particle to the trap
@@ -23,9 +24,9 @@ void PenningTrap::add_particle(Particle p_in)
 arma::vec PenningTrap::external_E_field(arma::vec r)
 {
   //Analytic gradient:
-  double E_x = -r[0]*V_0/(d*d);
-  double E_y = -r[1]*V_0/(d*d);
-  double E_z = 2*r[2]*V_0/(d*d);
+  double E_x = -r[0]*9.65;
+  double E_y = -r[1]*9.65;
+  double E_z = 2*r[2]*9.65;
   arma::vec E_ext = arma::vec({-E_x, -E_y, -E_z});
   return E_ext;
 }
@@ -54,7 +55,7 @@ arma::vec PenningTrap::total_force_external(int i)
   arma::vec B = external_B_field(p[i].position());
   arma::vec E = external_E_field(p[i].position());
   arma::vec F_ext = p[i].charge() * E + p[i].charge()*arma::cross( p[i].velocity(), B);
-
+  //std::cout << "EXTERNAL" << i  << E << "\n";
   return F_ext;
 }
 
@@ -70,15 +71,24 @@ arma::vec PenningTrap::total_force_particles(int i)
       F_p += force_particle(i, j);
     }
   }
-
+  //std::cout << "PARTICLES" << F_p/p[i].mass() << "\n";
   return F_p;
 }
 
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i)
 {
-  arma::vec F_tot = total_force_particles(i) + total_force_external(i);
+  arma::vec F_tot;
 
+  if (interaction)
+  {
+    F_tot = total_force_particles(i) + total_force_external(i);
+  }
+  else
+  {
+    F_tot = total_force_external(i);
+  }
+  
   return F_tot;
 }
 
@@ -91,7 +101,14 @@ void PenningTrap::evolve_RK4(double dt)
   double dt6 = dt/6; //perform 2n less FLOPs by cutting divide in evolve
   arma::vec tmp_pos;
   arma::vec tmp_vel;
-
+  arma::vec kr_1;
+  arma::vec kv_1;
+  arma::vec kr_2;
+  arma::vec kv_2;
+  arma::vec kr_3;
+  arma::vec kv_3;
+  arma::vec kr_4;
+  arma::vec kv_4;
 
   for (int i = 0; i < n; i++)
   {
@@ -100,26 +117,26 @@ void PenningTrap::evolve_RK4(double dt)
     tmp_vel = p[i].velocity();
 
     //K_1
-    arma::vec kr_1 = p[i].v;
-    arma::vec kv_1 = total_force(i) / p[i].mass();
+    kr_1 = p[i].v;
+    kv_1 = total_force(i) / p[i].mass();
 
     //K_2
     p[i].r += dt2*kr_1;
     p[i].v += dt2*kv_1;
-    arma::vec kr_2 = p[i].v;
-    arma::vec kv_2 = total_force(i) / p[i].mass();
+    kr_2 = p[i].v;
+    kv_2 = total_force(i) / p[i].mass();
 
     //K_3
     p[i].r += dt2*kr_2;
     p[i].v += dt2*kv_2;
-    arma::vec kr_3 = p[i].v;
-    arma::vec kv_3 = total_force(i) / p[i].mass();
+    kr_3 = p[i].v;
+    kv_3 = total_force(i) / p[i].mass();
 
     //K_4
     p[i].r += dt*kr_3;
     p[i].v += dt*kv_3;
-    arma::vec kr_4 = p[i].v;
-    arma::vec kv_4 = total_force(i) / p[i].mass();
+    kr_4 = p[i].v;
+    kv_4 = total_force(i) / p[i].mass();
 
     //evolve
     p[i].r = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
@@ -141,4 +158,42 @@ void PenningTrap::evolve_forward_Euler(double dt)
     p[i].v += total_force(i) / p[i].mass()*dt;
     p[i].r += tmp_vel*dt;
   }
+}
+
+arma::mat PenningTrap::analytic(arma::vec t)
+{
+  arma::vec x;
+  arma::vec y;
+  arma::vec z;
+  int n = t.size();
+  arma::mat r = arma::mat(n, 3);
+
+  if (p.size() == 1)
+  {
+    double omega_0 = p[0].charge() * B_0 / p[0].mass();
+    double omega_z = std::sqrt( (2 * p[0].charge() * V_0) / (p[0].mass() * d*d) );
+    double omega_plus = 0.5 * (omega_0 + std::sqrt(omega_0 * omega_0 - 2* omega_z * omega_z));
+    double omega_minus =  0.5 * (omega_0 - std::sqrt(omega_0 * omega_0 - 2* omega_z * omega_z));
+  
+    double x_0 = p[0].position()[0];
+    double y_0 = p[0].position()[1];
+    double z_0 = p[0].position()[2];
+
+    // The x and z component of v are 0. only using y component.
+    double v_0 = p[0].velocity()[1];
+   
+
+    double A_plus = (v_0 + omega_minus * x_0) / (omega_minus - omega_plus);
+    double A_minus = -(v_0 + omega_plus * x_0) / (omega_minus - omega_plus);
+
+    x = A_plus * arma::cos(omega_plus *t) + A_minus * arma::cos(omega_minus *t);
+    y = - A_plus * arma::sin(omega_plus *t) - A_minus * arma::sin(omega_minus *t);
+    z = z_0 * arma::cos(omega_z * t);
+  }
+  else
+  {
+    std::cout << "Too many particles! \n" << "The analytic solution is only designed for a single particle." << "\n";
+  } 
+  r.col(0) = x; r.col(1) = y; r.col(2) = z;
+  return r;
 }
