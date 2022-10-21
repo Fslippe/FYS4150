@@ -16,7 +16,11 @@ class PenningTrap
     double V_0; // applied potetial
     double d; // characteristic dimension
     bool interaction;
-    //double B_0 = B_0_in;
+
+    double V_0_d2; // V_0 / (d*d)
+    double f; // amplitude_in
+    double omega_v; // frequency_in
+    
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
     // Constructor
@@ -25,8 +29,17 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
+    // Add n random particles to the trap
+    void add_n_random_particles(int n);
+
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);
+
+    //Method to set amplitude f and angular frequency omega_v
+    void set_amplitude_and_frquency(double amplitude_in, double frequency_in);
+
+    // External electric field at point r=(x,y,z) with time dependence
+    arma::vec PenningTrap::external_E_field(arma::vec r, double t);
 
     // External magnetic field at point r=(x,y,z)
     arma::vec external_B_field(arma::vec r);
@@ -49,8 +62,11 @@ class PenningTrap
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
 
-
+    // Takes in t vector with time steps, returns analytic solution of single particle motion over time as vectros x, y, z. 
     arma::mat analytic(arma::vec t);
+
+    //Returns number of particles still inside trap
+    int PenningTrap::particles_left_in_trap();
 
 };
 

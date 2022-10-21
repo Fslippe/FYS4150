@@ -12,6 +12,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interacti
   V_0 = V0_in;
   d = d_in;
   interaction = interaction_in;
+  V_0_d2 = V_0/(d*d);
 }
 
 // Add a particle to the trap
@@ -20,21 +21,80 @@ void PenningTrap::add_particle(Particle p_in)
   p.push_back(p_in);
 }
 
+// Add n random particles to the trap
+void PenningTrap::add_n_random_particles(int n)
+{
+  double q = 1;
+  double m = 40.077; // Calcium ion atomic mass
+  arma::arma_rng::set_seed(1);
+  for (int i = 0; i < n; i++)
+  {
+    arma::vec r = arma::vec(3).randn() * 0.1 * d;  // random initial position
+    arma::vec v = arma::vec(3).randn() * 0.1 * d;  // random initial velocity
+    Particle random_particle(q, m, r, v);
+    add_particle(random_particle);
+  }
+  
+}
+
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r)
 {
-  //Analytic gradient:
-  double E_x = -r[0]*9.65;
-  double E_y = -r[1]*9.65;
-  double E_z = 2*r[2]*9.65;
-  arma::vec E_ext = arma::vec({-E_x, -E_y, -E_z});
+  arma::vec E_ext;
+  if (arma::norm(r) > d)
+  {
+    E_ext = arma::vec({0, 0, 0}); // sets external electric field to 0 in regions outside the trap
+  }
+  else
+  {
+     //Analytic gradient:
+    double E_x = -r[0]*V_0_d2;
+    double E_y = -r[1]*V_0_d2;
+    double E_z = 2*r[2]*V_0_d2;
+    E_ext = arma::vec({-E_x, -E_y, -E_z});
+  }
+  return E_ext;
+}
+//Method to set amplitude f and angular frequency omega_v
+void PenningTrap::set_amplitude_and_frquency(double amplitude_in, double frequency_in)
+{
+  f = amplitude_in;
+  omega_v = frequency_in;
+}
+
+// External electric field at point r=(x,y,z) with time dependence
+arma::vec PenningTrap::external_E_field(arma::vec r, double t)
+{
+  arma::vec E_ext;
+  if (arma::norm(r) > d)
+  {
+    E_ext = arma::vec({0, 0, 0}); // sets external electric field to 0 in regions outside the trap
+  }
+  else
+  {
+    double V_0_time_dep = V_0 * (1 + f * std::cos(omega_v * t));
+     //Analytic gradient:
+    double E_x = -r[0]*V_0_time_dep /(d*d);
+    double E_y = -r[1]*V_0_time_dep / (d*d);
+    double E_z = 2*r[2]*V_0_d2;
+    E_ext = arma::vec({-E_x, -E_y, -E_z});
+  }
   return E_ext;
 }
 
 // External magnetic field at point r=(x,y,z)
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
-  return arma::vec({0, 0, B_0});
+  arma::vec B_ext;
+  if (arma::norm(r) > d)
+  {
+    B_ext =  arma::vec({0, 0, 0}); // sets external magnetic field to 0 in regions outside the trap
+  }
+  else
+  {
+    B_ext = arma::vec({0, 0, B_0});
+  }
+  return B_ext;
 }
 
 // Force on particle_i from particle_j
@@ -194,4 +254,18 @@ arma::mat PenningTrap::analytic(arma::vec t)
   } 
   r.col(0) = x; r.col(1) = y; r.col(2) = z;
   return r;
+}
+
+//Returns number of particles still inside trap
+int PenningTrap::particles_left_in_trap()
+{
+  int t = 0;
+  for (int i = 0; i < p.size(); i++)
+  {
+   if (arma::norm(p[i].position()) < d)
+   {
+    t += 1;
+   }
+  }
+  return t;
 }
