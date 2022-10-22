@@ -114,7 +114,7 @@ arma::vec PenningTrap::force_particle(int i, int j)
 arma::vec PenningTrap::total_force_external(int i)  
 {
   arma::vec E;
-  if (time_dependency = true)
+  if (time_dependency == true)
   {
     E = external_E_field(p[i].position(), time);
   }
@@ -284,4 +284,32 @@ int PenningTrap::particles_left_in_trap()
    }
   }
   return counter;
+}
+
+//Creates a matrix with fraction of particles left in trap for different amplitudes and frequencies and writes it to a .dat file.
+void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step)
+{
+ int points = (omega_max - omega_min) /omega_step;
+  arma::mat frac_p_left = arma::mat(3,points); 
+  int j = 0;
+  for (double f : {0.1, 0.4, 0.7})
+  {
+    int k = 0;
+    std::cout << "\n\nF:" << f; // 114
+    for (double omega_v : arma::linspace(omega_min, omega_max, points))
+    {
+      set_amplitude_and_frquency(f, omega_v);
+      for (int i = 0; i < N; i++)
+      {
+        evolve_RK4(dt);
+      }
+      frac_p_left(j,k) = particles_left_in_trap()/p.size(); // fraction of particles left in trap
+      k += 1;
+    
+    }
+    j += 1;
+  }
+  //frac_p_left.save("data/frac_p_left.dat");
+  frac_p_left.print();
+
 }
