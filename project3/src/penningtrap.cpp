@@ -290,26 +290,26 @@ int PenningTrap::particles_left_in_trap()
 void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step)
 {
  int points = (omega_max - omega_min) /omega_step;
-  arma::mat frac_p_left = arma::mat(3,points); 
-  int j = 0;
+  arma::mat frac_p_left = arma::mat(points, 4); 
+  arma::vec omega_vec = arma::linspace(omega_min, omega_max, points);
+  frac_p_left.col(0) = omega_vec;
+  int j = 1;
   for (double f : {0.1, 0.4, 0.7})
   {
     int k = 0;
-    std::cout << "\n\nF:" << f; // 114
-    for (double omega_v : arma::linspace(omega_min, omega_max, points))
+    for (double omega_v : omega_vec)
     {
       set_amplitude_and_frquency(f, omega_v);
       for (int i = 0; i < N; i++)
       {
         evolve_RK4(dt);
       }
-      frac_p_left(j,k) = particles_left_in_trap()/p.size(); // fraction of particles left in trap
+      frac_p_left(k, j) = particles_left_in_trap()/p.size(); // fraction of particles left in trap
       k += 1;
     
     }
     j += 1;
   }
-  //frac_p_left.save("data/frac_p_left.dat");
-  frac_p_left.print();
+  frac_p_left.save("data/frac_p_left.dat");
 
 }
