@@ -1,4 +1,4 @@
-//g++ main.cpp penningtrap.cpp particle.cpp -o main -larmadillo
+//g++ time_dep.cpp penningtrap.cpp particle.cpp -o main -larmadillo
 
 //Args: Number of timepoints, Time, Number of particles, interaction, omega_min, omega_max, omega_step 
 

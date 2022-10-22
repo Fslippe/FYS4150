@@ -114,7 +114,7 @@ arma::vec PenningTrap::force_particle(int i, int j)
 arma::vec PenningTrap::total_force_external(int i)  
 {
   arma::vec E;
-  if (time_dependency = true)
+  if (time_dependency == true)
   {
     E = external_E_field(p[i].position(), time);
   }
@@ -297,7 +297,7 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
       {
         evolve_RK4(dt);
       }
-      frac_p_left[j,k] = particles_left_in_trap()/p.size(); // fraction of particles left in trap
+      frac_p_left(j,k) = particles_left_in_trap()/p.size(); // fraction of particles left in trap
       k += 1;
     }
     j += 1;
