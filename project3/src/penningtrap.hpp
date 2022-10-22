@@ -16,15 +16,17 @@ class PenningTrap
     double V_0; // applied potetial
     double d; // characteristic dimension
     bool interaction;
-
+    bool time_dependency; 
     double V_0_d2; // V_0 / (d*d)
+    double time = 0;
     double f; // amplitude_in
     double omega_v; // frequency_in
+    
     
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
     // Constructor
-    PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in);
+    PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in, bool time_dependency_in);
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
@@ -39,7 +41,7 @@ class PenningTrap
     void set_amplitude_and_frquency(double amplitude_in, double frequency_in);
 
     // External electric field at point r=(x,y,z) with time dependence
-    arma::vec PenningTrap::external_E_field(arma::vec r, double t);
+    arma::vec external_E_field(arma::vec r, double t);
 
     // External magnetic field at point r=(x,y,z)
     arma::vec external_B_field(arma::vec r);
@@ -66,7 +68,7 @@ class PenningTrap
     arma::mat analytic(arma::vec t);
 
     //Returns number of particles still inside trap
-    int PenningTrap::particles_left_in_trap();
+    int particles_left_in_trap();
 
 };
 

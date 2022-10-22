@@ -6,12 +6,13 @@
 const double k_e = 1.38935333*std::pow(10, 5); 
 
 // Constructor
-PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in)
+PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in, bool time_dependency_in)
 {
   B_0 = B0_in;
   V_0 = V0_in;
   d = d_in;
   interaction = interaction_in;
+  time_dependency = time_dependency_in;
   V_0_d2 = V_0/(d*d);
 }
 
@@ -110,10 +111,19 @@ arma::vec PenningTrap::force_particle(int i, int j)
 }
 
 // The total force on particle_i from the external fields
-arma::vec PenningTrap::total_force_external(int i)
+arma::vec PenningTrap::total_force_external(int i)  
 {
+  arma::vec E;
+  if (time_dependency = true)
+  {
+    E = external_E_field(p[i].position(), time);
+  }
+  else
+  {
+    E = external_E_field(p[i].position());
+  }
+  
   arma::vec B = external_B_field(p[i].position());
-  arma::vec E = external_E_field(p[i].position());
   arma::vec F_ext = p[i].charge() * E + p[i].charge()*arma::cross( p[i].velocity(), B);
   return F_ext;
 }
@@ -200,6 +210,7 @@ void PenningTrap::evolve_RK4(double dt)
     p[i].r = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
     p[i].v = tmp_vel + dt6 * (kv_1 + 2*kv_2 + 2*kv_3 + kv_4);
   }
+  time += dt;
 }
 
 // Evolve the system one time step (dt) using Forward Euler
@@ -216,6 +227,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
     p[i].v += total_force(i) / p[i].mass()*dt;
     p[i].r += tmp_vel*dt;
   }
+  time += dt;
 }
 
 arma::mat PenningTrap::analytic(arma::vec t)
@@ -259,13 +271,13 @@ arma::mat PenningTrap::analytic(arma::vec t)
 //Returns number of particles still inside trap
 int PenningTrap::particles_left_in_trap()
 {
-  int t = 0;
+  int counter = 0;
   for (int i = 0; i < p.size(); i++)
   {
    if (arma::norm(p[i].position()) < d)
    {
-    t += 1;
+    counter += 1;
    }
   }
-  return t;
+  return counter;
 }
