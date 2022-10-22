@@ -1,4 +1,7 @@
+//on linux
 //g++ time_dep.cpp penningtrap.cpp particle.cpp -o main -larmadillo
+//or on mac OS
+//g++ -std=c++11 time_dep.cpp penningtrap.cpp particle.cpp -o time_dep -larmadillo -O2 
 
 //Args: Number of timepoints, Time, Number of particles, interaction, omega_min, omega_max, omega_step 
 
@@ -17,11 +20,11 @@ int main(int argc, char** argv)
   }
 
   int N = atoi(argv[1]); //number of timepoints 
-  double T = atoi(argv[2]); //Time
+  double T = atof(argv[2]); //Time
   int n = atoi(argv[3]); //number of particles
-  double omega_min_in = atoi(argv[5]); // min frequency
-  double omega_max_in = atoi(argv[6]); // max frequency
-  double omega_step_in = atoi(argv[7]); // steps size for omega_v
+  double omega_min_in = atof(argv[5]); // min frequency
+  double omega_max_in = atof(argv[6]); // max frequency
+  double omega_step_in = atof(argv[7]); // steps size for omega_v
   bool time_dependency = true; 
   bool interaction;
   std::string method = std::string(argv[5]);
