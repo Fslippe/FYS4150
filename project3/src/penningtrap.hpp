@@ -70,6 +70,9 @@ class PenningTrap
     //Returns number of particles still inside trap
     int particles_left_in_trap();
 
+    //Creates a matrix with fraction of particles left in trap for different frequencies and writes it to a .dat file.
+    void parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step);
+
 };
 
 #endif
