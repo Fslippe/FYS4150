@@ -72,6 +72,7 @@ int main(int argc, char** argv)
   
   if (std::string(method) == "Analytic")
   {
+    std::cout << n << pt.p[0].r[0] << "\n";
     arma::vec t = arma::linspace(0, T, N);
     arma::mat r_a = arma::mat(pt.analytic(t));
     r_a.save("data/r_a.dat");

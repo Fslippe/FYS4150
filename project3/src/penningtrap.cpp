@@ -248,6 +248,8 @@ arma::mat PenningTrap::analytic(arma::vec t)
     double x_0 = p[0].position()[0];
     double y_0 = p[0].position()[1];
     double z_0 = p[0].position()[2];
+    std::cout << z_0 <<"\n";
+
 
     // The x and z component of v are 0. only using y component.
     double v_0 = p[0].velocity()[1];
@@ -265,6 +267,8 @@ arma::mat PenningTrap::analytic(arma::vec t)
     std::cout << "Too many particles! \n" << "The analytic solution is only designed for a single particle." << "\n";
   } 
   r.col(0) = x; r.col(1) = y; r.col(2) = z;
+  std::cout << z[0] <<"\n";
+  
   return r;
 }
 
