@@ -27,8 +27,8 @@ int main(int argc, char** argv)
   double omega_step_in = atof(argv[7]); // steps size for omega_v
   bool time_dependency = true; 
   bool interaction;
-  std::string method = std::string(argv[5]);
 
+  std::cout << omega_min_in << omega_max_in << omega_step_in << "\n"; 
 
   if (std::string(argv[4]) == "true")
   {
@@ -56,29 +56,12 @@ int main(int argc, char** argv)
 
   PenningTrap pt = PenningTrap(B0, V0, d, interaction, time_dependency); // Initialize PenningTrap
 
-  if (n == 1 || n == 2)
-  {
-    arma::vec r0 = arma::vec({20, 0., 20});
-    arma::vec v0 = arma::vec({0.,25,0.});
-    Particle p_in = Particle(q_ca, m_ca, r0, v0);
-    pt.add_particle(p_in);
-  }
-  
-  if (n == 2)
-  {
-    arma::vec r0_2 = arma::vec({25, 25., 0});
-    arma::vec v0_2 = arma::vec({0.,40, 5});
-    Particle p_in_2 = Particle(q_ca, m_ca, r0_2, v0_2);
-    pt.add_particle(p_in_2);
-  }
 
-  if (n > 2)  
-  {
-    pt.add_n_random_particles(n);
-  }
+  pt.add_n_random_particles(n);
 
-// Checks what fratcion of particles are left in trap for amplitudes(0.1, 0.4, 0.7) different frquencies.
-pt.parcticles_left_for_omega_v(dt, N, omega_min_in, omega_max_in, omega_step_in);
+  // Checks what fratcion of particles are left in trap for amplitudes(0.1, 0.4, 0.7) different frquencies.
+  pt.parcticles_left_for_omega_v(dt, N, omega_min_in, omega_max_in, omega_step_in);
+
 
 
   return 0;

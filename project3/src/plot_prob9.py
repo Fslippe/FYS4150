@@ -22,7 +22,8 @@ def run(N, T, n, interaction, omega_min, omega_max, omega_step, compile=False):
     return r
 
 def plot_p_fraction_frequency():
-    r = run(10000, 500, 10, "false", 0.2, 2.5, 0.2, False)
+
+    r = run(10000, 500, 100, "false", 0.2, 2.5, 0.02, True)
     plt.plot(r[:,0], r[:,1], label = "$f = 0.1$")
     plt.plot(r[:,0], r[:,2], label = "$f = 0.4$")
     plt.plot(r[:,0], r[:,3], label = "$f = 0.7$")

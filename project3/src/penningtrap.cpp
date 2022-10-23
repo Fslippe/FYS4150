@@ -32,7 +32,7 @@ void PenningTrap::add_n_random_particles(int n)
   {
     arma::vec r = arma::vec(3).randn() * 0.1 * d;  // random initial position
     arma::vec v = arma::vec(3).randn() * 0.1 * d;  // random initial velocity
-    Particle random_particle(q, m, r, v);
+    Particle random_particle = Particle(q, m, r, v);
     add_particle(random_particle);
   }
   
@@ -77,7 +77,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r, double t)
      //Analytic gradient:
     double E_x = -r[0]*V_0_time_dep /(d*d);
     double E_y = -r[1]*V_0_time_dep / (d*d);
-    double E_z = 2*r[2]*V_0_d2;
+    double E_z = 2*r[2]*V_0_time_dep/(d*d);
     E_ext = arma::vec({-E_x, -E_y, -E_z});
   }
   return E_ext;
@@ -289,27 +289,32 @@ int PenningTrap::particles_left_in_trap()
 //Creates a matrix with fraction of particles left in trap for different amplitudes and frequencies and writes it to a .dat file.
 void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step)
 {
- int points = (omega_max - omega_min) /omega_step;
+  int points = (omega_max - omega_min) /omega_step + 2;
   arma::mat frac_p_left = arma::mat(points, 4); 
-  arma::vec omega_vec = arma::linspace(omega_min, omega_max, points);
-  frac_p_left.col(0) = omega_vec;
   int j = 1;
-  for (double f : {0.1, 0.4, 0.7})
+  double f = 0.1;
+  std::vector<Particle> initial_p = p;
+
+  for (int i = 0; i < points; i++)
   {
-    int k = 0;
-    for (double omega_v : omega_vec)
+    frac_p_left(i,0) = omega_min + i*omega_step;
+  }
+  for (int i = 1; i < 4; i++)
+  {
+    for (int j = 0; j < points; j++)
     {
-      set_amplitude_and_frquency(f, omega_v);
-      for (int i = 0; i < N; i++)
+      time = 0;
+      p = initial_p;
+      set_amplitude_and_frquency(f, frac_p_left(j, 0));
+      for (int k = 0; k < N; k++)
       {
         evolve_RK4(dt);
       }
-      frac_p_left(k, j) = particles_left_in_trap()/p.size(); // fraction of particles left in trap
-      k += 1;
-    
+      frac_p_left(j,i) = (float)particles_left_in_trap() / (float)p.size();
     }
-    j += 1;
+    f += 0.3;
   }
+
   frac_p_left.save("data/frac_p_left.dat");
 
 }

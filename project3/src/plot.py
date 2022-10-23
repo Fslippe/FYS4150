@@ -191,7 +191,7 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
         plt.savefig("../figures/%s_t_axis_%i_N%i.pdf" %(save, y_axis, N), dpi=300, bbox_inches="tight")
     plt.show()
 
-def compare_error(N, T, method_in, save=False, norm=True):,
+def compare_error(N, T, method_in, save=False, norm=True):
     """
     Function to compare relative error for different number of timepoints
     Plotting either error for each dimension or using total length of r vector
