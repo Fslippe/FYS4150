@@ -82,7 +82,8 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    % We provide an overview of how to structure a scientific report. For concreteness, we consider the example of writing a report about an implementation of the midpoint rule of integration. For each section of the report we briefly discuss what the purpose of the given section is. We also provide examples of how to properly include equations, tables, algorithms, figures and references.
+    NB! ABSTRACT HERE
+    %We provide an overview of how to structure a scientific report. For concreteness, we consider the example of writing a report about an implementation of the midpoint rule of integration. For each section of the report we briefly discuss what the purpose of the given section is. We also provide examples of how to properly include equations, tables, algorithms, figures and references.
 \end{abstract}
 \maketitle
 
@@ -101,14 +102,18 @@ a cylinder magnet (c) (figure \ref*{fig:Penning_trap} again only shows the ring 
 Materials to construct a physical Penning trap are very costly, we will therefore
 be using a numerical approach to simulate a Penning trap. To implement such a simulation
 we will be working with a system of coupled non-linear differential equations. These are very
-difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous
-Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. In addition to the
+difficult and often impossible to solve analytically. %An example some readers might be familiar with are the famous
+%Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. 
+In addition to the
 material cost, the complexity of the equations therefore also motivates the use of numerical methods.
+
+MAIN PURPOSE? 
 
 Section \ref*{sec:methods} will describe the mathematical and physical background as well as concrete algorithms which in this case will be
 implemented in C++, but can be written in any programming language.
 
-In section \ref*{sec:results} we present...
+In section \ref*{sec:results} we present a selection of results form different simulations and error analysis. This will include 
+simulations with a single particle, 2 particles and 100 random particles. 
 
 A detailed discussion of the algorithms' and results is presented in section \ref*{sec:discussion}, 
 followed by a summary and potential for further experiments in section \ref*{sec:conclusion}.
@@ -154,8 +159,9 @@ Famously expressing that the sum of forces equals mass times acceleration.
     V(x,y,z) = \frac{V_0}{2d^2} (2z^2 - x^2 - y^2)
 \end{equation}
 For this experiment we will be considering an ideal Penning trap for which the electric field $\textbf{E}$ is given by the electric potential $V$. 
-Here $V_0$ is the potential applied to the electrodes. $d = \sqrt{z_0^2 + r_0^2 / 2}$ is the $\textit{charachteristic dimension}$ representing the length scale 
-for the region between electrodes. Here $z_0$ is distance from the center to the end caps (a) and $r_0$ is the distance from the center 
+Here $V_0$ is the potential applied to the electrodes. The trap will be approximated as a sphere where $d = \sqrt{z_0^2 + r_0^2 / 2}$ is the 
+$\textit{charachteristic dimension}$ representing the length scale (or radius of the sphere)
+for the region between electrodes. Here $z_0$ is the distance from the center to the end caps (a) and $r_0$ is the distance from the center 
 to the surrounding ring (b).
 
 \begin{equation}\label{eq:mag_field}
@@ -163,8 +169,9 @@ to the surrounding ring (b).
 \end{equation}
 $\textbf{B}$ is the homogenous magnetic field and is dictated by the field strength $B_0$. With $B_0 > 0$. 
 
-Now starting from Newton's second law and using the equations above we can express the time evolution of the particles motion.
-The sum of forces will be the Lonretz force, putting eq. \ref*{eq:lorentz} into eq. \ref*{eq:N2L} leads to:
+\subsection*{Equations for single particle motion}
+Now starting from Newton's second law and using the equations above we can express the time evolution of a single particle's motion.
+The sum of forces will be the Lonretz force. Putting eq. \ref*{eq:lorentz} into eq. \ref*{eq:N2L} leads to:
 \begin{equation}\label{eq:N2L_lorentz}
     m \ddot{\textbf{r}} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
 \end{equation}
@@ -267,10 +274,28 @@ The possible bounds for $R$ are consequently:
     R_+ &= \sqrt{A_+^2 +2A_+ A_- + A_-^2} = A_+ + A_- \\
     R_- &= \sqrt{A_+^2 -2A_+ A_- + A_-^2} = |A_+ - A_-|
 \end{align*}
+
+\subsection*{Equations for multiple particle motion}
+For all simulations with more than one particle (when particle interaction is taken into account) 
+the equations of motion will be coupled because of the Coulomb force between two point charges. 
+Our numerical algorithms will therefore be solving the following equations:
+\begin{align}
+    \ddot{x}_i - w_{0,i} \dot{y}_i - \frac{1}{2}& w_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i}^{n} q_j \frac{x_i - x_j}{|\textbf{r}_i - \textbf{r}_j|^3} = 0 \label{eq:a_x_coupled}\\
+    \ddot{y}_i + w_{0,i} \dot{x}_i - \frac{1}{2}& w_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i}^{n} q_j \frac{y_i - y_j}{|\textbf{r}_i - \textbf{r}_j|^3} = 0 \label{eq:a_y_coupled}\\
+    \ddot{z}_i + w_{z,i}^2& z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i}^{n} q_j \frac{z_i - z_j}{|\textbf{r}_i - \textbf{r}_j|^3} = 0 \label{eq:a_z_coupled}
+\end{align}
+Here the summation term is the Coulomb force and $i$ and $j$ are particle indices for $n$ particles 
+with charges $\{q_1,...,q_n\}$ and masses $\{m_1,..,m_n\}$. 
 % ===========================================
 \subsection*{The algorithms}
 To evolve our Penning trap system in time the following algorithms will be implemented to solve our particles' equations of motion. 
-
+Consider the forward difference approximation for the first derivative based on Taylor expansion
+\begin{equation}
+    y_n' = \frac{y_{n+1}  - y_n}{h}, \quad h = t_{t-1} -t_n
+\end{equation}
+Rearranging this results in the forward Euler method which has a Global error of $\mathcal{O}(h)$, 
+making it only first order accurate. The method is easy to implement and will be used for comparisons 
+and checking of the main algorithm. 
 %
 % The algorithm for the midpoint rule is summarized in algorithm~\ref{algo:midpointrule}. The basic idea behind the algorithm is to divide the integration range into to $n$ small subintervals of length $h$, and on each such subinterval approximate the function $f(x)$ by a constant function. The value for this constant function is taken to be the value of $f(x)$ evaluated at the midpoint of the given subinterval --- hence the name of the method.
 % %
@@ -285,44 +310,44 @@ To evolve our Penning trap system in time the following algorithms will be imple
             \State $n = 1 / h$ \Comment{Compute number of steps}
             \\
             \For{$i = 0, 1, 2, \ldots, n$}
-            \State $y_{i+1} = x_i + h f_i$  \Comment{Value for next time step} 
+            \State $y_{i+1} = y_i + h f(t_i, y_i)$  \Comment{Value at next time step} 
             \EndFor
             \EndProcedure
         \end{algorithmic}
     \end{algorithm}
 \end{figure}
-The forward Euler method has Global error of $\mathcal{O}(h)$, 
-making it at first order method.
-\begin{figure}[H]
-    % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
-        \begin{algorithm}[H]
-        \caption{Runge-Kutta fourth order method}
-        \label{algo:RK4}
-            \begin{algorithmic}
-                \Procedure{Runge-Kutta fourth order}{$y_0, h$}
-                \State $y' = f(t_i,y_i)$        \Comment{Single fist-order diff. eq.}
-                \State $n = 1 / h$ \Comment{Compute number of steps}
-                \\
-                \For{$i = 0, 1, 2, \ldots, n$}
-                \State $k_1 = hf(t_i,y_i)$  \Comment{Intermediate step 1}
-                \State $k_2 = hf(t_i + h/2, y_i +k_1/2)$  \Comment{Intermediate step 2}
-                \State $k_3 = hf(t_i + h/2, y_i + k_2/2)$ \Comment{Intermediate step 3}
-                \State $k_4 = hf(t_i + h, y_i + k_3)$ \Comment{Intermediate step 4}
-                \State $y_{i+1} = y_i + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$ \Comment{Final algorithm}
-                \EndFor
-                \EndProcedure
-            \end{algorithmic}
-        \end{algorithm}
-    \end{figure}
-    Similarly to the forward Euler scheme, Runge-Kutta fourth order (RK4) is based on Taylor expansion, but by adding several intermediate 
+
+    Similarly to the forward Euler, Runge-Kutta fourth order (RK4) is based on Taylor expansion, but by adding several intermediate 
     steps to the computation of $y_{i+1}$ it generally yields better solutions for ODEs. RK4 has a global error of $\mathcal{O}(h^4)$.
 
-    The RK4 scheme will be our main method as this is a "gold standard" in numerical analysis. 
+    \begin{figure}[H]
+        % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+            \begin{algorithm}[H]
+            \caption{Runge-Kutta fourth order method}
+            \label{algo:RK4}
+                \begin{algorithmic}
+                    \Procedure{Runge-Kutta fourth order}{$y_0, h$}
+                    \State $y' = f(t_i,y_i)$        \Comment{Single fist-order diff. eq.}
+                    \State $n = 1 / h$ \Comment{Compute number of steps}
+                    \\
+                    \For{$i = 0, 1, 2, \ldots, n$}
+                    \State $k_1 = hf(t_i,y_i)$  \Comment{Intermediate step 1}
+                    \State $k_2 = hf(t_i + h/2, y_i +k_1/2)$  \Comment{Intermediate step 2}
+                    \State $k_3 = hf(t_i + h/2, y_i + k_2/2)$ \Comment{Intermediate step 3}
+                    \State $k_4 = hf(t_i + h, y_i + k_3)$ \Comment{Intermediate step 4}
+                    \State $y_{i+1} = y_i + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)$ \Comment{Final algorithm}
+                    \EndFor
+                    \EndProcedure
+                \end{algorithmic}
+            \end{algorithm}
+        \end{figure}
+
+        The RK4 scheme will be our main method as this is a "gold standard" in numerical analysis. 
     Early tests with one single particle will be confirmed by an analytical solution, but for comparison of more complex 
     scenarios the simple forward Euler scheme will also be implemented.
 
     The Penning trap with time evolving algorithms will be implemented in an object-oriented C++ code, the plots are generated using Python.
-    
+
     \subsection*{Particles}
     Our charged particles will be singly-charged Calcium ions $(Ca^+)$ with a mass of $40.077 u$.
     \begin{itemize}
@@ -343,38 +368,120 @@ making it at first order method.
 
 % % ===========================================
 \section{Results}\label{sec:results}
-% %
-% To test the midpoint rule algorithm, we perform the integration of $f(x)$ using different choices for the number of subintervals. The results are listed in table \ref{tab:midpointruletab}.\footnote{A general style recommendation is to avoid having vertical lines in tables. There are of course exceptions, but in most cases vertical lines will make a table less readable.}
-% %
-% \begin{table}[h!]
-%     \centering
-%     \caption{Approximate values for the integral of $f(x) = x^3$ on the interval $[0,1]$, as obtained with the midpoint rule with different numbers of integration subintervals.}
-%     \begin{tabular}{c@{\hspace{1cm}} c}
-%         \hline
-%         Number of subintervals & Integral value \\
-%         \hline
-%         $10^1$  &  0.3086 \\
-%         $10^2$  &  0.2550 \\
-%         $10^3$  &  0.2505 \\
-%         $10^4$  &  0.2500 \\
-%         % $10$  &  0.3086 \\
-%         % $100$  &  0.2550 \\
-%         % $1 000$  &  0.2505 \\
-%         % $10 000$  &  0.2500 \\
-%         \hline
-%     \end{tabular}\label{tab:midpointruletab}
-% \end{table}
+First we test our Penning trap's behavior for a single particle to see if it produces the expected motion in this simple case. 
+All three solutions have been plotted in figure \ref*{fig:compare_analytic_tz} to examine weather the numerical and analytic results agree.
+%single particle
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/compare_analytic_tz.pdf}
+    \caption{Here we see the vertical path of a single particle over 50 $\mu s$. The analytic, Euler and RK4 solutions are shown.}
+    \label{fig:compare_analytic_tz}
+\end{figure}
+Figure \ref*{fig:compare_analytic_tz} shows that both the forward Euler and RK4 method show the same 
+$z$ motion as the analytic solution for a single particle. The particle oscillates vertically.  
 
-% In figure \ref{fig:rel_err} we show the relative error as a function of the number of subintervals $n$.
-% \begin{figure}[h!]
-%     \centering %Centers the figure
-%     %\includegraphics[scale=0.55]{} %Imports the figure.
-%     \caption{The relative error versus the number of integration subintervals ($n$) when using the midpoint rule to estimate the integral $\int_0^1 x^3\dd x$. \textit{Given that this plot is based only on a handful of data points, it should also show the data points using some form of point markers, like the dots here. When presented only with a continuous line, it is not necessarily clear for the reader if the result is based on a large or small number of data points.}}
-%     \label{fig:rel_err}
-% \end{figure}
+%two particles
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_xy_no_interaction_xy.pdf}
+    \caption{The horizontal ($xy$-plane) path of two particles without interaction.}
+    \label{fig:RK4_2_xy_no_interaction_xy}
+\end{figure}
+In figure \ref*{fig:RK4_2_xy_no_interaction_xy} we see the motion of Particle 1 and Particle 2 in the $xy$-plane when they do not interact. 
+That is, disregarding the Coulomb force. 
+The paths have a very similar spiraling shape both resulting circular patterns around the origin. 
 
-% \textit{Note especially how we reference both the table and the figure with a short explanation of their content. Always do this! In the figure/table captions we can also add additional information, such as information about how the figure/table was produced. You can also do this in the main text if you like. When writing the figure/table captions, keep in mind the general rule of thumb that an expert on the topic should be able to understand the gist of your report simply by reading the abstract and look at the figures/tables and read their corresponding captions.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_xy_with_interaction_xy.pdf}
+    \caption{The horizontal ($xy$-plane) path of two particles with interaction.}
+    \label{fig:RK4_2_xy_with_interaction_xy}
+\end{figure}
+Figure \ref*{fig:RK4_2_xy_with_interaction_xy} shows the same two particles as figure \ref*{fig:RK4_2_xy_no_interaction_xy} with the exact same initial conditions, 
+but with interaction between particles. We notice that the paths, although still spiraling, are not as circular.
 
+% Phase spaces xy
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_x_phasespace_no_interaction_phasespace_xy.pdf}
+    \caption{The phase space $(x, v_x)$ of two particles without interaction.}
+    \label{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_x_phasespace_with_interaction_phasespace_xy.pdf}
+    \caption{The phase space $(x, v_x)$ of two particles with interaction.}
+    \label{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy}
+\end{figure}
+The two figures above show the trajectories of Particle 1 and Particle 2 in the $(x,v_x)$ plane. 
+Figure \ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy} is a simulation disregarding particle interaction whilst 
+figure \ref*{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows the trajectories with particle interaction. We 
+notice that the trajectories in figure \ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy} are fairly repetitive whilst 
+figure \ref*{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows more variations and different final points to figure 
+\ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}.
+
+% Phase spaces z
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_z_phasespace_no_interaction_phasespace_xy.pdf}
+    \caption{The phase space $(z, v_z)$ of two particles without interaction.}
+    \label{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RK4_2_z_phasespace_with_interaction_phasespace_xy.pdf}
+    \caption{The phase space $(z, v_z)$ of two particles with interaction.}
+    \label{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
+\end{figure}
+Figures \ref*{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} and \ref*{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} 
+show the trajectories of Particle 1 and Particle 2 in the $(z,v_z)$ plane. In figure \ref*{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}, 
+without particle interactions, we notice what seems to be repetitive trajectories similarly to figure 
+\ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}. Figure \ref*{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} 
+which includes particle interactions on the other hand displays more irregular trajectories similarly to figure \ref*{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy}.
+
+%3D path plots
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_no_interaction.pdf}
+    \caption{Shows a 3D representation of two particle paths without interaction.}
+    \label{fig:3D_2_particles_no_interaction}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_with_interaction.pdf}
+    \caption{Shows a 3D representation of two particle paths with interaction.}
+    \label{fig:3D_2_particles_with_interaction}
+\end{figure}
+Looking at the 3D-plots in figures \ref*{fig:3D_2_particles_no_interaction} and \ref*{fig:3D_2_particles_with_interaction} 
+it is difficult to follow the exact motion of the particles. Comparing figure \ref*{fig:3D_2_particles_no_interaction}, without 
+particle interactions, to figure \ref*{fig:3D_2_particles_with_interaction}, with interactions, one notices that the start positions 
+are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue 
+lines in the two figures. 
+
+%Relative error
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/relative_error_Euler_norm.pdf}
+    \caption{The plot shows the relative error for a single particle's motion over 50 $\mu s$ using the forward Euler approximation. 
+            The four different lines show results for different step sizes $h = 50/N \mu s$ }
+    \label{fig:relative_error_Euler_norm}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/relative_error_RK4_norm.pdf}
+    \caption{The plot shows the relative error for a single particle's motion over 50 $\mu s$ using the fourth order Runge-Kutta approximation.
+            The four different lines show results for different step sizes $h = 50/N \mu s$ }
+    \label{fig:relative_error_RK4_norm}
+\end{figure}
+Considering the case of a single particle to allow for a comparison to the analytic solution, figures \ref*{fig:relative_error_Euler_norm} 
+and \ref*{fig:relative_error_RK4_norm} display the relative error of the forward Euler method (figure \ref*{fig:relative_error_Euler_norm}) 
+and the RK4 method (figure \ref*{fig:relative_error_RK4_norm}) for different step sizes $h = 50/N \mu s$. Noticeably for both 
+methods, the error decreases as the step size does too (increasing the number of points $N$). Comparing the two, one clearly 
+sees that the RK4 method is more precise than the forward Euler.  
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
