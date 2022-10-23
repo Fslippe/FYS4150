@@ -21,14 +21,24 @@ def run(N, T, n, interaction, omega_min, omega_max, omega_step, compile=False):
     r = np.array(data)
     return r
 
-def plot_p_fraction_frequency():
-
-    r = run(10000, 500, 100, "false", 0.2, 2.5, 0.02, True)
+def plot_p_fraction_frequency(r, save = False):
+    """
+    Function to plot fraction of particles left in Penning trap for a range of frequencies and different amplitudes f.
+    Takes in:
+    - r                 2D array containing 
+                        ([frequencies], [fractions for f=0.1], [fractions for f=0.4[fractions for f=0.7])
+    - save (opt)        Savename of plot, default False 
+    """
     plt.plot(r[:,0], r[:,1], label = "$f = 0.1$")
     plt.plot(r[:,0], r[:,2], label = "$f = 0.4$")
     plt.plot(r[:,0], r[:,3], label = "$f = 0.7$")
+    plt.xlabel("Fraction of Particles left in trap")
+    plt.ylabel("Frequency $\omega_v$ [$MHz$]") 
     plt.legend()
+
+    if save != False:
+        plt.savefig("../figures/%s.pdf" %(save), dpi=300, bbox_inches="tight")
     plt.show()
 
-
-plot_p_fraction_frequency()
+r = run(10000, 500, 100, "false", 0.2, 2.5, 0.02, True)
+plot_p_fraction_frequency(r, save = "p_fractions_left_for_differen_frequencies")
