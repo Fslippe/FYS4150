@@ -15,7 +15,7 @@ int main(int argc, char** argv)
   {
     std::cout << "Expected 7 commandline arguments: " <<
     "\nint N (Timepoints)\ndouble T (Time)\nint n (number of particles)" 
-    << "\nbool interaction (particle interaction true or false) \nstring method (Euler or RK4)\n";
+    << "\nbool interaction (particle interaction true or false) \nstring method (Euler or RK4)\nstring compute";
     exit(1);
   }
 
@@ -56,13 +56,11 @@ int main(int argc, char** argv)
 
   PenningTrap pt = PenningTrap(B0, V0, d, interaction, time_dependency); // Initialize PenningTrap
 
-
   pt.add_n_random_particles(n);
 
+  pt.set_amplitude_and_frquency(0.7)
   // Checks what fratcion of particles are left in trap for amplitudes(0.1, 0.4, 0.7) different frquencies.
   pt.parcticles_left_for_omega_v(dt, N, omega_min_in, omega_max_in, omega_step_in);
-
-
 
   return 0;
 }

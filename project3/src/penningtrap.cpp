@@ -38,6 +38,33 @@ void PenningTrap::add_n_random_particles(int n)
   
 }
 
+
+//Method to set amplitude f and angular frequency omega_v
+void PenningTrap::set_amplitude_and_frquency(double amplitude_in, double frequency_in)
+{
+  f = amplitude_in;
+  omega_v = frequency_in;
+}
+
+// External electric field at point r=(x,y,z) with time dependence
+arma::vec PenningTrap::external_E_field(arma::vec r, double t)
+{
+  if (arma::norm(r) > d)
+  {
+    E_ext = arma::vec({0, 0, 0}); // sets external electric field to 0 in regions outside the trap
+  }
+  else
+  {
+    V_0_time_dep = V_0 * (1 + f * std::cos(omega_v * t));
+     //Analytic gradient:
+    E_x = -r[0]*V_0_time_dep /(d*d);
+    E_y = -r[1]*V_0_time_dep / (d*d);
+    E_z = 2*r[2]*V_0_time_dep/(d*d);
+    E_ext = arma::vec({-E_x, -E_y, -E_z});
+  }
+  return E_ext;
+}
+
 // External electric field at point r=(x,y,z)
 arma::vec PenningTrap::external_E_field(arma::vec r)
 {
@@ -49,63 +76,35 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
   else
   {
      //Analytic gradient:
-    double E_x = -r[0]*V_0_d2;
-    double E_y = -r[1]*V_0_d2;
-    double E_z = 2*r[2]*V_0_d2;
+    E_x = -r[0]*V_0_d2;
+    E_y = -r[1]*V_0_d2;
+    E_z = 2*r[2]*V_0_d2;
     E_ext = arma::vec({-E_x, -E_y, -E_z});
   }
   return E_ext;
 }
-//Method to set amplitude f and angular frequency omega_v
-void PenningTrap::set_amplitude_and_frquency(double amplitude_in, double frequency_in)
-{
-  f = amplitude_in;
-  omega_v = frequency_in;
-}
-
-// External electric field at point r=(x,y,z) with time dependence
-arma::vec PenningTrap::external_E_field(arma::vec r, double t)
-{
-  arma::vec E_ext;
-  if (arma::norm(r) > d)
-  {
-    E_ext = arma::vec({0, 0, 0}); // sets external electric field to 0 in regions outside the trap
-  }
-  else
-  {
-    double V_0_time_dep = V_0 * (1 + f * std::cos(omega_v * t));
-     //Analytic gradient:
-    double E_x = -r[0]*V_0_time_dep /(d*d);
-    double E_y = -r[1]*V_0_time_dep / (d*d);
-    double E_z = 2*r[2]*V_0_time_dep/(d*d);
-    E_ext = arma::vec({-E_x, -E_y, -E_z});
-  }
-  return E_ext;
-}
-
 // External magnetic field at point r=(x,y,z)
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
-  arma::vec B_ext;
   if (arma::norm(r) > d)
   {
-    B_ext =  arma::vec({0, 0, 0}); // sets external magnetic field to 0 in regions outside the trap
+    B =  arma::vec({0, 0, 0}); // sets external magnetic field to 0 in regions outside the trap
   }
   else
   {
-    B_ext = arma::vec({0, 0, B_0});
+    B = arma::vec({0, 0, B_0});
   }
-  return B_ext;
+  return B;
 }
 
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j)
 {
-  arma::vec r_diff = p[i].position() - p[j].position();
+  r_diff = p[i].position() - p[j].position();
 
-  arma::vec E_i = k_e * p[j].charge() * r_diff /
-  std::pow(std::sqrt(r_diff[0]*r_diff[0] + r_diff[1]*r_diff[1] + r_diff[2]*r_diff[2]), 3);
-  arma::vec F_int = p[i].charge() * E_i;
+  E_i = k_e * p[j].charge() * r_diff /
+  std::pow(arma::norm(r_diff), 3);
+  F_int = p[i].charge() * E_i;
   
   return F_int;
 }
@@ -113,26 +112,25 @@ arma::vec PenningTrap::force_particle(int i, int j)
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i)  
 {
-  arma::vec E;
   if (time_dependency == true)
   {
-    E = external_E_field(p[i].position(), time);
+    E_ext = external_E_field(p[i].position(), time);
   }
   else
   {
-    E = external_E_field(p[i].position());
+    E_ext = external_E_field(p[i].position());
   }
   
-  arma::vec B = external_B_field(p[i].position());
-  arma::vec F_ext = p[i].charge() * E + p[i].charge()*arma::cross( p[i].velocity(), B);
+  B = external_B_field(p[i].position());
+  F_ext = p[i].charge() * E_ext + p[i].charge()*arma::cross( p[i].velocity(), B);
   return F_ext;
 }
 
 // The total force on particle_i from the other particles
 arma::vec PenningTrap::total_force_particles(int i)
 {
-  int n = p.size();
-  arma::vec F_p = arma::zeros(3);
+  n = p.size();
+  F_p = arma::zeros(3);
   for (int j = 0; j < n; j++)
   {
     if (i != j)
@@ -146,8 +144,6 @@ arma::vec PenningTrap::total_force_particles(int i)
 // The total force on particle_i from both external fields and other particles
 arma::vec PenningTrap::total_force(int i)
 {
-  arma::vec F_tot;
-
   if (interaction)
   {
     F_tot = total_force_particles(i) + total_force_external(i);
@@ -163,20 +159,8 @@ arma::vec PenningTrap::total_force(int i)
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 {
-  int n = p.size();
-  arma::mat k = arma::mat(4, 3);
-  double dt2 = dt/2; //perform 4n less FLOPs by cutting divide in k2 and k3
-  double dt6 = dt/6; //perform 2n less FLOPs by cutting divide in evolve
-  arma::vec tmp_pos;
-  arma::vec tmp_vel;
-  arma::vec kr_1;
-  arma::vec kv_1;
-  arma::vec kr_2;
-  arma::vec kv_2;
-  arma::vec kr_3;
-  arma::vec kv_3;
-  arma::vec kr_4;
-  arma::vec kv_4;
+  dt2 = dt/2; //perform 4n less FLOPs by cutting divide in k2 and k3
+  dt6 = dt/6; //perform 2n less FLOPs by cutting divide in evolve
 
   for (int i = 0; i < n; i++)
   {
@@ -217,9 +201,6 @@ void PenningTrap::evolve_RK4(double dt)
 void PenningTrap::evolve_forward_Euler(double dt)
 {
   int n = p.size();
-  arma::vec tmp_vel;
-  arma::vec v; 
-  arma::vec r; 
 
   for (int i = 0; i < n; i++)
   {
@@ -232,11 +213,11 @@ void PenningTrap::evolve_forward_Euler(double dt)
 
 arma::mat PenningTrap::analytic(arma::vec t)
 {
+  n = t.size();
   arma::vec x;
   arma::vec y;
   arma::vec z;
-  int n = t.size();
-  arma::mat r = arma::mat(n, 3);
+  arma::mat r_a = arma::mat(n, 3);
 
   if (p.size() == 1)
   {
@@ -266,17 +247,17 @@ arma::mat PenningTrap::analytic(arma::vec t)
   {
     std::cout << "Too many particles! \n" << "The analytic solution is only designed for a single particle." << "\n";
   } 
-  r.col(0) = x; r.col(1) = y; r.col(2) = z;
+  r_a.col(0) = x; r_a.col(1) = y; r_a.col(2) = z;
   std::cout << z[0] <<"\n";
   
-  return r;
+  return r_a;
 }
 
 //Returns number of particles still inside trap
 int PenningTrap::particles_left_in_trap()
 {
-  int counter = 0;
-  for (int i = 0; i < p.size(); i++)
+  counter = 0;
+  for (int i = 0; i < n; i++)
   {
    if (arma::norm(p[i].position()) < d)
    {
@@ -293,16 +274,20 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
   arma::mat frac_p_left = arma::mat(points, 4); 
   int j = 1;
   double f = 0.1;
+  n = p.size();
   std::vector<Particle> initial_p = p;
 
   for (int i = 0; i < points; i++)
   {
     frac_p_left(i,0) = omega_min + i*omega_step;
   }
+
   for (int i = 1; i < 4; i++)
   {
     for (int j = 0; j < points; j++)
     {
+     clock_t start = clock();
+
       time = 0;
       p = initial_p;
       set_amplitude_and_frquency(f, frac_p_left(j, 0));
@@ -310,8 +295,13 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
       {
         evolve_RK4(dt);
       }
-      frac_p_left(j,i) = (float)particles_left_in_trap() / (float)p.size();
+      frac_p_left(j,i) = (float)particles_left_in_trap() / (float)n;
+      std::cout << "Finished running for frequency " << frac_p_left(j, 0) << "\n";
+      clock_t end = clock();
+      double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+      std::cout << "timeused = " << timeused << " seconds " << "\n";
     }
+    std::cout << "Finished running for Amplitude " << f << "\n";
     f += 0.3;
   }
 

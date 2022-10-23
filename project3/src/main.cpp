@@ -7,19 +7,20 @@
 int main(int argc, char** argv)
 {
   // Command line arguments
-   if (argc != 6)
+   if (argc != 9)
   {
     std::cout << "Expected 6 commandline arguments: " <<
     "\nint N (Timepoints)\ndouble T (Time)\nint n (number of particles)" 
-    << "\nbool interaction (particle interaction true or false) \nstring method (Euler or RK4)\n";
+    << "\nbool interaction (particle interaction true or false) \nstring method (Euler or RK4)"
+    << "\nbool time_dependency (true or false)\nAmplitude \nfrequency (MHz)\n";
     exit(1);
   }
 
   int N = atoi(argv[1]); //number of timepoints 
   double T = atoi(argv[2]); //Time
   int n = atoi(argv[3]); //number of particles
-  bool time_dependency = false; 
   bool interaction;
+  bool time_dependency;
   std::string method = std::string(argv[5]);
 
 
@@ -37,7 +38,22 @@ int main(int argc, char** argv)
    exit(1);
   }
   
+    if (std::string(argv[6]) == "true")
+  {
+    time_dependency = true;
+  }
+  else if (std::string(argv[6]) == "false")
+  {
+    time_dependency = false;
+  }
+  else
+  {
+   std::cout << "argument 7 time dependency has to be either true or false \n\nExiting...\n";
+   exit(1);
+  }
   // Variables
+
+  
   double B0 = 96.5;
   double V0 = 2.41 * std::pow(10, 6);
   double d = 500;
@@ -48,7 +64,15 @@ int main(int argc, char** argv)
   arma::cube v; // to save nummerical velocities 
 
   PenningTrap pt = PenningTrap(B0, V0, d, interaction, time_dependency); // Initialize PenningTrap
+  if (time_dependency)
+  {
+    double f = atof(argv[7]);
+    double omega = atof(argv[8]);
+    pt.set_amplitude_and_frquency(f, omega);
+  }
+  
 
+  
   if (n == 1 || n == 2)
   {
     arma::vec r0 = arma::vec({20, 0., 20});
@@ -69,7 +93,7 @@ int main(int argc, char** argv)
   {
     pt.add_n_random_particles(n);
   }
-  
+  pt.n = n;
   if (std::string(method) == "Analytic")
   {
     std::cout << n << pt.p[0].r[0] << "\n";
@@ -94,21 +118,44 @@ int main(int argc, char** argv)
   }
 
   // Step forward in time depending on method
-  for (int j = 1; j < N; j++)
+  if (std::string(method) == "Euler")
   {
-    if (std::string(method) == "Euler")
+    clock_t start = clock();
+
+    for (int j = 1; j < N; j++)
     {
       pt.evolve_forward_Euler(dt);
+      for (int i = 0; i < n; i++)
+      {
+        for (int k = 0; k < 3; k++)
+        {
+          r(i,j,k) = pt.p[i].r[k];
+          v(i,j,k) = pt.p[i].v[k];
+        }
+      }
     }
-    else if (std::string(method) == "RK4")
+    clock_t end = clock();
+    double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+    std::cout << "timeused = " << timeused << " seconds " << "\n";
+  }     
+  else if (std::string(method) == "RK4")
+  {
+    clock_t start = clock();
+    for (int j = 1; j < N; j++)
     {
       pt.evolve_RK4(dt);
+      for (int i = 0; i < n; i++)
+      {
+        for (int k = 0; k < 3; k++)
+        {
+          r(i,j,k) = pt.p[i].r[k];
+          v(i,j,k) = pt.p[i].v[k];
+        }
+      }
     }
-    for (int i = 0; i < n; i++)
-    {
-      r(arma::span(i),arma::span(j),arma::span::all) = pt.p[i].r;
-      v(arma::span(i),arma::span(j),arma::span::all) = pt.p[i].v;
-    }
+    clock_t end = clock();
+    double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+    std::cout << "timeused = " << timeused << " seconds " << "\n";
   }
 
   // Save r and v to dat files with names depending on method

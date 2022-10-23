@@ -6,12 +6,42 @@ extern const double k_e;
 
 #include <string>
 #include <armadillo>
+#include <time.h>
 #include "particle.hpp"
 
 class PenningTrap
 {
+  private:
+    double V_0_time_dep;
+    arma::vec E_ext;
+    double E_x;
+    double E_y;
+    double E_z;
+    arma::vec r_diff;
+    arma::vec E_i;
+    arma::vec F_int;
+    arma::vec B;
+    arma::vec F_ext;
+    arma::vec F_p;
+    arma::vec F_tot;
+
+    arma::vec tmp_pos;
+    arma::vec tmp_vel;
+    arma::vec kr_1;
+    arma::vec kv_1;
+    arma::vec kr_2;
+    arma::vec kv_2;
+    arma::vec kr_3;
+    arma::vec kv_3;
+    arma::vec kr_4;
+    arma::vec kv_4;
+    int counter;
+
   public:
     // Member variables
+    int n;
+    double dt2; //perform 4n less FLOPs by cutting divide in k2 and k3
+    double dt6; //perform 2n less FLOPs by cutting divide in evolve
     double B_0; // magnetic field strength
     double V_0; // applied potetial
     double d; // characteristic dimension
@@ -21,7 +51,7 @@ class PenningTrap
     double time = 0;
     double f; // amplitude_in
     double omega_v; // frequency_in
-    
+
     
     std::vector<Particle> p; // conntains Particle objects in the Penning trap
 
