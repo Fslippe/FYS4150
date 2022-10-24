@@ -257,9 +257,13 @@ def compare_error(N, T, method_in, save=False, norm=True):
             if save != False:
                 plt.savefig("../figures/%s_%s_%i.pdf" %(save, method_in, N[i]), dpi=300, bbox_inches="tight")
             plt.show()
+            
     r_err = 0
+
     for k in range(1, 4):
-        r_err += np.log(delta_max[k]/delta_max[k-1]) / np.log(50/N[k]/N[k-1])
+        r_err += np.log(delta_max[k]/delta_max[k-1]) / np.log(50/N[k]/(50/N[k-1]))
+
+    r_err = r_err/3
 
     plt.title(r"%s, Convergence rate $r_{err}=$%.3f" %(method_in, r_err))
 
@@ -268,8 +272,6 @@ def compare_error(N, T, method_in, save=False, norm=True):
     plt.show()
 
 def plot_p_fraction_frequency(r, save = False):
-
-   
     """
     Function to plot fraction of particles left in Penning trap for a range of frequencies and different amplitudes f.
     Takes in:
@@ -293,10 +295,10 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 4000
+    N = 50000
     T = 50
     n = 100
-    f= 0.4
+    f = 0.4
     omega = 0.685
     
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
@@ -343,6 +345,7 @@ def main():
     """Compare Error for different N"""
     if compare_error_plot:
         N_array = np.array([4000, 8000, 16000, 32000])
+
         compare_error(N_array, T, "Euler", save="relative_error", norm=True)
         compare_error(N_array, T, "RK4", save="relative_error", norm=True)
 
