@@ -418,7 +418,7 @@ All three solutions have been plotted in figure \ref{fig:compare_analytic_tz} fo
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/compare_analytic_t_axis_2_N10000.pdf}
-    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=10000$. The analytic (in black), Euler (in orange) and RK4 (in blue) solutions are shown.}
+    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=10000$. The analytic, Euler and RK4 solutions are shown.}
     \label{fig:compare_analytic_tz}
 \end{figure}
 Figure \ref{fig:compare_analytic_tz} shows that both the forward Euler and RK4 method show the same
@@ -484,14 +484,14 @@ figure \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows more va
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_z_RK4_N10000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles without interaction.}
+    \caption{The phase space $(z, v_z)$ of two particles without interaction for $N = 10000$.}
     \label{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_z_interaction_RK4_N10000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles with interaction.}
+    \caption{The phase space $(z, v_z)$ of two particles with interaction for $N = 10000$.}
     \label{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 Figures \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
@@ -504,14 +504,14 @@ which includes particle interactions on the other hand displays more irregular t
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_N10000.pdf}
-    \caption{Shows a 3D representation of two particle paths without interaction.}
+    \caption{Shows a 3D representation of two particle paths without interaction for $N = 10000$.}
     \label{fig:3D_2_particles_no_interaction}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_interaction_N10000.pdf}
-    \caption{Shows a 3D representation of two particle paths with interaction.}
+    \caption{Shows a 3D representation of two particle paths with interaction for $N = 10000$.}
     \label{fig:3D_2_particles_with_interaction}
 \end{figure}
 Looking at the 3D-plots in figures \ref{fig:3D_2_particles_no_interaction} and \ref{fig:3D_2_particles_with_interaction}
@@ -541,6 +541,35 @@ and \ref{fig:relative_error_RK4_norm} display the relative error of the forward 
 and the RK4 method (figure \ref{fig:relative_error_RK4_norm}) for different step sizes $h = 50/N \mu s$. Noticeably for both
 methods, the error decreases as the step size does too (increasing the number of points $N$). Comparing the two, one clearly
 sees that the RK4 method is more precise than the forward Euler.
+
+% 100 particle simulations full frequency range
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/wide_freq_p_left_N_5000.pdf}
+    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in (0.2,2.5)$MHz. Each color 
+            shows results for a different amplitude f. The simulation is for 100 random particles \textbf{without interactions} 
+            and $N = 5000$.}
+    \label{fig:wide_freq_p_left_N_5000}
+\end{figure}
+% zoomed without interaction
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom.pdf}
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range 
+            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a 
+            different amplitude f. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
+    \label{fig:narrow_freq_p_left_N_5000_zoom}
+\end{figure}
+%zoomed with interaction
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_interaction_zoom.pdf}
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range 
+            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a 
+            different amplitude f. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
+    \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
+\end{figure}
+
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
