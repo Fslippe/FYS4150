@@ -297,7 +297,7 @@ Consider the forward difference approximation for the first derivative based on 
 \begin{equation}
     y_n' = \frac{y_{n+1}  - y_n}{h}, \quad h = t_{t-1} -t_n
 \end{equation}
-Rearranging this results in the forward Euler method which has a Global error of $\mathcal{O}(h)$,
+Rearranging this results in the forward Euler method which has a local error of $\mathcal{O}(h^2)$ and global error of $\mathcal{O}(h)$,
 making it only first order accurate. The method is easy to implement and will be used for comparisons
 and checking of the main algorithm.
 %
@@ -322,7 +322,8 @@ and checking of the main algorithm.
 \end{figure}
 
 Similarly to the forward Euler, Runge-Kutta fourth order (RK4) is based on Taylor expansion, but by adding several intermediate
-steps to the computation of $y_{i+1}$ it generally yields better solutions for ODEs. RK4 has a global error of $\mathcal{O}(h^4)$.
+steps to the computation of $y_{i+1}$ it generally yields better solutions for ODEs. RK4 has a local error of $\mathcal{O}(h^5)$ 
+and global error of $\mathcal{O}(h^4)$. (REF COMPENDIUM HERE)
 
 \begin{figure}[H]
     % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
@@ -522,15 +523,29 @@ sees that the RK4 method is more precise than the forward Euler.
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
-%
-\textit{Note that you are free to merge the presentation and discussion of the results into a single section of your report. This can in many cases lead to a more fluid presentation. If you do this, we recommend you use ``Results and discussion'' or similar for the section title.}
+From figure  \ref*{fig:compare_analytic_tz} where the motion of Particle 1 is simulated we see that the analytic and numerical solutions 
+match closely enough to allow us to trust further numerical results for more complex simulations.
 
-From table \ref{tab:midpointruletab}, we note that our implementation reproduces the analytical results to four digits precision when the integration range is divided into $n = 10^4$ subintervals. This indicates that that our implementation of the algorithm is correct.
+Comparing figure \ref*{fig:RK4_2_xy_no_interaction_xy} and \ref*{fig:RK4_2_xy_with_interaction_xy} shows that the Coulomb force has a noticeable effect on 
+the particles motion since they repel each other. Here we look at only two particles interacting and the results with and without interactions are not extremely different, 
+but in a case of $n$ particles we would expect larger deviations between motion with and without interactions for increasing $n$.
 
-From figure \ref{fig:rel_err}, we see that $\log_{10}(\epsilon)$ decreases linearly with $\log_{2}(n)$. From this, it should be possible to extract the convergence rate of our implementation of the midpoint rule. From a theoretical point of view we know that the midpoint rule should have a convergence rate of $\mathcal{O}(h^2)$. To properly verify our implementation, we should have estimated the convergence rate from our results and compared it to this theoretical rate. Without doing so, we cannot know that the our implementation of the algorithm is correct, even though we have seen that the numerical approximation converges to the correct answer in \ref{tab:midpointruletab}.
+Similarly, there are noticeable differences with and without interactions for the phase space $(x, v_x)$ in figure \ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
+and \ref*{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy} and the phase space $(z, v_z)$ in figure \ref*{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
+and \ref*{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}. From a physical point of view the results again seem reasonable. Specifically looking at 
+the phase space $(z, v_z)$, figure \ref*{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} without interaction shows a repetitive relation between velocity and position.
+Figure \ref*{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} with interaction on the other hand shows a very different result as expected, since the particles 
+repel each other thereby affecting each other's velocities.
 
-\textit{Although this is a somewhat silly example, please note the following: We are to-the-point in our discussion of the results, and we only make strong claims about what we are actually certain about. In the discussion it is important to try to be as concise as possible --- long paragraphs that only make very general points are typically of limited interest. Note that we also highlight aspects of our analysis that could have been improved and that might form a topic for future work.}
+Comparing the 3D-plot in figure \ref*{fig:3D_2_particles_no_interaction}, without
+particle interactions, to figure \ref*{fig:3D_2_particles_with_interaction}, with interactions, one notices that the start positions
+are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue
+lines in the two figures. This supports that the Coulomb interaction has an important effect on particle motion in the Penning trap.
 
+The error analysis in figures \ref*{fig:relative_error_Euler_norm} and \ref*{fig:relative_error_RK4_norm} clearly shows that we gain 
+precision for smaller step sizes in the numerical simulations as expected. Furthermore, the fourth order Runge-Kutta method gives a better 
+approximation that the forward Euler method. This is again as expected since the local truncation error for Euler is $\mathcal{O}(h^2)$ and for RK4 is $\mathcal{O}(h^5)$. 
+The RK4 method thus deviating less from the analytical solution for small values of $h$.
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
