@@ -58,7 +58,6 @@ int main(int argc, char** argv)
 
   pt.add_n_random_particles(n);
 
-  pt.set_amplitude_and_frquency(0.7)
   // Checks what fratcion of particles are left in trap for amplitudes(0.1, 0.4, 0.7) different frquencies.
   pt.parcticles_left_for_omega_v(dt, N, omega_min_in, omega_max_in, omega_step_in);
 

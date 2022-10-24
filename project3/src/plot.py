@@ -112,10 +112,10 @@ def plot_Xt(X, t, y_axis, linestyle="-", label=""):
    
 
     if np.size(X, axis=1) == 1: 
-        plt.plot(t, X[y_axis, 0, :], linestyle=linestyle, label=label)
+        plt.plot(t, X[y_axis, 0, :], linestyle=linestyle, label="%s" %(label))
     else:
         for i in range(np.size(X, axis=1)):
-            plt.plot(t, X[y_axis, i, :], linestyle=linestyle, label = "Particle %i" %(i+1))
+            plt.plot(t, X[y_axis, i, :], linestyle=linestyle, label = "P_%i %s" %(i+1, label))
 
     if y_axis == 0:
         y_label = "x"
@@ -295,21 +295,22 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 50000
-    T = 50
-    n = 100
-    f = 0.4
-    omega = 0.685
+    N = 5000
+    T = 500
+    n = 1
+    f = 0.1
+    omega = 2.2
     
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
-    plot_compare_analytic = True
-    phase_space_and_position = True 
-    compare_error_plot = True 
+    plot_compare_analytic = False
+    phase_space_and_position = False 
+    compare_error_plot = False 
+    particle_escape = True
+
     wide_freq_scan = False
     narrow_freq_scan = False
     narrow_freq_scan_interaction = False 
-    particle_escape = False
 
     """Comparing to analytic solutions"""
     if plot_compare_analytic:
@@ -342,6 +343,7 @@ def main():
 
         plot_3D(r, N, save="3D_2_particles_%s_interaction" %(method))
 
+
     """Compare Error for different N"""
     if compare_error_plot:
         N_array = np.array([4000, 8000, 16000, 32000])
@@ -349,45 +351,51 @@ def main():
         compare_error(N_array, T, "Euler", save="relative_error", norm=True)
         compare_error(N_array, T, "RK4", save="relative_error", norm=True)
 
+    if particle_escape:
+        r_t, v = run(N, T, n, interaction="true", method="RK4", time_dependency="true", f=f, omega=omega, compile=False)
+        r, v = run(N, T, n, interaction="false", method="RK4", time_dependency="false", f=f, omega=omega, compile=False)
+        t = np.linspace(0, T, N+1)
+        y_axis = 2
+        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_z_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
+
+        plt.show()
+        y_axis = 1
+        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_y_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
+
+        plt.show()
+        y_axis = 0
+        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_x_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
+
+        plt.show()
+
+    N = 5000
+    T = 500
+    n = 100
+
     """Wide Frequency scan"""
     if wide_freq_scan:
         r = run_frequency_scan(N, T, n, interaction="false",
-            omega_min=0.2, omega_max=2.5, omega_step=0.02, compile=False)
-        plot_p_fraction_frequency(r, save="wide_freq_p_left_N_10000")
+            omega_min=0.2, omega_max=2.5, omega_step=0.02, compile=True)
+        plot_p_fraction_frequency(r, save="wide_freq_p_left_N_%s" %(N))
 
     """Narrow Frequency scan without interaction"""
     if narrow_freq_scan:
         r = run_frequency_scan(N, T, n, interaction="false",
-            omega_min=0.61, omega_max=0.73, omega_step=0.001, compile=True)
-        plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_10000_zoom")
+            omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=False)
+        plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_%s_zoom" %(N)) 
 
 
     """Narrow Frequency scan with interaction"""
     if narrow_freq_scan_interaction:
-        start = timeit.default_timer()
-
         r = run_frequency_scan(N, T, n, interaction="true",
-            omega_min=0.61, omega_max=0.73, omega_step=0.001, compile=True)
-        plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_10000_interaction_zoom")
-        stop = timeit.default_timer()
-        print('Time: ', stop - start)  
-
-    if particle_escape:
-        r_t, v = run(N, T, n, interaction="true", method="RK4", time_dependency="true", f=f, omega=omega, compile=False)
-        r, v = run(N, T, n, interaction="false", method="RK4", time_dependency="true", f=f, omega=omega, compile=False)
-        t = np.linspace(0, T, N)
-        y_axis = 2
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Time dependent $V_0$")
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Constant $V_0$")
-        plt.show()
-        y_axis = 1
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Time dependent $V_0$")
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Constant $V_0$")
-        plt.show()
-        y_axis = 0
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Time dependent $V_0$")
-        plot_Xt(r, t, y_axis, linestyle="-", label=r"Constant $V_0$")
-        plt.show()
+            omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=False)
+        plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_%s_interaction_zoom" %(N))
 
 
 if __name__ == "__main__":

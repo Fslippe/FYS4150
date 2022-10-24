@@ -209,6 +209,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
     tmp_vel = p[i].velocity();
     p[i].v += total_force(i) / p[i].mass()*dt;
     p[i].r += tmp_vel*dt;
+
   }
   time += dt;
 }
