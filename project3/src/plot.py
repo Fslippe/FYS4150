@@ -186,7 +186,7 @@ def plot_3D(r, N, save=False):
 
     plt.show()
 
-def compare_analytic(N, T, x_axis, y_axis, save=False):
+def compare_analytic(N, T, x_axis, y_axis, Euler=True, save=False):
     """
     Function to compare numerical methods to analytic solution.
     Only works for a single particle without particle interaction
@@ -195,6 +195,7 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
     - T                 Time to compute
     - x_axis            Axis of position to plot on x-axis in 2D position plot
     - y_axis            Axis of position to plot on y-axis in 2D position plot and time dependency plot
+    - Euler (opt)       if False only compares RK4 to analytic
     - save (opt)        Savename of plot, default False 
     """
    
@@ -206,7 +207,9 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
 
     plt.plot(r_A[:,x_axis], r_A[:,y_axis], "k-", label="Analytic")
     plot_X(r_RK, x_axis, y_axis, "--", label="RK4")
-    plot_X(r_E, x_axis, y_axis, "dotted", label="Euler")
+    if Euler:
+        plot_X(r_E, x_axis, y_axis, "dotted", label="Euler")
+
     plt.axis("equal")
     if save != False:
         plt.savefig("../figures/%s_axis_%i_%i_N%i.pdf" %(save, x_axis, y_axis, N), dpi=300, bbox_inches="tight")
@@ -215,9 +218,11 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
     t = np.linspace(0, T, N+1)
     plt.plot(t, r_A[:,y_axis], "k-", label="Analytic")
     plot_Xt(r_RK, t, y_axis, linestyle="--", label="RK4")
-    plot_Xt(r_E, t, y_axis, linestyle="dotted", label="Euler")
+    if Euler:
+        plot_Xt(r_E, t, y_axis, linestyle="dotted", label="Euler")
     if save != False:
         plt.savefig("../figures/%s_t_axis_%i_N%i.pdf" %(save, y_axis, N), dpi=300, bbox_inches="tight")
+
     plt.show()
 
 def compare_error(N, T, method_in, save=False, norm=True):
@@ -295,18 +300,19 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 40000
-    T = 50
+    N = 1000
+    T = 500
     n = 1
     f = 0.1
     omega = 2.2
     
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
-    plot_compare_analytic = True
-    phase_space_and_position = True      
-    compare_error_plot = True        
-    particle_escape = True      
+    plot_compare_analytic = False
+    phase_space_and_position = False      
+    compare_error_plot = False        
+    particle_escape = False     
+    compare_RK4_analytic = True  
 
     wide_freq_scan = False
     narrow_freq_scan = False
@@ -374,6 +380,9 @@ def main():
 
         plt.show()
 
+    if compare_RK4_analytic:
+        compare_analytic(N, T, x_axis=0, y_axis=1, Euler=False, save="analytic_RK4")
+        compare_analytic(N, T, x_axis=0, y_axis=2, Euler=False, save="analytic_RK4")
     N = 5000
     T = 500
     n = 100
