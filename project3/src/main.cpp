@@ -96,8 +96,7 @@ int main(int argc, char** argv)
   pt.n = n;
   if (std::string(method) == "Analytic")
   {
-    std::cout << n << pt.p[0].r[0] << "\n";
-    arma::vec t = arma::linspace(0, T, N);
+    arma::vec t = arma::linspace(0, T, N+1);
     arma::mat r_a = arma::mat(pt.analytic(t));
     r_a.save("data/r_a.dat");
     exit(1);
@@ -106,8 +105,8 @@ int main(int argc, char** argv)
   else
   {
     // Arrays to save r and v for nummerical solutions
-    r = arma::cube(n, N,  3);
-    v = arma::cube(n, N,  3);
+    r = arma::cube(n, N+1,  3);
+    v = arma::cube(n, N+1,  3);
   }
   
   // Initial conditions
@@ -122,7 +121,7 @@ int main(int argc, char** argv)
   {
     clock_t start = clock();
 
-    for (int j = 1; j < N; j++)
+    for (int j = 1; j < N+1; j++)
     {
       pt.evolve_forward_Euler(dt);
       for (int i = 0; i < n; i++)
@@ -141,7 +140,7 @@ int main(int argc, char** argv)
   else if (std::string(method) == "RK4")
   {
     clock_t start = clock();
-    for (int j = 1; j < N; j++)
+    for (int j = 1; j < N+1; j++)
     {
       pt.evolve_RK4(dt);
       for (int i = 0; i < n; i++)

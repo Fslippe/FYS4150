@@ -171,36 +171,39 @@ void PenningTrap::evolve_RK4(double dt)
     //K_1
     kr_1 = p[i].v;
     kv_1 = total_force(i) / p[i].mass();
-
+    p[i].r = tmp_pos + dt2*kr_1;
+    p[i].v = tmp_vel + dt2*kv_1;
     //K_2
-    p[i].r += dt2*kr_1;
-    p[i].v += dt2*kv_1;
+
     kr_2 = p[i].v;
     kv_2 = total_force(i) / p[i].mass();
-
+    p[i].r = tmp_pos + dt2*kr_2;
+    p[i].v = tmp_vel + dt2*kv_2;
+  
     //K_3
-    p[i].r += dt2*kr_2;
-    p[i].v += dt2*kv_2;
+
     kr_3 = p[i].v;
     kv_3 = total_force(i) / p[i].mass();
-
+    p[i].r = tmp_pos + dt*kr_3;
+    p[i].v = tmp_vel + dt*kv_3;
+  
     //K_4
-    p[i].r += dt*kr_3;
-    p[i].v += dt*kv_3;
+
     kr_4 = p[i].v;
     kv_4 = total_force(i) / p[i].mass();
-
-    //evolve
+      //evolve
     p[i].r = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
     p[i].v = tmp_vel + dt6 * (kv_1 + 2*kv_2 + 2*kv_3 + kv_4);
   }
+
+  
   time += dt;
 }
 
 // Evolve the system one time step (dt) using Forward Euler
 void PenningTrap::evolve_forward_Euler(double dt)
 {
-  int n = p.size();
+  n = p.size();
 
   for (int i = 0; i < n; i++)
   {

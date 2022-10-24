@@ -212,7 +212,7 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
         plt.savefig("../figures/%s_axis_%i_%i_N%i.pdf" %(save, x_axis, y_axis, N), dpi=300, bbox_inches="tight")
     plt.show()
 
-    t = np.linspace(0, T, N)
+    t = np.linspace(0, T, N+1)
     plt.plot(t, r_A[:,y_axis], "k-", label="Analytic")
     plot_Xt(r_RK, t, y_axis, linestyle="--", label="RK4")
     plot_Xt(r_E, t, y_axis, linestyle="dotted", label="Euler")
@@ -234,7 +234,7 @@ def compare_error(N, T, method_in, save=False, norm=True):
    
     delta_max = np.zeros(len(N))
     for i in range(len(N)):
-        t = np.linspace(0, T, N[i])
+        t = np.linspace(0, T, N[i]+1)
         r_a = run(N[i], T, 1, interaction="false", method="Analytic")
         r, v = run(N[i], T, 1, interaction="false", method= method_in)
         if norm:
@@ -293,7 +293,7 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 50000
+    N = 4000
     T = 50
     n = 100
     f= 0.4
