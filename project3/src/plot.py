@@ -3,9 +3,11 @@ import pyarma as pa
 import matplotlib.pyplot as plt 
 import os
 import timeit
+import seaborn as sns
 
 plt.rcParams.update({"lines.linewidth": 2})
-plt.rcParams.update({"font.size": 14})
+plt.rcParams.update({"font.size": 10})
+sns.set_style("whitegrid")
 
 
 def run(N, T, n, interaction, method, time_dependency="false", f=0.4, omega=0.685, compile=False):
@@ -65,13 +67,16 @@ def plot_X(X, x_axis, y_axis, linestyle="-", label="",show=False):
     - label (opt)       label for plot when using one particle
     - show  (opt)       Show plot if True, default False
     """
-
+   
     if np.size(X, axis=1) == 1:
         plt.plot(X[x_axis, 0, :], X[y_axis, 0, :], linestyle=linestyle, label="%s" %(label))
     else:
         for i in range(np.size(X, axis=1)):
-            plt.plot(X[x_axis, i, :], X[y_axis, i, :], linestyle=linestyle, label="Particle %i %s" %(label))
+            plt.plot(X[x_axis, i, :], X[y_axis, i, :], zorder=-0, linestyle=linestyle, label="Particle %i %s" %(i, label))
+        plt.scatter(X[x_axis, :, 0], X[y_axis, :, 0], s=50, marker="x", zorder=1, color="k", label="%s" %("Start"))
+        plt.scatter(X[x_axis, :, -1], X[y_axis, :, -1], s=50, marker="o", zorder=1, color="r", label="%s" %("Finish"))
         
+
     if x_axis == 0:
         x_label = "x"
     elif x_axis == 1:
@@ -85,11 +90,11 @@ def plot_X(X, x_axis, y_axis, linestyle="-", label="",show=False):
         y_label = "y"
     elif y_axis == 2:
         y_label = "z" 
+    plt.axis("equal")
 
     plt.xlabel(r"%s ($\mu$s)" %(x_label))
     plt.ylabel(r"%s ($\mu$m)" %(y_label))
     plt.legend()
-    plt.axis("equal")
 
     if show:
         plt.show()
@@ -104,8 +109,9 @@ def plot_Xt(X, t, y_axis, linestyle="-", label=""):
     - linestyle (opt)   Linestyle for plot default "-"
     - label (opt)       label for plot when using one particle
     """
+   
 
-    if np.size(X, axis=1) == 1:
+    if np.size(X, axis=1) == 1: 
         plt.plot(t, X[y_axis, 0, :], linestyle=linestyle, label=label)
     else:
         for i in range(np.size(X, axis=1)):
@@ -131,11 +137,12 @@ def plot_phase_space(r, N, v, axis, save=False):
     - axis              Axis to plot (0, 1 or 2) equaling (x, y or z)
     - save (opt)        Savename of plot, default False 
     """
+   
 
     for i in range(np.size(r, axis=1)):
-        plt.plot(r[axis,i,:], v[axis,i,:], label="Particle %i" %(i+1))
-    plt.scatter(r[axis, :,0], v[axis, :,0], color="r", label="Start")
-    plt.scatter(r[axis, :,-1], v[axis, :,-1], color="b", label="Finish")
+        plt.plot(r[axis,i,:], v[axis,i,:], zorder=-0, label="Particle %i" %(i+1))
+    plt.scatter(r[axis, :,0], v[axis, :,0], s=50, zorder=1, color="k", marker="x", label="Start")
+    plt.scatter(r[axis, :,-1], v[axis, :,-1], s=50, zorder=1, color="r", label="Finish")
     plt.axis("equal")
     
     if axis==0:
@@ -147,7 +154,7 @@ def plot_phase_space(r, N, v, axis, save=False):
     elif axis==2:
         plt.xlabel(r"$z$ ($\mu$m)")
         plt.ylabel(r"$v_z$ [$\mu$m/$\mu$s]")   
-    plt.legend()
+    plt.legend(loc="upper right")
 
     if save != False:
         plt.savefig("../figures/%s_N%i.pdf" %(save, N), dpi=300, bbox_inches="tight")
@@ -166,9 +173,9 @@ def plot_3D(r, N, save=False):
     ax = fig.gca(projection="3d")
 
     for i in range(np.size(r, axis=1)):
-        ax.plot3D(r[0,i,:], r[1,i,:], r[2,i,:], label="Particle %i" %(i+1))
-    ax.scatter3D(r[0,:,0], r[1,:,0], r[2,:,0], color="r",s=20, label="Start")
-    ax.scatter3D(r[0,:,-1], r[1,:,-1], r[2,:,-1], color="b", s=20, label="Finish")
+        ax.plot3D(r[0,i,:], r[1,i,:], r[2,i,:], zorder=-0, label="Particle %i" %(i+1))
+    ax.scatter3D(r[0,:,0], r[1,:,0], r[2,:,0], zorder=1, color="k", marker="x",s=50, label="Start")
+    ax.scatter3D(r[0,:,-1], r[1,:,-1], r[2,:,-1], zorder=1, color="r", s=50, label="Finish")
 
     ax.set_xlabel(r"x ($\mu$m)")
     ax.set_ylabel(r"y ($\mu$m)")
@@ -190,6 +197,8 @@ def compare_analytic(N, T, x_axis, y_axis, save=False):
     - y_axis            Axis of position to plot on y-axis in 2D position plot and time dependency plot
     - save (opt)        Savename of plot, default False 
     """
+   
+    
     r_A = run(N, T, 1, "false", "Analytic")
     r_E, v_E = run(N, T, 1, "false", "Euler")
     r_RK, v_RK = run(N, T, 1, "false", "RK4")
@@ -222,6 +231,7 @@ def compare_error(N, T, method_in, save=False, norm=True):
     - save (opt)        Savename of plot, default False 
     - norm (opt)        Using length of vector (True or False) default True
     """
+   
     delta_max = np.zeros(len(N))
     for i in range(len(N)):
         t = np.linspace(0, T, N[i])
@@ -258,6 +268,8 @@ def compare_error(N, T, method_in, save=False, norm=True):
     plt.show()
 
 def plot_p_fraction_frequency(r, save = False):
+
+   
     """
     Function to plot fraction of particles left in Penning trap for a range of frequencies and different amplitudes f.
     Takes in:
@@ -281,43 +293,52 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 10000
-    T = 500
+    N = 50000
+    T = 50
     n = 100
     f= 0.4
     omega = 0.685
     
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
-    plot_compare_analytic = False
-    phase_space_and_3D = False 
-    compare_error_plot = False 
+    plot_compare_analytic = True
+    phase_space_and_position = True 
+    compare_error_plot = True 
     wide_freq_scan = False
     narrow_freq_scan = False
     narrow_freq_scan_interaction = False 
-    particle_escape = True
+    particle_escape = False
 
     """Comparing to analytic solutions"""
     if plot_compare_analytic:
         compare_analytic(N, T, x_axis=0, y_axis=1, save="compare_analytic")
         compare_analytic(N, T, x_axis=0, y_axis=2, save="compare_analytic")
 
-    if phase_space_and_3D:
+    if phase_space_and_position:
         """Phase space plot without interaction"""
-        r, v = run(N, T, 2, interaction="false", method="RK4")
-        plot_phase_space(r, N, v, 0, save="phase_space_x_no_interaction")
-        plot_phase_space(r, N, v, 2, save="phase_space_x_no_interaction")
+        method = "RK4"
+        r, v = run(N, T, 2, interaction="false", method=method)
+        plot_phase_space(r, N, v, 0, save="phase_space_x_%s" %(method))
+        plot_phase_space(r, N, v, 2, save="phase_space_z_%s" %(method))
 
         """3D plot"""
-        plot_3D(r, N, save="3D_2_particles_no_interaction")
+        plot_X(r, 0, 1)
+        plt.savefig("../figures/2p_N%i_%s_xy.pdf" %(N, method), dpi=300, bbox_inches="tight")
+        plt.show()
+        plot_3D(r, N, save="3D_2_particles_%s" %(method))
 
         """Phase space plot with interaction"""
-        r, v = run(N, T, 2, interaction="true", method="RK4")
-        plot_phase_space(r, N, v, 0, save="phase_space_x_with_interaction")
-        plot_phase_space(r, N, v, 2, save="phase_space_x_with_interaction")
+        r, v = run(N, T, 2, interaction="true", method=method)
+        plot_phase_space(r, N, v, 0, save="phase_space_x_interaction_%s" %(method))
+        plot_phase_space(r, N, v, 2, save="phase_space_z_interaction_%s" %(method))
 
         """3D plot"""
-        plot_3D(r, N, save="3D_2_particles_with_interaction")
+        plot_X(r, 0, 1)
+        plt.savefig("../figures/2p_N%i_%s_xy_interaction.pdf" %(N, method), dpi=300, bbox_inches="tight")
+        
+        plt.show()
+
+        plot_3D(r, N, save="3D_2_particles_%s_interaction" %(method))
 
     """Compare Error for different N"""
     if compare_error_plot:
