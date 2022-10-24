@@ -403,7 +403,13 @@ range is initially explored with a step size of $0.2$ MHz disregarding Coulomb i
 looked at closely with smaller step sizes once with Coulomb interactions and once without.
 % \textit{As demonstrated in algorithm~\ref{algo:midpointrule}, it is conventional to present algorithms in a way that is independent of any specific programming language. This ensures that it is the logic behind the algorithm that remains in focus, rather than the syntax of a particular programming language. In algorithm~\ref{algo:midpointrule} we have also demonstrated a common notation: The right-to-left arrow ($\leftarrow$) means that we assign the value of everything on the right to the variable on the left. This is nothing but how the ``='' symbol functions in most programming languages, but the arrow notation makes it clear that we are in fact assigning a value, rather than stating that two things are equal.}
 
-
+\subsection*{Error analysis}
+To check the validity of our methods and gauge how realistic our Penning trap simulations are we perform an error analysis of the 
+numerical methods implemented. This is done by considering the simple case of a single particle, making it easy to compare the numerical 
+to analytic results. The simulation with Particle 1 is run over 50 $\mu$s. This is done for four different step sizes $h_k = 50 / n_k \mu$s.
+The chosen step sizes are for $n_1 = 4000, n_2 = 8000, n_3 = 16000, n_4 = 32000$. For each step size the relative error of $\textbf{r}_i$ 
+for each time step $t_i$ is calculated for both algorithms.
+Additionally, these results are used to calculate the error convergence rate in both cases.
 % % ===========================================
 \section{Results}\label{sec:results}
 First we test our Penning trap's behavior for a single particle to see if it produces the expected motion in this simple case.
@@ -412,7 +418,7 @@ All three solutions have been plotted in figure \ref{fig:compare_analytic_tz} fo
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/compare_analytic_t_axis_2_N10000.pdf}
-    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=10000$. The analytic, Euler and RK4 solutions are shown.}
+    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=10000$. The analytic (in black), Euler (in orange) and RK4 (in blue) solutions are shown.}
     \label{fig:compare_analytic_tz}
 \end{figure}
 Figure \ref{fig:compare_analytic_tz} shows that both the forward Euler and RK4 method show the same
@@ -545,16 +551,16 @@ the particles motion since they repel each other. Here we look at only two parti
 but in a case of $n$ particles we would expect larger deviations between motion with and without interactions for increasing $n$.
 
 Similarly, there are noticeable differences with and without interactions for the phase space $(x, v_x)$ in figure \ref{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
-and \ref{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy} and the phase space $(z, v_z)$ in figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
+and \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} and the phase space $(z, v_z)$ in figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
 and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}. From a physical point of view the results again seem reasonable. Specifically looking at
 the phase space $(z, v_z)$, figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} without interaction shows a repetitive relation between velocity and position.
 Figure \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} with interaction on the other hand shows a very different result as expected, since the particles
 repel each other thereby affecting each other's velocities.
 
-Comparing the 3D-plot in figure \ref{fig:3D_2_particles_no_interaction}, without
-particle interactions, to figure \ref{fig:3D_2_particles_with_interaction}, with interactions, one notices that the start positions
-are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue
-lines in the two figures. This supports that the Coulomb interaction has an important effect on particle motion in the Penning trap.
+% The 3D-plots in figure \ref{fig:3D_2_particles_no_interaction}, without
+% particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, with interactions allow us to see the full complexity of the particle motion. 
+% Already for two particles the paths are hard to follow.  
+
 
 The error analysis in figures \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} clearly shows that we gain
 precision for smaller step sizes in the numerical simulations as expected. Furthermore, the fourth order Runge-Kutta method gives a better
