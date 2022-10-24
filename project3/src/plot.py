@@ -296,17 +296,17 @@ def main():
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
     N = 5000
-    T = 500
+    T = 50
     n = 1
     f = 0.1
     omega = 2.2
     
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
-    plot_compare_analytic = False
+    plot_compare_analytic = True
     phase_space_and_position = False 
     compare_error_plot = False 
-    particle_escape = True
+    particle_escape = False
 
     wide_freq_scan = False
     narrow_freq_scan = False
