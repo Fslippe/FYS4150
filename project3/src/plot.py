@@ -295,7 +295,7 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 5000
+    N = 10000
     T = 50
     n = 1
     f = 0.1

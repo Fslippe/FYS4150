@@ -22,7 +22,7 @@ void PenningTrap::add_particle(Particle p_in)
   p.push_back(p_in);
 }
 
-// Add n random particles to the trap
+// Add n random Ca+ particles to the trap
 void PenningTrap::add_n_random_particles(int n)
 {
   double q = 1;
@@ -65,7 +65,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r, double t)
   return E_ext;
 }
 
-// External electric field at point r=(x,y,z)
+// External electric field at point r=(x,y,z) without time dependence
 arma::vec PenningTrap::external_E_field(arma::vec r)
 {
   arma::vec E_ext;
@@ -83,6 +83,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
   }
   return E_ext;
 }
+
 // External magnetic field at point r=(x,y,z)
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
@@ -214,6 +215,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
   time += dt;
 }
 
+// Takes in t vector with time steps, returns analytic solution of single particle motion over time as vectros x, y, z. 
 arma::mat PenningTrap::analytic(arma::vec t)
 {
   n = t.size();
@@ -256,7 +258,7 @@ arma::mat PenningTrap::analytic(arma::vec t)
   return r_a;
 }
 
-//Returns number of particles still inside trap
+// Returns number of particles still inside trap at the time of being called
 int PenningTrap::particles_left_in_trap()
 {
   counter = 0;
@@ -270,7 +272,7 @@ int PenningTrap::particles_left_in_trap()
   return counter;
 }
 
-//Creates a matrix with fraction of particles left in trap for different amplitudes and frequencies and writes it to a .dat file.
+// Creates a matrix with fraction of particles left in trap for different amplitudes and frequencies and writes it to a .dat file.
 void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step)
 {
   int points = (omega_max - omega_min) /omega_step + 2;
