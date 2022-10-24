@@ -431,7 +431,25 @@ We again compare the three solutions but now using a smaller time step of $n=500
     \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=5000$. The analytic, Euler and RK4 solutions are shown.}
     \label{fig:compare_analytic_tz_5000}
 \end{figure}
-Above in figure \ref{fig:compare_analytic_tz_5000} we again see a growing error for Euler while RK4 still agrees well with the analytic solution.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/compare_analytic_axis_0_1_N10000.pdf}
+    \caption{Horizontal motion of a single particle over 50 $\mu s$ for $N=10000$. The analytic, Euler and RK4 solutions are shown.}
+    \label{fig:compare_analytic_axis_0_1_N10000}
+\end{figure}
+Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical methods perform as similarly for all spatial axes of the simulation. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/compare_analytic_axis_0_1_N5000.pdf}
+    \caption{Horizontal motion of a single particle over 50 $\mu s$ for $N=5000$. The analytic, Euler and RK4 solutions are shown.}
+    \label{fig:compare_analytic_axis_0_1_N5000}
+\end{figure}
+
+
+
+Above in figure \ref{fig:compare_analytic_tz_5000} and \ref{fig:compare_analytic_axis_0_1_N5000} we see a growing error for Euler while RK4 still agrees well with the analytic solution.
 We also notice that a change in number of timesteps from $N=10000$ to $N=5000$ impacts the performence of the Euler method, while RK4 keeps its accuracy indicating the superiority of this method.
 All this means that we now especially can trust the RK4 method but also Euler while keeping the timestep $h=T/N$ low.
 
