@@ -2,7 +2,6 @@ import numpy as np
 import pyarma as pa 
 import matplotlib.pyplot as plt 
 import os
-import timeit
 import seaborn as sns
 
 plt.rcParams.update({"lines.linewidth": 2})
@@ -22,7 +21,7 @@ def run(N, T, n, interaction, method, time_dependency="false", f=0.4, omega=0.68
     """
     if compile == True:
         print("Compiling...\n")
-        compile_cpp = os.system("g++ main.cpp penningtrap.cpp particle.cpp -o main -larmadillo -O2"),
+        compile_cpp = os.system("g++ -std=c++11 main.cpp penningtrap.cpp particle.cpp -o main -larmadillo -O2"),
     print("Running")
     run_cpp = os.system("./main %s %s %s %s %s %s %s %s" %(N, T, n, interaction, method, time_dependency, f, omega))   
 
@@ -46,8 +45,8 @@ def run_frequency_scan(N, T, n, interaction, omega_min, omega_max, omega_step, c
     """
     if compile == True:
         print("Compiling...\n")
-        compile_cpp = os.system("g++ -std=c++11 time_dep.cpp penningtrap.cpp particle.cpp -o time_dep -larmadillo -O2"),
-    run_cpp = os.system("./time_dep %s %s %s %s %s %s %s" %(N, T, n, interaction, omega_min, omega_max, omega_step))   
+        compile_cpp = os.system("g++ -std=c++11 frequency_scan.cpp penningtrap.cpp particle.cpp -o frequency_scan -larmadillo -O2"),
+    run_cpp = os.system("./frequency_scan %s %s %s %s %s %s %s" %(  ))   
 
   
     data = pa.mat()
@@ -300,7 +299,7 @@ def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 1000
+    N = 2000
     T = 500
     n = 1
     f = 0.1
@@ -405,7 +404,6 @@ def main():
         r = run_frequency_scan(N, T, n, interaction="true",
             omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=False)
         plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_%s_interaction_zoom" %(N))
-
 
 if __name__ == "__main__":
     main()
