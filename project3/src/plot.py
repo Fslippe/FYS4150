@@ -304,9 +304,9 @@ def main():
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
     plot_compare_analytic = True
-    phase_space_and_position = True 
-    compare_error_plot = True 
-    particle_escape = True
+    phase_space_and_position = True      
+    compare_error_plot = True        
+    particle_escape = True      
 
     wide_freq_scan = False
     narrow_freq_scan = False
