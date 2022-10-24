@@ -72,7 +72,7 @@ def plot_X(X, x_axis, y_axis, linestyle="-", label="",show=False):
         plt.plot(X[x_axis, 0, :], X[y_axis, 0, :], linestyle=linestyle, label="%s" %(label))
     else:
         for i in range(np.size(X, axis=1)):
-            plt.plot(X[x_axis, i, :], X[y_axis, i, :], zorder=-0, linestyle=linestyle, label="Particle %i %s" %(i, label))
+            plt.plot(X[x_axis, i, :], X[y_axis, i, :], zorder=-0, linestyle=linestyle, label="Particle %i %s" %(i+1, label))
         plt.scatter(X[x_axis, :, 0], X[y_axis, :, 0], s=50, marker="x", zorder=1, color="k", label="%s" %("Start"))
         plt.scatter(X[x_axis, :, -1], X[y_axis, :, -1], s=50, marker="o", zorder=1, color="r", label="%s" %("Finish"))
         
@@ -304,9 +304,9 @@ def main():
     #r, v = run(N, T, n, "false", "RK4", compile=True) 
 
     plot_compare_analytic = True
-    phase_space_and_position = False 
-    compare_error_plot = False 
-    particle_escape = False
+    phase_space_and_position = True 
+    compare_error_plot = True 
+    particle_escape = True
 
     wide_freq_scan = False
     narrow_freq_scan = False
