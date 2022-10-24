@@ -27,15 +27,15 @@ g++ -std=c++11 frequency_scan.cpp penningtrap.cpp particle.cpp -o frequency_scan
 ./frequency_scan N T n interaction omega_min omega_max omega_step
 ```
 Here we have the chosen parameters given as command line arguments:
-- int N:                  Number of timesteps
-- double T:               Time
-- int n:                  Number of particles in the Penning Trap 
-- bool interaction:       true to run with particle interactions, false otherwise
-- stringmethod:           Method to run, Analyic, Euler or RK4
-- bool time_dependency:   true to run with time dependent $V_0$, false otherwise
-- double f:               Amplitude of time dependent $V_0$
-- double omega:           Frequency of time dependent $V_0$
-- double omega_min:       Smallest frequency for $V_0$ when performing frequency scan
-- double omega_max:       Largest frequency for $V_0$ when performing frequency scan
-- double omega_step:      Frequency stepsize for $V_0$ when performing frequency scan
+- **int N:**                  Number of timesteps
+- **double T:**               Time
+- **int n:**                  Number of particles in the Penning Trap 
+- **bool interaction:**       true to run with particle interactions, false otherwise
+- **stringmethod:**       Method to run, Analyic, Euler or RK4
+- **bool time_dependency:**   true to run with time dependent $V_0$, false otherwise
+- **double f:**  Amplitude of time dependent $V_0$
+- **double omega:** Frequency of time dependent $V_0$
+- **double omega_min:** Smallest frequency for $V_0$ when performing frequency scan
+- **double omega_max:** Largest frequency for $V_0$ when performing frequency scan
+- **double omega_step:** Frequency stepsize for $V_0$ when performing frequency scan
 
