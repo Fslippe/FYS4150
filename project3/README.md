@@ -15,6 +15,9 @@ pip3 install pyarma
 pip3 install matplotlib
 pip3 install seaborn
 ```
+
+Everything is built around two classes penningtrap and particle with their own .cpp and .hpp files. 
+All computations use the main.cpp file which includes both the classes except for a frequency scan that use frequency_scan.cpp to compute the results. 
 The python file "plot.py" reproduces all figures and results by compiling, linking, and running the necessary c++ code. All this can be done by
 ```
 python3 plot.py
@@ -28,7 +31,7 @@ g++ -std=c++11 frequency_scan.cpp penningtrap.cpp particle.cpp -o frequency_scan
 ```
 Here we have the chosen parameters given as command line arguments:
 - *int* **N:**                  Number of timesteps
-- *double* T:**               Time
+- *double* **T:**               Time
 - *int* **n:**                  Number of particles in the Penning Trap 
 - *bool* **interaction:**       true to run with particle interactions, false otherwise
 - *string* **method:**       Method to run, Analyic, Euler or RK4
