@@ -39,7 +39,7 @@ class PenningTrap
 
   public:
     // Member variables
-    int n;
+    int n; // Number of particles 
     double dt2; //perform 4n less FLOPs by cutting divide in k2 and k3
     double dt6; //perform 2n less FLOPs by cutting divide in evolve
     double B_0; // magnetic field strength
@@ -47,8 +47,8 @@ class PenningTrap
     double d; // characteristic dimension
     bool interaction;
     bool time_dependency; 
-    double V_0_d2; // V_0 / (d*d)
-    double time = 0;
+    double V_0_d2; // V_0 / (d*d) for time independency
+    double time = 0; // time value to be updated
     double f; // amplitude_in
     double omega_v; // frequency_in
 
