@@ -446,20 +446,26 @@ Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical me
     \caption{Horizontal motion of a single particle over 50 $\mu s$ for $N=5000$. The analytic, Euler and RK4 solutions are shown.}
     \label{fig:compare_analytic_axis_0_1_N5000}
 \end{figure}
-
-
-
 Above in figure \ref{fig:compare_analytic_tz_5000} and \ref{fig:compare_analytic_axis_0_1_N5000} we see a growing error for Euler while RK4 still agrees well with the analytic solution.
 We also notice that a change in number of timesteps from $N=10000$ to $N=5000$ impacts the performence of the Euler method, while RK4 keeps its accuracy indicating the superiority of this method.
 All this means that we now especially can trust the RK4 method but also Euler while keeping the timestep $h=T/N$ low.
 
-We continue using $N=10000$ time steps and the RK4 method to plot the motion of Particle 1 and Particle 2 in the $xy$-plane when they do not interact.
+%z motion over 500 , RK4 vs analytic
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/analytic_RK4_t_axis_2_N5000.pdf}
+    \caption{Vertical motion of a single particle over 500 $\mu s$ for $N=5000$. The analytic and RK4 solutions are shown.}
+    \label{fig:analytic_RK4_t_axis_2_N5000}
+\end{figure}
+
+Figure \ref{fig:analytic_RK4_t_axis_2_N5000} shows that the RK4 method agrees with the analytic solution even for a longer time period of 500 $\mu$s 
+Based on this we continue using $N=5000$ time steps and the RK4 method to plot the motion of Particle 1 and Particle 2 in the $xy$-plane when they do not interact.
 That is, disregarding the Coulomb force.
 %two particles
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/2p_N10000_RK4_xy.pdf}
-    \caption{The horizontal ($xy$-plane) path of two particles without interaction.}
+    \includegraphics[width=.5\textwidth]{../figures/2p_N5000_RK4_xy.pdf}
+    \caption{The horizontal ($xy$-plane) path of two particles without interaction for for $N = 5000$.}
     \label{fig:RK4_2_xy_no_interaction_xy}
 \end{figure}
 In figure \ref{fig:RK4_2_xy_no_interaction_xy}
@@ -469,8 +475,8 @@ We continue with the same parameters and particles but now adding the Coloumb fo
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/2p_N10000_RK4_xy_interaction.pdf}
-    \caption{The horizontal ($xy$-plane) path of two particles with interaction.}
+    \includegraphics[width=.5\textwidth]{../figures/2p_N5000_RK4_xy_interaction.pdf}
+    \caption{The horizontal ($xy$-plane) path of two particles with interaction for $N = 5000$.}
     \label{fig:RK4_2_xy_with_interaction_xy}
 \end{figure}
 
@@ -480,15 +486,15 @@ In figure \ref{fig:RK4_2_xy_with_interaction_xy} we see a similar motion as in f
 % Phase spaces xy
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/phase_space_x_RK4_N10000.pdf}
-    \caption{The phase space $(x, v_x)$ of two particles without interaction.}
+    \includegraphics[width=.5\textwidth]{../figures/phase_space_x_RK4_N5000.pdf}
+    \caption{The phase space $(x, v_x)$ of two particles without interaction for $N = 5000$.}
     \label{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/phase_space_x_interaction_RK4_N10000.pdf}
-    \caption{The phase space $(x, v_x)$ of two particles with interaction.}
+    \includegraphics[width=.5\textwidth]{../figures/phase_space_x_interaction_RK4_N5000.pdf}
+    \caption{The phase space $(x, v_x)$ of two particles with interaction for $N = 5000$.}
     \label{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 The two figures above show the trajectories of Particle 1 and Particle 2 in the $(x,v_x)$ plane.
@@ -501,15 +507,15 @@ figure \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows more va
 % Phase spaces z
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/phase_space_z_RK4_N10000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles without interaction for $N = 10000$.}
+    \includegraphics[width=.5\textwidth]{../figures/phase_space_z_RK4_N5000.pdf}
+    \caption{The phase space $(z, v_z)$ of two particles without interaction for $N = 5000$.}
     \label{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/phase_space_z_interaction_RK4_N10000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles with interaction for $N = 10000$.}
+    \includegraphics[width=.5\textwidth]{../figures/phase_space_z_interaction_RK4_N5000.pdf}
+    \caption{The phase space $(z, v_z)$ of two particles with interaction for $N = 5000$.}
     \label{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 Figures \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
@@ -521,15 +527,15 @@ which includes particle interactions on the other hand displays more irregular t
 %3D path plots
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_N10000.pdf}
-    \caption{Shows a 3D representation of two particle paths without interaction for $N = 10000$.}
+    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_N5000.pdf}
+    \caption{Shows a 3D representation of two particle paths without interaction for $N = 5000$.}
     \label{fig:3D_2_particles_no_interaction}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_interaction_N10000.pdf}
-    \caption{Shows a 3D representation of two particle paths with interaction for $N = 10000$.}
+    \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_interaction_N5000.pdf}
+    \caption{Shows a 3D representation of two particle paths with interaction for $N = 5000$.}
     \label{fig:3D_2_particles_with_interaction}
 \end{figure}
 Looking at the 3D-plots in figures \ref{fig:3D_2_particles_no_interaction} and \ref{fig:3D_2_particles_with_interaction}
