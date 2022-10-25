@@ -413,7 +413,7 @@ following replacement will be made:
 \begin{equation}
     V_0 \rightarrow V_0 (1 + f \cos(\omega_V t) )
 \end{equation}
-The simulation is run for 500 $\mu s$ for amplitudes $ f = 0.1, 0.4, 0.7$ and frequencies $\omega_V \in (0.2,2.5)$. The frequency
+The simulation is run for 500 $\mu s$ for amplitudes $ f = 0.1, 0.4, 0.7$ and frequencies $\omega_V \in [0.2,2.5]$ MHz. The frequency
 range is initially explored with a step size of $0.2$ MHz disregarding Coulomb interactions. An area of interest (in this case $\omega_V \in (2.05,2.35)$)
 is then
 looked at closely with smaller step sizes of 0.001 MHz once with Coulomb interactions and once without.
@@ -481,7 +481,7 @@ That is, disregarding the Coulomb force.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/2p_N5000_RK4_xy.pdf}
-    \caption{The horizontal ($xy$-plane) path of two particles without interaction for for $N = 5000$.}
+    \caption{The horizontal ($xy$-plane) path of two particles \textbf{without interaction} for for $N = 5000$.}
     \label{fig:RK4_2_xy_no_interaction_xy}
 \end{figure}
 In figure \ref{fig:RK4_2_xy_no_interaction_xy}
@@ -492,7 +492,7 @@ We continue with the same parameters and particles but now adding the Coloumb fo
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/2p_N5000_RK4_xy_interaction.pdf}
-    \caption{The horizontal ($xy$-plane) path of two particles with interaction for $N = 5000$.}
+    \caption{The horizontal ($xy$-plane) path of two particles \textbf{with interaction} for $N = 5000$.}
     \label{fig:RK4_2_xy_with_interaction_xy}
 \end{figure}
 
@@ -503,14 +503,14 @@ In figure \ref{fig:RK4_2_xy_with_interaction_xy} we see a similar motion as in f
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_x_RK4_N5000.pdf}
-    \caption{The phase space $(x, v_x)$ of two particles without interaction for $N = 5000$.}
+    \caption{The phase space $(x, v_x)$ of two particles \textbf{without interaction} for $N = 5000$.}
     \label{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_x_interaction_RK4_N5000.pdf}
-    \caption{The phase space $(x, v_x)$ of two particles with interaction for $N = 5000$.}
+    \caption{The phase space $(x, v_x)$ of two particles \textbf{with interaction} for $N = 5000$.}
     \label{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 The two figures above show the trajectories of Particle 1 and Particle 2 in the $(x,v_x)$ plane.
@@ -524,14 +524,15 @@ figure \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows more va
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_z_RK4_N5000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles without interaction for $N = 5000$.}
+    \caption{The phase space $(z, v_z)$ of two particles \textbf{without interaction} for $N = 5000$.}
     \label{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_z_interaction_RK4_N5000.pdf}
-    \caption{The phase space $(z, v_z)$ of two particles with interaction for $N = 5000$.}
+    \caption{The phase space $(z, v_z)$ of two particles \textbf{
+    with interaction} for $N = 5000$.}
     \label{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 Figures \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
@@ -544,14 +545,14 @@ which includes particle interactions on the other hand displays more irregular t
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_N5000.pdf}
-    \caption{Shows a 3D representation of two particle paths without interaction for $N = 5000$.}
+    \caption{Shows a 3D representation of two particle paths \textbf{without interaction} for $N = 5000$.}
     \label{fig:3D_2_particles_no_interaction}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/3D_2_particles_RK4_interaction_N5000.pdf}
-    \caption{Shows a 3D representation of two particle paths with interaction for $N = 5000$.}
+    \caption{Shows a 3D representation of two particle paths \textbf{with interaction} for $N = 5000$.}
     \label{fig:3D_2_particles_with_interaction}
 \end{figure}
 Looking at the 3D-plots in figures \ref{fig:3D_2_particles_no_interaction} and \ref{fig:3D_2_particles_with_interaction}
@@ -560,11 +561,11 @@ particle interactions, to figure \ref{fig:3D_2_particles_with_interaction}, with
 are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue
 lines in the two figures.
 
-Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we see plots of the relative error of our two numerical methods for different choices of $N$. We also see the belonging error convergence rate.
+Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we see plots of the relative error of our two numerical methods for different choices of $N$. We also see the belonging error convergence rate. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/relative_error_Euler_norm.pdf}
-    \caption{The plot shows the relative error for a single particle's motion over 50 $\mu s$ using the forward Euler approximation.
+    \caption{The plot shows the relative error on a Log scale for a single particle's motion over 50 $\mu s$ using the forward Euler approximation.
         The four different lines show results for different step sizes $h = 50/N \mu s$ }
     \label{fig:relative_error_Euler_norm}
 \end{figure}
@@ -572,38 +573,32 @@ Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/relative_error_RK4_norm.pdf}
-    \caption{The plot shows the relative error for a single particle's motion over 50 $\mu s$ using the fourth order Runge-Kutta approximation.
+    \caption{The plot shows the relative error on a Log scale for a single particle's motion over 50 $\mu s$ using the fourth order Runge-Kutta approximation.
         The four different lines show results for different step sizes $h = 50/N \mu s$ }
     \label{fig:relative_error_RK4_norm}
 \end{figure}
-We see that the error convergence rate of the RK4 method is 4 while the less accurate Euler has a convergence rate of 1.397. We notice that the logarithmic y-axis of the two figures are on different order and showing us the superiority of the RK4 method giving us more accurate results for $N=4000$ than Euler manages to do for $N=32000$. We also notice an oscillating nature of the relative error over time meaning that our methods perform worse for some particle positions than others.
-
-Considering the case of a single particle to allow for a comparison to the analytic solution, figures \ref{fig:relative_error_Euler_norm}
-and \ref{fig:relative_error_RK4_norm} display the relative error of the forward Euler method (figure \ref{fig:relative_error_Euler_norm})
-and the RK4 method (figure \ref{fig:relative_error_RK4_norm}) for different step sizes $h = 50/N \mu s$. Noticeably for both
-methods, the error decreases as the step size does too (increasing the number of points $N$). Comparing the two, one clearly
-sees that the RK4 method is more precise than the forward Euler.
+Noticeably for both methods, the error decreases as the step size does too (increasing the number of points $N$) as expected. We see that the error convergence rate of the RK4 method is 4 while the less accurate Euler has a convergence rate of 1.397. Additionally, the logarithmic y-axis of the two figures are of different orders, showing the superiority of the RK4 method giving us more accurate results for $N=4000$ than Euler manages to do for $N=32000$. We also notice an oscillating nature of the relative error over time. 
 
 Under in figure \ref{fig:wide_freq_p_left_N_5000} we can see a wide frequency scan for three different amplitudes using a frequency step of $0.02$MHz.
 Here we have again used $N=5000$ steps for the RK4 method
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/wide_freq_p_left_N_5000.pdf}
-    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in (0.2,2.5)$MHz. Each color
-            shows results for a different amplitude f. The simulation is for 100 random particles \textbf{without interactions}
+    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in [0.2,2.5]$ MHz. Each color
+            shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions}
             and $N = 5000$.}
     \label{fig:wide_freq_p_left_N_5000}
 \end{figure}
-We see 4 main frequency bands giving us a resonance in the motion of our particles. These are around a frequency of 0.45, 0.65, 1.4 and 2.2 MHz. We also see that the more narrow resonance bands needs a higher amplitude to throw the particles out of the Penningtrap. The most efficient ressonance frequencies are in other words the ones where even an amplitude of 0.1 is enough.
+We see 4 main frequency bands giving us a resonance in the motion of our particles. These are around a frequency of 0.45, 0.65, 1.4 and 2.2 MHz. We also see that the more narrow resonance bands need a higher amplitude to throw the particles out of the Penningtrap. The most efficient ressonance frequencies are in other words the ones where even an amplitude of 0.1 is enough.
 
 % zoomed without interaction
-We continue with a frequency analysis and zoom in on frequencies in the interval [2.05, 2.35]MHz for a frequency step of 0.001MHz. This gives us figure \ref{fig:narrow_freq_p_left_N_5000_zoom}.
+We continue with a frequency analysis and zoom in on frequencies in the interval [2.05, 2.35] MHz for a frequency step of 0.001MHz. This gives us figure \ref{fig:narrow_freq_p_left_N_5000_zoom}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom.pdf}
-    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
-            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a
-            different amplitude f. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
+    \caption{The fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
+            is shown. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
+            different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_zoom}
 \end{figure}
 We see the same as we saw in figure \ref{fig:wide_freq_p_left_N_5000} just now with more details giving us a smoother plot.
@@ -613,41 +608,37 @@ By turning on particle interaction and looking at the same frequency spectrum we
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_interaction_zoom.pdf}
-    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
-            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a
-            different amplitude f. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
+            different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
 \end{figure}
-Here we see that the particle interactions clearly has an impact on how well the frequencies resonates with the motion of our particles. We see that some frequencies now resonates better than before and others that resonates worse. This is especially visible for frequencies around 2.05 and and 2.125 for $f=0.7$ which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
+We see that some frequencies now resonates better than before and others that resonates worse. This is especially visible for frequencies from 2.05 to 2.125 for $f=0.7$ which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 
-
+Initial simulations present results showing the general behavior of our numerical Penning trap. 
+% Particel motion discussion
 Comparing figure \ref{fig:RK4_2_xy_no_interaction_xy} and \ref{fig:RK4_2_xy_with_interaction_xy} shows that the Coulomb force has a noticeable effect on
-the particles motion since they repel each other. Here we look at only two particles interacting and the results with and without interactions are not extremely different,
-but in a case of $n$ particles we would expect larger deviations between motion with and without interactions for increasing $n$.
+the particles motion, this matches expectations from a physical point of view since two positively charged particles will repel each other. This is exactly what happens in figure \ref{fig:RK4_2_xy_with_interaction_xy}. Here we look at only two particles interacting and the results with and without interactions are not extremely different,
+but in a case of $n$ particles we would expect larger deviations between motion with and without interactions for increasing $n$ since all the equations of motion are coupled.
 
 Similarly, there are noticeable differences with and without interactions for the phase space $(x, v_x)$ in figure \ref{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
 and \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} and the phase space $(z, v_z)$ in figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
-and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}. From a physical point of view the results again seem reasonable. Specifically looking at
-the phase space $(z, v_z)$, figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} without interaction shows a repetitive relation between velocity and position.
-Figure \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} with interaction on the other hand shows a very different result as expected, since the particles
+and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}. From a physical point of view the results again seem reasonable since the particles
 repel each other thereby affecting each other's velocities.
 
-% The 3D-plots in figure \ref{fig:3D_2_particles_no_interaction}, without
-% particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, with interactions allow us to see the full complexity of the particle motion.
-% Already for two particles the paths are hard to follow.
-
-
-The error analysis in figures \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} clearly shows that we gain
-precision for smaller step sizes in the numerical simulations as expected. Furthermore, the fourth order Runge-Kutta method gives a better
-approximation that the forward Euler method. This is again as expected since the local truncation error for Euler is $\mathcal{O}(h^2)$ and for RK4 is $\mathcal{O}(h^5)$.
-The RK4 method thus deviating less from the analytical solution for small values of $h$.
-
+The 3D-plots in figure \ref{fig:3D_2_particles_no_interaction}, without
+particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, with interactions allow us to see the full complexity of the particle motion.
+Already for two particles the paths are hard to follow, and other figures give more valuable information, but they give us a more intuitive representation of particle trajectories in a Penning trap. Especially for the unrealistic case without Coulomb interaction the particles stay within specific boundaries.
 
 %ERROR Discussion
-We saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods works. Euler uses the current position and velocity to step forward which for too large timesteps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in a atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity.
+We saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods work. Euler uses the current position and velocity to step forward which for too large time steps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in an atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity. The oscillating behavior of the relative error indicates that our methods perform worse for some particle positions than others.
+
+%frequency Discussion
+Having confirmed an acceptable precision of the RK4 method we move on to larger simulations exploring resonance phenomena. Certain angular frequencies cause all particles to escape whilst others result in all particles remain as seen in figure \ref{fig:wide_freq_p_left_N_5000}. 
+
+Comparing results in figures \ref{fig:narrow_freq_p_left_N_5000_zoom} and \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} we see that particle interaction clearly has an impact on how well the frequencies resonate with the motion of the particles. 
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
