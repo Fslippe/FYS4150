@@ -34,7 +34,6 @@ edition = {1},
 year = {2006},
 adress = {New York}
 }
-\nocite{bishop}
 @book{hastie,
 author = {Trevor Hastie and Robert Tibshirani and Jerome Friedman},
 title = {The Elements of Statistical Learning},
