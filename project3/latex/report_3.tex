@@ -652,7 +652,23 @@ By turning on particle interaction and looking at the same frequency spectrum we
         different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
 \end{figure}
-We see that some frequencies now resonates better than before and others that resonates worse. This is especially visible for frequencies from 2.05 to 2.125 for $f=0.7$ which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom_compare.pdf}
+    \caption{Comparison of the fraction of particles that are left after 500 $\mu$s for $f = 0.7$. The orange line shows results \textbf{with interaction} and the blue line results \textbf{without interaction}. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. The simulation is for 100 particles and $N = 5000$.}
+    \label{fig:narrow_freq_p_left_N_5000_zoom_compare}
+\end{figure}
+We see that some frequencies now resonate more than before and others resonate less. This is especially visible for frequencies from 2.05 to 2.125 for $f=0.7$ shown in figure \ref{fig:narrow_freq_p_left_N_5000_zoom_compare}, which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/ressonance_p1_norm_f0.10_omega_2.20_x_500.pdf}
+    \caption{Here a single particle's (Particle 1) distance from the origin is plotted over time. The blue line represents variations under a constant electromagnetic field $V_0$. The orange line is for the same particle subjected to a time-dependent electromagnetic field with amplitude $f = 0.1$ and angular frequency $\omega_V = 2.20$.}
+    \label{fig:ressonance_p1_norm_f0}
+\end{figure}
+
+Figure \ref{fig:ressonance_p1_norm_f0} shows a Particel  
+
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
@@ -673,7 +689,7 @@ particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, wit
 Already for two particles the paths are hard to follow, and other figures give more valuable information, but they give us a more intuitive representation of particle trajectories in a Penning trap. Especially for the unrealistic case without Coulomb interaction the particles stay within specific boundaries.
 
 %ERROR Discussion
-In figure \ref{relative_error_Euler_norm} and \ref{relative_error_RK4_norm} we saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods work. Euler uses the current position and velocity to step forward which for too large time steps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in an atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity. The oscillating behavior of the relative error indicates that our methods perform worse for some particle positions than others.
+In figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods work. Euler uses the current position and velocity to step forward which for too large time steps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in an atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity. The oscillating behavior of the relative error indicates that our methods perform worse for some particle positions than others.
 
 We also see that the RK4 method has an error convergence rate of 4 which indicates how efficient the method's error converges towards zero. This value is what we would expect for RK4 based on its global error proportional to the fourth order time step $h^4$. For Euler on the other hand we would expect a convergence rate of 1. Our value of 1.397 is not exactly 1 which may be a result of the Euler method starting to blow up for $N=4000$. This would give $\log(\Delta_{\text{max},k}/\Delta_{\text{max},k-1})$ a larger negative value which in turn will increase $r_{\text{err}}$. When looking at \ref{tab:convergence_euler} this is exactly what we see. The convergence rate calculated for $N_k = 8000$ and $N_{k-1} = 4000$ indicates a global error proportional to $h^2$. When we look at table \ref{tab:convergence_euler_x10} on the other hand we see what we would expect with an error convergence closer to 1, and can therefore conclude that both our methods perform as expected.
 
