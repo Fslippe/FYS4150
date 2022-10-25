@@ -1,32 +1,35 @@
 // Definitions for the functions in the PenningTrap class
-
 #include "penningtrap.hpp"
 #include "particle.hpp"
-
-const double k_e = 1.38935333*std::pow(10, 5); 
+// Using following base units:
+// length - micrometers
+// time - microseconds
+// mass - atomic mass unit (u)
+// charge - elementary charge (q)
+const double k_e = 1.38935333*std::pow(10, 5); // Couloumb constant in units u(micrometer)^3 / (microseconds)^2 / e^2
 
 // Constructor
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interaction_in, bool time_dependency_in)
 {
-  B_0 = B0_in;
-  V_0 = V0_in;
-  d = d_in;
-  interaction = interaction_in;
-  time_dependency = time_dependency_in;
-  V_0_d2 = V_0/(d*d);
+  B_0 = B0_in; // Magnetic field strength (u/microsecond/e)
+  V_0 = V0_in; // applied potential (u (micrometer)^2 /(microsecond)^2 / e)
+  d = d_in; // charachteristic dimension 
+  interaction = interaction_in; // bool particle interaction true or false
+  time_dependency = time_dependency_in; // bool time dependency true or false
+  V_0_d2 = V_0/(d*d); // asigning ratio to perform less FLOPS when using time independent V_0
 }
 
 // Add a particle to the trap
 void PenningTrap::add_particle(Particle p_in)
 {
-  p.push_back(p_in);
+  p.push_back(p_in); 
 }
 
 // Add n random Ca+ particles to the trap
 void PenningTrap::add_n_random_particles(int n)
 {
-  double q = 1;
-  double m = 40.077; // Calcium ion atomic mass
+  double q = 1; 
+  double m = 40.077; // Ca+ ion atomic mass
   arma::arma_rng::set_seed(1);
   for (int i = 0; i < n; i++)
   {
@@ -38,8 +41,8 @@ void PenningTrap::add_n_random_particles(int n)
   
 }
 
-
-//Method to set amplitude f and angular frequency omega_v
+// Method to set amplitude f and angular frequency omega_V
+// For V_0 = (1+ f cos(omega_V*t))
 void PenningTrap::set_amplitude_and_frquency(double amplitude_in, double frequency_in)
 {
   f = amplitude_in;
@@ -56,7 +59,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r, double t)
   else
   {
     V_0_time_dep = V_0 * (1 + f * std::cos(omega_v * t));
-     //Analytic gradient:
+     //Analytic gradient of applied potential at time t:
     E_x = -r[0]*V_0_time_dep /(d*d);
     E_y = -r[1]*V_0_time_dep / (d*d);
     E_z = 2*r[2]*V_0_time_dep/(d*d);
@@ -75,7 +78,7 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
   }
   else
   {
-     //Analytic gradient:
+    //Analytic gradient of the applied potential:
     E_x = -r[0]*V_0_d2;
     E_y = -r[1]*V_0_d2;
     E_z = 2*r[2]*V_0_d2;
@@ -98,7 +101,7 @@ arma::vec PenningTrap::external_B_field(arma::vec r)
   return B;
 }
 
-// Force on particle_i from particle_j
+// Force on particle_i from particle_j based on electric field set up by a particle of charge q
 arma::vec PenningTrap::force_particle(int i, int j)
 {
   r_diff = p[i].position() - p[j].position();
@@ -160,8 +163,8 @@ arma::vec PenningTrap::total_force(int i)
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 {
-  dt2 = dt/2; //perform 4n less FLOPs by cutting divide in k2 and k3
-  dt6 = dt/6; //perform 2n less FLOPs by cutting divide in evolve
+  dt2 = dt/2; //perform 2n less FLOPs by cutting divide in k2 and k3
+  dt6 = dt/6; //perform n less FLOPs by cutting divide in evolve
 
   for (int i = 0; i < n; i++)
   {
@@ -172,22 +175,22 @@ void PenningTrap::evolve_RK4(double dt)
     //K_1
     kr_1 = p[i].v;
     kv_1 = total_force(i) / p[i].mass();
-    p[i].r = tmp_pos + dt2*kr_1;
-    p[i].v = tmp_vel + dt2*kv_1;
 
     //K_2
+    p[i].r = tmp_pos + dt2*kr_1;
+    p[i].v = tmp_vel + dt2*kv_1;
     kr_2 = p[i].v;
     kv_2 = total_force(i) / p[i].mass();
+
+    //K_3
     p[i].r = tmp_pos + dt2*kr_2;
     p[i].v = tmp_vel + dt2*kv_2;
-  
-    //K_3
     kr_3 = p[i].v;
     kv_3 = total_force(i) / p[i].mass();
+
+    //K_4
     p[i].r = tmp_pos + dt*kr_3;
     p[i].v = tmp_vel + dt*kv_3;
-  
-    //K_4
     kr_4 = p[i].v;
     kv_4 = total_force(i) / p[i].mass();
 
@@ -195,9 +198,8 @@ void PenningTrap::evolve_RK4(double dt)
     p[i].r = tmp_pos + dt6 * (kr_1 + 2*kr_2 + 2*kr_3 + kr_4);
     p[i].v = tmp_vel + dt6 * (kv_1 + 2*kv_2 + 2*kv_3 + kv_4);
   }
-
   
-  time += dt;
+  time += dt; //adding dt to time to calculate time dependent V_0
 }
 
 // Evolve the system one time step (dt) using Forward Euler
@@ -218,11 +220,10 @@ void PenningTrap::evolve_forward_Euler(double dt)
 // Takes in t vector with time steps, returns analytic solution of single particle motion over time as vectros x, y, z. 
 arma::mat PenningTrap::analytic(arma::vec t)
 {
-  n = t.size();
   arma::vec x;
   arma::vec y;
   arma::vec z;
-  arma::mat r_a = arma::mat(n, 3);
+  arma::mat r_a = arma::mat(t.size(), 3);
 
   if (p.size() == 1)
   {
@@ -236,10 +237,8 @@ arma::mat PenningTrap::analytic(arma::vec t)
     double z_0 = p[0].position()[2];
     std::cout << z_0 <<"\n";
 
-
     // The x and z component of v are 0. only using y component.
     double v_0 = p[0].velocity()[1];
-   
 
     double A_plus = (v_0 + omega_minus * x_0) / (omega_minus - omega_plus);
     double A_minus = -(v_0 + omega_plus * x_0) / (omega_minus - omega_plus);
@@ -278,13 +277,13 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
   int points = (omega_max - omega_min) /omega_step + 2;
   
   // Use these values of f and n_f if comparing with and without interaction
-  //double f = 0.7;  
-  //int n_f = 1;
+  // se narrow_freq_scan in plot.py for more info
+  // double f = 0.7;  
+  // int n_f = 1;
   // Use these values of f and n_f otherwise
   double f = 0.1;
   int n_f = 3;
-  arma::mat frac_p_left = arma::mat(points, n_f+1); 
-
+  arma::mat frac_p_left = arma::mat(points, n_f+1); // contains four cols omega and one for fractions for each amplitude 
 
   n = p.size();
   std::vector<Particle> initial_p = p;
@@ -298,17 +297,21 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
   {
     for (int j = 0; j < points; j++)
     {
-     clock_t start = clock();
+     clock_t start = clock(); // Time function to indicate total runtime
 
       time = 0;
-      p = initial_p;
+      p = initial_p; // resetting the updated values from evolve_RK4
       set_amplitude_and_frquency(f, frac_p_left(j, 0));
+
       for (int k = 0; k < N; k++)
       {
         evolve_RK4(dt);
       }
+
       frac_p_left(j,i) = (float)particles_left_in_trap() / (float)n;
+
       std::cout << "Finished running for frequency " << frac_p_left(j, 0) << "\n";
+
       clock_t end = clock();
       double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
       std::cout << "timeused = " << timeused << " seconds " << "\n";

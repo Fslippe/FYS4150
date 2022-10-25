@@ -3,6 +3,8 @@ import pyarma as pa
 import matplotlib.pyplot as plt 
 import os
 import seaborn as sns
+# See github repo for more information on how to run and reproduce results:
+# https://github.com/Fslippe/FYS4150/tree/main/project3
 
 plt.rcParams.update({"lines.linewidth": 2})
 plt.rcParams.update({"font.size": 10})
@@ -98,7 +100,7 @@ def plot_X(X, x_axis, y_axis, linestyle="-", label="",show=False):
     if show:
         plt.show()
 
-def plot_Xt(X, t, y_axis, linestyle="-", label=""):
+def plot_Xt(X, t, y_axis, linestyle="-", label="", ylim=False, first_index =0):
     """
     Function to plot either position or velocities of particles as a function of time
     Takes in:
@@ -107,12 +109,13 @@ def plot_Xt(X, t, y_axis, linestyle="-", label=""):
     - y_axis            Axis of X to plot on y axis (0, 1 or 2)
     - linestyle (opt)   Linestyle for plot default "-"
     - label (opt)       label for plot when using one particle
+    - ylim (opt)        if True adds y limits [-600,600] to x and y plots
+    - first_index (opt) First index to plot for
     """
-   
-
+    
     if np.size(X, axis=1) == 1: 
-        plt.plot(t[3000:], X[y_axis, 0, 3000:], linestyle=linestyle, label="%s" %(label))
-        if (y_axis==0) or (y_axis==1):
+        plt.plot(t[first_index:], X[y_axis, 0, first_index:], linestyle=linestyle, label="%s" %(label))
+        if (y_axis==0) or (y_axis==1) and ylim==True:
             plt.ylim(-600, 600)
     else:
         for i in range(np.size(X, axis=1)):
@@ -124,6 +127,8 @@ def plot_Xt(X, t, y_axis, linestyle="-", label=""):
         y_label = "y"
     elif y_axis == 2:
         y_label = "z" 
+    elif y_axis == "norm":
+        y_label = "|r|"
 
     plt.xlabel(r"$t$ ($\mu$s)")
     plt.ylabel(r"%s ($\mu$m)" %(y_label))
@@ -302,23 +307,25 @@ def plot_p_fraction_frequency(r, label="",save = False):
 
 
 def main():
-    """Compile c++ file"""
+    """Compile c++ file main.cpp"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
+    """Compile c++ file frequency_scan.cpp"""
+    #run_frequency_scan(1, 1, 1, "false", 0, 1, 1, compile=True)
 
-    N = 5000
-    T = 500
-    n = 1
-    f = 0.1
-    omega = 2.2
+    N = 5000 #Timesteps
+    T = 500 #Time
+    n = 1 #particles
+    f = 0.1 # Amplitude
+    omega = 2.2 # Frequency
+    N_array = np.array([4000, 8000, 16000, 32000]) # To use for relative error plot
     
-    #r, v = run(N, T, n, "false", "RK4", compile=True) 
-
-    plot_compare_analytic = False
-    phase_space_and_position = False      
-    compare_error_plot = False        
-    particle_escape = True     
+    plot_compare_analytic = False # Compares Euler, RK4 and Euler for chosen parameters above and saviing figures
+    phase_space_and_position = False # Phase space plots + 3D plots for two particles with and without interaction 
+    compare_error_plot = False # Relative Error plots with convergence rate
+    particle_escape = True #
     compare_RK4_analytic = False  
 
+    """Uses N=5000, T=500, n=100"""
     wide_freq_scan = False
     narrow_freq_scan = False
     narrow_freq_scan_interaction = False 
@@ -357,7 +364,6 @@ def main():
 
     """Compare Error for different N"""
     if compare_error_plot:
-        N_array = np.array([4000, 8000, 16000, 32000])
 
         compare_error(N_array, T, "Euler", save="relative_error", norm=True)
         compare_error(N_array, T, "RK4", save="relative_error", norm=True)
@@ -367,27 +373,27 @@ def main():
         r, v = run(N, T, n, interaction="false", method="RK4", time_dependency="false", f=f, omega=omega, compile=False)
         t = np.linspace(0, T, N+1)
         y_axis = 2
-        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
-        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plot_Xt(r, t, y_axis, linestyle="-",ylim=True, first_index=3000, label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--",ylim=True, first_index=3000, label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
         plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_z_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
-
         plt.show()
+        
         y_axis = 1
-        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
-        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plot_Xt(r, t, y_axis, linestyle="-",ylim=True, first_index=3000, label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--",ylim=True, first_index=3000, label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
         plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_y_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
-
         plt.show()
+        
         y_axis = 0
-        plot_Xt(r, t, y_axis, linestyle="-", label="Constant $V_0$")
-        plot_Xt(r_t, t, y_axis, linestyle="--", label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plot_Xt(r, t, y_axis, linestyle="-",ylim=True, first_index=3000, label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="--",ylim=True, first_index=3000, label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
         plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_x_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
-
         plt.show()
 
     if compare_RK4_analytic:
         compare_analytic(N, T, x_axis=0, y_axis=1, Euler=False, save="analytic_RK4")
         compare_analytic(N, T, x_axis=0, y_axis=2, Euler=False, save="analytic_RK4")
+
     N = 5000
     T = 500
     n = 100

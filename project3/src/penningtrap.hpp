@@ -12,37 +12,36 @@ extern const double k_e;
 class PenningTrap
 {
   private:
-    double V_0_time_dep;
-    arma::vec E_ext;
-    double E_x;
-    double E_y;
-    double E_z;
-    arma::vec r_diff;
-    arma::vec E_i;
+    double V_0_time_dep; // Time dependent V_0
+    arma::vec E_ext; // Total external E field
+    double E_x; // External E field in x
+    double E_y; // External E field in y
+    double E_z; // External E field in z
+    arma::vec r_diff; // position length difference between two particles 
+    arma::vec E_i; // Internal E field set up by point charges
+    arma::vec B; // B-field in x-y-z 
+    arma::vec F_ext; // External force on one particle 
+    arma::vec F_p; // particle to particle force on one particle
+    arma::vec F_tot; // Total force on one particle
     arma::vec F_int;
-    arma::vec B;
-    arma::vec F_ext;
-    arma::vec F_p;
-    arma::vec F_tot;
-
-    arma::vec tmp_pos;
-    arma::vec tmp_vel;
-    arma::vec kr_1;
-    arma::vec kv_1;
-    arma::vec kr_2;
-    arma::vec kv_2;
-    arma::vec kr_3;
-    arma::vec kv_3;
-    arma::vec kr_4;
-    arma::vec kv_4;
-    int counter;
+    arma::vec tmp_pos; // Temporary position used to step forward in RK4
+    arma::vec tmp_vel; // Temporary velocity used to step forward in RK4 and Euler
+    arma::vec kr_1; // K_1 for position in RK4
+    arma::vec kv_1; // K_1 for velocity in RK4
+    arma::vec kr_2; // K_2 for position in RK4
+    arma::vec kv_2; // K_2 for velocity in RK4
+    arma::vec kr_3; // K_3 for position in RK4
+    arma::vec kv_3; // K_3 for velocity in RK4
+    arma::vec kr_4; // K_4 for position in RK4
+    arma::vec kv_4; // K_4 for velocity in RK4
+    int counter; // Counter for how many particles left in trap
 
   public:
     // Member variables
     int n; // Number of particles 
     double dt2; //perform 4n less FLOPs by cutting divide in k2 and k3
     double dt6; //perform 2n less FLOPs by cutting divide in evolve
-    double B_0; // magnetic field strength
+    double B_0; //
     double V_0; // applied potetial
     double d; // characteristic dimension
     bool interaction;
@@ -67,7 +66,7 @@ class PenningTrap
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);
 
-    //Method to set amplitude f and angular frequency omega_v
+    // Method to set amplitude f and angular frequency omega_v
     void set_amplitude_and_frquency(double amplitude_in, double frequency_in);
 
     // External electric field at point r=(x,y,z) with time dependence
@@ -97,12 +96,11 @@ class PenningTrap
     // Takes in t vector with time steps, returns analytic solution of single particle motion over time as vectros x, y, z. 
     arma::mat analytic(arma::vec t);
 
-    //Returns number of particles still inside trap
+    // Returns number of particles still inside trap when called
     int particles_left_in_trap();
 
     //Creates a matrix with fraction of particles left in trap for different frequencies and writes it to a .dat file.
     void parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step);
-
 };
 
 #endif

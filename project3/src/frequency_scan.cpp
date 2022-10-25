@@ -1,10 +1,9 @@
-//on linux
-//g++ time_dep.cpp penningtrap.cpp particle.cpp -o main -larmadillo
-//or on mac OS
-//g++ -std=c++11 time_dep.cpp penningtrap.cpp particle.cpp -o time_dep -larmadillo -O2 
+// To compile and link
+// g++ -std=c++11 frequency_scan.cpp penningtrap.cpp particle.cpp -o frequency_scan -larmadillo -O2 
+// See github repo for more information on how to run:
+// https://github.com/Fslippe/FYS4150/tree/main/project3
 
-//Args: Number of timepoints, Time, Number of particles, interaction, omega_min, omega_max, omega_step 
-
+// Args: Number of timepoints, Time, Number of particles, interaction, omega_min, omega_max, omega_step 
 #include "particle.hpp"
 #include "penningtrap.hpp"
 
@@ -25,8 +24,8 @@ int main(int argc, char** argv)
   double omega_min_in = atof(argv[5]); // min frequency
   double omega_max_in = atof(argv[6]); // max frequency
   double omega_step_in = atof(argv[7]); // steps size for omega_v
-  bool time_dependency = true; 
-  bool interaction;
+  bool time_dependency = true; // Runs for only time dependent potential
+  bool interaction; // Particle interaction
 
   std::cout << omega_min_in << omega_max_in << omega_step_in << "\n"; 
 
@@ -47,12 +46,8 @@ int main(int argc, char** argv)
   // Variables
   double B0 = 96.5;
   double V0 = 2.41 * std::pow(10, 6);
-  double d = 500;
-  double m_ca = 40.077; // atomic mass unit
-  double q_ca = 1; // elementary charge
+  double d = 500; 
   double dt = T / N; //Time interval
-  arma::cube r; // to save nummerical postions 
-  arma::cube v; // to save nummerical velocities 
 
   PenningTrap pt = PenningTrap(B0, V0, d, interaction, time_dependency); // Initialize PenningTrap
 

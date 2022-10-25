@@ -1,9 +1,12 @@
-//g++ main.cpp penningtrap.cpp particle.cpp -o main -larmadillo
+// Command to compile and link code:
+// g++ main.cpp penningtrap.cpp particle.cpp -o main -larmadillo -O2
+// See github repo for more information on how to run:
+// https://github.com/Fslippe/FYS4150/tree/main/project3
 
 #include "particle.hpp"
 #include "penningtrap.hpp"
 
-
+// Args: Number of timepoints, Time, Number of particles, interaction, method, time_dependency, amplitude, frequency
 int main(int argc, char** argv)
 {
   // Command line arguments
@@ -23,7 +26,7 @@ int main(int argc, char** argv)
   bool time_dependency;
   std::string method = std::string(argv[5]);
 
-
+  // commandline arguments to bool statements
   if (std::string(argv[4]) == "true")
   {
     interaction = true;
@@ -51,12 +54,11 @@ int main(int argc, char** argv)
    std::cout << "argument 7 time dependency has to be either true or false \n\nExiting...\n";
    exit(1);
   }
-  // Variables
 
-  
-  double B0 = 96.5;
-  double V0 = 2.41 * std::pow(10, 6);
-  double d = 500;
+  // Variables
+  double B0 = 96.5; // (u/microsecond/e)
+  double V0 = 2.41 * std::pow(10, 6); //(u (micrometer)^2 /(microsecond)^2 / e)
+  double d = 500; // micrometer
   double m_ca = 40.077; // atomic mass unit
   double q_ca = 1; // elementary charge
   double dt = T / N; //Time interval
@@ -64,6 +66,7 @@ int main(int argc, char** argv)
   arma::cube v; // to save nummerical velocities 
 
   PenningTrap pt = PenningTrap(B0, V0, d, interaction, time_dependency); // Initialize PenningTrap
+  // initializing time dependent V_0
   if (time_dependency)
   {
     double f = atof(argv[7]);
@@ -71,8 +74,7 @@ int main(int argc, char** argv)
     pt.set_amplitude_and_frquency(f, omega);
   }
   
-
-  
+  // Chosen initial conditions for 1 and 2 particle simulations
   if (n == 1 || n == 2)
   {
     arma::vec r0 = arma::vec({20, 0., 20});
@@ -89,17 +91,21 @@ int main(int argc, char** argv)
     pt.add_particle(p_in_2);
   }
 
+  // For more than 2 particles, random inital positions and velocities are given
   if (n > 2)  
   {
     pt.add_n_random_particles(n);
   }
-  pt.n = n;
+
+  pt.n = n; // initializing numer of particles to the Penning Trap
+
+  // For analytic solution 
   if (std::string(method) == "Analytic")
   {
     arma::vec t = arma::linspace(0, T, N+1);
     arma::mat r_a = arma::mat(pt.analytic(t));
     r_a.save("data/r_a.dat");
-    exit(1);
+    exit(0);
   }
 
   else
@@ -109,7 +115,7 @@ int main(int argc, char** argv)
     v = arma::cube(n, N+1,  3);
   }
   
-  // Initial conditions
+  // Adding initial conditions to arrays for saving
   for (int i = 0; i < n; i++)
   {
     r(arma::span(i),arma::span(0),arma::span::all) = pt.p[i].r;
@@ -117,6 +123,7 @@ int main(int argc, char** argv)
   }
 
   // Step forward in time depending on method
+  // Using Euler
   if (std::string(method) == "Euler")
   {
     clock_t start = clock();
@@ -137,6 +144,8 @@ int main(int argc, char** argv)
     double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
     std::cout << "timeused = " << timeused << " seconds " << "\n";
   }     
+
+  // Using RK4
   else if (std::string(method) == "RK4")
   {
     clock_t start = clock();
