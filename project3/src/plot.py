@@ -46,7 +46,7 @@ def run_frequency_scan(N, T, n, interaction, omega_min, omega_max, omega_step, c
     if compile == True:
         print("Compiling...\n")
         compile_cpp = os.system("g++ -std=c++11 frequency_scan.cpp penningtrap.cpp particle.cpp -o frequency_scan -larmadillo -O2"),
-    run_cpp = os.system("./frequency_scan %s %s %s %s %s %s %s" %(  ))   
+    run_cpp = os.system("./frequency_scan %s %s %s %s %s %s %s" %(N, T, n, interaction, omega_min, omega_max, omega_step))   
 
   
     data = pa.mat()
@@ -111,7 +111,9 @@ def plot_Xt(X, t, y_axis, linestyle="-", label=""):
    
 
     if np.size(X, axis=1) == 1: 
-        plt.plot(t, X[y_axis, 0, :], linestyle=linestyle, label="%s" %(label))
+        plt.plot(t[3000:], X[y_axis, 0, 3000:], linestyle=linestyle, label="%s" %(label))
+        if (y_axis==0) or (y_axis==1):
+            plt.ylim(-600, 600)
     else:
         for i in range(np.size(X, axis=1)):
             plt.plot(t, X[y_axis, i, :], linestyle=linestyle, label = "P_%i %s" %(i+1, label))
@@ -264,10 +266,11 @@ def compare_error(N, T, method_in, save=False, norm=True):
             
     r_err = 0
 
-    for k in range(1, 4):
+    for k in range(1, len(N)):
+        print(np.log(delta_max[k]/delta_max[k-1]) / np.log(50/N[k]/(50/N[k-1])))
         r_err += np.log(delta_max[k]/delta_max[k-1]) / np.log(50/N[k]/(50/N[k-1]))
 
-    r_err = r_err/3
+    r_err = r_err/(len(N)-1)
 
     plt.title(r"%s, Convergence rate $r_{err}=$%.3f" %(method_in, r_err))
 
@@ -275,7 +278,7 @@ def compare_error(N, T, method_in, save=False, norm=True):
         plt.savefig("../figures/%s_%s_norm.pdf" %(save, method_in), dpi=300, bbox_inches="tight")
     plt.show()
 
-def plot_p_fraction_frequency(r, save = False):
+def plot_p_fraction_frequency(r, label="",save = False):
     """
     Function to plot fraction of particles left in Penning trap for a range of frequencies and different amplitudes f.
     Takes in:
@@ -283,23 +286,26 @@ def plot_p_fraction_frequency(r, save = False):
                         ([frequencies], [fractions for f=0.1], [fractions for f=0.4[fractions for f=0.7])
     - save (opt)        Savename of plot, default False 
     """
-    plt.plot(r[:,0], r[:,1], label = "$f = 0.1$")
-    plt.plot(r[:,0], r[:,2], label = "$f = 0.4$")
-    plt.plot(r[:,0], r[:,3], label = "$f = 0.7$")
+    if np.size(r, axis=1) == 2:
+        plt.plot(r[:,0], r[:,1], label = label)
+    else:
+
+        plt.plot(r[:,0], r[:,1], label = "$f = 0.1$")
+        plt.plot(r[:,0], r[:,2], label = "$f = 0.4$")
+        plt.plot(r[:,0], r[:,3], label = "$f = 0.7$")
     plt.ylabel("Fraction of Particles left in trap")
     plt.xlabel("Frequency $\omega_v$ [$MHz$]") 
     plt.legend()
 
     if save != False:
         plt.savefig("../figures/%s.pdf" %(save), dpi=300, bbox_inches="tight")
-    plt.show()
 
 
 def main():
     """Compile c++ file"""
     #r, v = run(1, 1, 1, "false", "RK4", compile=True) 
 
-    N = 2000
+    N = 5000
     T = 500
     n = 1
     f = 0.1
@@ -310,8 +316,8 @@ def main():
     plot_compare_analytic = False
     phase_space_and_position = False      
     compare_error_plot = False        
-    particle_escape = False     
-    compare_RK4_analytic = True  
+    particle_escape = True     
+    compare_RK4_analytic = False  
 
     wide_freq_scan = False
     narrow_freq_scan = False
@@ -391,12 +397,23 @@ def main():
         r = run_frequency_scan(N, T, n, interaction="false",
             omega_min=0.2, omega_max=2.5, omega_step=0.02, compile=True)
         plot_p_fraction_frequency(r, save="wide_freq_p_left_N_%s" %(N))
+        plt.show()
+
 
     """Narrow Frequency scan without interaction"""
     if narrow_freq_scan:
         r = run_frequency_scan(N, T, n, interaction="false",
-            omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=False)
+            omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=True)
         plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_%s_zoom" %(N)) 
+
+        """
+        if plotting comparison plot change parameters n_f and f in 
+        PenningTrap::parcticles_left_for_omega_v in
+        penningtrap.cpp #-mark plot_p_fraction_frequency above and unmark below
+        """
+        #plot_p_fraction_frequency(r, label="without interaction") 
+        plt.show()
+
 
 
     """Narrow Frequency scan with interaction"""
@@ -404,6 +421,16 @@ def main():
         r = run_frequency_scan(N, T, n, interaction="true",
             omega_min=2.05, omega_max=2.35, omega_step=0.001, compile=False)
         plot_p_fraction_frequency(r, save="narrow_freq_p_left_N_%s_interaction_zoom" %(N))
+
+        """
+        if plotting comparison plot change parameters n_f and f in 
+        PenningTrap::parcticles_left_for_omega_v in
+        penningtrap.cpp #-mark plot_p_fraction_frequency above and unmark below
+        """
+        #plot_p_fraction_frequency(r, label="with interation") 
+        #plt.savefig("../figures/%s.pdf" %("narrow_freq_p_left_N_%s_zoom" %(N)), dpi=300, bbox_inches="tight")
+
+        plt.show()
 
 if __name__ == "__main__":
     main()

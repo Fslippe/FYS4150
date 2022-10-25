@@ -276,9 +276,16 @@ int PenningTrap::particles_left_in_trap()
 void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min, double omega_max, double omega_step)
 {
   int points = (omega_max - omega_min) /omega_step + 2;
-  arma::mat frac_p_left = arma::mat(points, 4); 
-  int j = 1;
+  
+  // Use these values of f and n_f if comparing with and without interaction
+  //double f = 0.7;  
+  //int n_f = 1;
+  // Use these values of f and n_f otherwise
   double f = 0.1;
+  int n_f = 3;
+  arma::mat frac_p_left = arma::mat(points, n_f+1); 
+
+
   n = p.size();
   std::vector<Particle> initial_p = p;
 
@@ -287,7 +294,7 @@ void PenningTrap::parcticles_left_for_omega_v(double dt, int N, double omega_min
     frac_p_left(i,0) = omega_min + i*omega_step;
   }
 
-  for (int i = 1; i < 4; i++)
+  for (int i = 1; i < n_f+1; i++)
   {
     for (int j = 0; j < points; j++)
     {
