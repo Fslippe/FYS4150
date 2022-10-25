@@ -104,7 +104,7 @@ Materials to construct a physical Penning trap are very costly, we will therefor
 be using a numerical approach to simulate a Penning trap. To implement such a simulation
 we will be working with a system of coupled non-linear differential equations. These are very
 difficult and often impossible to solve analytically. %An example some readers might be familiar with are the famous
-%Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. 
+%Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize.
 In addition to the
 material cost, the complexity of the equations therefore also motivates the use of numerical methods.
 
@@ -318,17 +318,17 @@ For further simulations with 100 particles, Armadillo's \texttt{vec::randu()} fu
 positions and velocities for each particle.
 
 \subsection*{Specific analytical solution}
-To test the numerical solutions and for error analysis an analytical solution for 
-Particle 1 is used. For these initial condition the specific $z(t)$ solution for 
+To test the numerical solutions and for error analysis an analytical solution for
+Particle 1 is used. For these initial condition the specific $z(t)$ solution for
 eq. \ref{eq:z_general} becomes:
 \begin{equation*}
     z(t) = z_0 \cos(\omega_z t)
 \end{equation*}
-The specific solution for motion in the $xy$-plane, $f(t)$ is given by eq. \ref{eq:general_sol_f} 
-with 
+The specific solution for motion in the $xy$-plane, $f(t)$ is given by eq. \ref{eq:general_sol_f}
+with
 \begin{align*}
     A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+}&, \quad A_- = -\frac{v_0 + \omega_+- x_0}{\omega_- - \omega_+} \\
-    \phi_+ = 0&, \quad \phi_- = 0 
+    \phi_+ = 0&, \quad \phi_- = 0
 \end{align*}
 
 
@@ -420,10 +420,10 @@ looked at closely with smaller step sizes of 0.001 MHz once with Coulomb interac
 % \textit{As demonstrated in algorithm~\ref{algo:midpointrule}, it is conventional to present algorithms in a way that is independent of any specific programming language. This ensures that it is the logic behind the algorithm that remains in focus, rather than the syntax of a particular programming language. In algorithm~\ref{algo:midpointrule} we have also demonstrated a common notation: The right-to-left arrow ($\leftarrow$) means that we assign the value of everything on the right to the variable on the left. This is nothing but how the ``='' symbol functions in most programming languages, but the arrow notation makes it clear that we are in fact assigning a value, rather than stating that two things are equal.}
 
 \subsection*{Error analysis}
-To check the validity of our methods and gauge how realistic our Penning trap simulations are, we perform an error analysis of the 
-numerical methods implemented. This is done by considering the simple case of a single particle, making it easy to compare the numerical 
+To check the validity of our methods and gauge how realistic our Penning trap simulations are, we perform an error analysis of the
+numerical methods implemented. This is done by considering the simple case of a single particle, making it easy to compare the numerical
 to analytic results. The simulation with Particle 1 is run over 50 $\mu$s. This is done for four different step sizes $h_k = 50 / n_k \mu$s.
-The chosen step sizes are for $n_1 = 4000, n_2 = 8000, n_3 = 16000, n_4 = 32000$. For each step size the relative error of $\textbf{r}_i$ 
+The chosen step sizes are for $n_1 = 4000, n_2 = 8000, n_3 = 16000, n_4 = 32000$. For each step size the relative error of $\textbf{r}_i$
 for each time step $t_i$ is calculated for both algorithms.
 Additionally, these results are used to calculate the error convergence rate in both cases.
 % % ===========================================
@@ -455,7 +455,7 @@ We again compare the three solutions but now using a smaller time step of $n=500
     \caption{Horizontal motion of a single particle over 50 $\mu s$ for $N=10000$. The analytic, Euler and RK4 solutions are shown.}
     \label{fig:compare_analytic_axis_0_1_N10000}
 \end{figure}
-Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical methods perform as similarly for all spatial axes of the simulation. 
+Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical methods perform as similarly for all spatial axes of the simulation.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/compare_analytic_axis_0_1_N5000.pdf}
@@ -474,7 +474,7 @@ All this means that we now especially can trust the RK4 method but also Euler wh
     \label{fig:analytic_RK4_t_axis_2_N5000}
 \end{figure}
 
-Figure \ref{fig:analytic_RK4_t_axis_2_N5000} shows that the RK4 method agrees with the analytic solution even for a longer time period of 500 $\mu$s 
+Figure \ref{fig:analytic_RK4_t_axis_2_N5000} shows that the RK4 method agrees with the analytic solution even for a longer time period of 500 $\mu$s
 Based on this we continue using $N=5000$ time steps and the RK4 method to plot the motion of Particle 1 and Particle 2 in the $xy$-plane when they do not interact.
 That is, disregarding the Coulomb force.
 %two particles
@@ -560,7 +560,7 @@ particle interactions, to figure \ref{fig:3D_2_particles_with_interaction}, with
 are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue
 lines in the two figures.
 
-%Relative error
+Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we see plots of the relative error of our two numerical methods for different choices of $N$. We also see the belonging error convergence rate.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/relative_error_Euler_norm.pdf}
@@ -576,40 +576,49 @@ lines in the two figures.
         The four different lines show results for different step sizes $h = 50/N \mu s$ }
     \label{fig:relative_error_RK4_norm}
 \end{figure}
+We see that the error convergence rate of the RK4 method is 4 while the less accurate Euler has a convergence rate of 1.397. We notice that the logarithmic y-axis of the two figures are on different order and showing us the superiority of the RK4 method giving us more accurate results for $N=4000$ than Euler manages to do for $N=32000$. We also notice an oscillating nature of the relative error over time meaning that our methods perform worse for some particle positions than others.
+
 Considering the case of a single particle to allow for a comparison to the analytic solution, figures \ref{fig:relative_error_Euler_norm}
 and \ref{fig:relative_error_RK4_norm} display the relative error of the forward Euler method (figure \ref{fig:relative_error_Euler_norm})
 and the RK4 method (figure \ref{fig:relative_error_RK4_norm}) for different step sizes $h = 50/N \mu s$. Noticeably for both
 methods, the error decreases as the step size does too (increasing the number of points $N$). Comparing the two, one clearly
 sees that the RK4 method is more precise than the forward Euler.
 
-% 100 particle simulations full frequency range
+Under in figure \ref{fig:wide_freq_p_left_N_5000} we can see a wide frequency scan for three different amplitudes using a frequency step of $0.02$MHz.
+Here we have again used $N=5000$ steps for the RK4 method
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/wide_freq_p_left_N_5000.pdf}
-    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in (0.2,2.5)$MHz. Each color 
-            shows results for a different amplitude f. The simulation is for 100 random particles \textbf{without interactions} 
+    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in (0.2,2.5)$MHz. Each color
+            shows results for a different amplitude f. The simulation is for 100 random particles \textbf{without interactions}
             and $N = 5000$.}
     \label{fig:wide_freq_p_left_N_5000}
 \end{figure}
+We see 4 main frequency bands giving us a resonance in the motion of our particles. These are around a frequency of 0.45, 0.65, 1.4 and 2.2 MHz. We also see that the more narrow resonance bands needs a higher amplitude to throw the particles out of the Penningtrap. The most efficient ressonance frequencies are in other words the ones where even an amplitude of 0.1 is enough.
+
 % zoomed without interaction
+We continue with a frequency analysis and zoom in on frequencies in the interval [2.05, 2.35]MHz for a frequency step of 0.001MHz. This gives us figure \ref{fig:narrow_freq_p_left_N_5000_zoom}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom.pdf}
-    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range 
-            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a 
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
+            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a
             different amplitude f. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_zoom}
 \end{figure}
+We see the same as we saw in figure \ref{fig:wide_freq_p_left_N_5000} just now with more details giving us a smoother plot.
+
+By turning on particle interaction and looking at the same frequency spectrum we get the following plot in figure \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom}.
 %zoomed with interaction
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_interaction_zoom.pdf}
-    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range 
-            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a 
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
+            is shown. The angular frequencies $\omega_V \in (2.05,2.35)$MHz are visible. Each color shows results for a
             different amplitude f. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
 \end{figure}
-
+Here we see that the particle interactions clearly has an impact on how well the frequencies resonates with the motion of our particles. We see that some frequencies now resonates better than before and others that resonates worse. This is especially visible for frequencies around 2.05 and and 2.125 for $f=0.7$ which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
@@ -627,8 +636,8 @@ Figure \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy} with interacti
 repel each other thereby affecting each other's velocities.
 
 % The 3D-plots in figure \ref{fig:3D_2_particles_no_interaction}, without
-% particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, with interactions allow us to see the full complexity of the particle motion. 
-% Already for two particles the paths are hard to follow.  
+% particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, with interactions allow us to see the full complexity of the particle motion.
+% Already for two particles the paths are hard to follow.
 
 
 The error analysis in figures \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} clearly shows that we gain
@@ -636,12 +645,16 @@ precision for smaller step sizes in the numerical simulations as expected. Furth
 approximation that the forward Euler method. This is again as expected since the local truncation error for Euler is $\mathcal{O}(h^2)$ and for RK4 is $\mathcal{O}(h^5)$.
 The RK4 method thus deviating less from the analytical solution for small values of $h$.
 
+
+%ERROR Discussion
+We saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods works. Euler uses the current position and velocity to step forward which for too large timesteps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in a atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity.
+
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
 \textit{In this section we state three things in a concise manner: what we have done, what we have found, and what should or could be done in the future.}
 
-We have investigated the behavior of a Penning trap through numerical simulations, first exploring the basics of the simulation to then focus on 
-resonance phenomena. Our results show that 
+We have investigated the behavior of a Penning trap through numerical simulations, first exploring the basics of the simulation to then focus on
+resonance phenomena. Our results show that
 \onecolumngrid
 
 %\bibliographystyle{apalike}
