@@ -327,8 +327,8 @@ eq. \ref{eq:z_general} becomes:
 The specific solution for motion in the $xy$-plane, $f(t)$ is given by eq. \ref{eq:general_sol_f}
 with
 \begin{align*}
-    A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+}&, \quad A_- = -\frac{v_0 + \omega_+- x_0}{\omega_- - \omega_+} \\
-    \phi_+ = 0&, \quad \phi_- = 0
+    A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+} & , \quad A_- = -\frac{v_0 + \omega_+- x_0}{\omega_- - \omega_+} \\
+    \phi_+ = 0                                           & , \quad \phi_- = 0
 \end{align*}
 
 
@@ -532,7 +532,7 @@ figure \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} shows more va
     \centering
     \includegraphics[width=.5\textwidth]{../figures/phase_space_z_interaction_RK4_N5000.pdf}
     \caption{The phase space $(z, v_z)$ of two particles \textbf{
-    with interaction} for $N = 5000$.}
+            with interaction} for $N = 5000$.}
     \label{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
 \end{figure}
 Figures \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy} and \ref{fig:K4_2_z_phasespace_with_interaction_phasespace_xy}
@@ -561,7 +561,7 @@ particle interactions, to figure \ref{fig:3D_2_particles_with_interaction}, with
 are identical, yet the finishing positions differ. Taking a close look it is also possible to see differences in the orange and blue
 lines in the two figures.
 
-Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we see plots of the relative error of our two numerical methods for different choices of $N$. We also see the belonging error convergence rate. 
+Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm} we see plots of the relative error of our two numerical methods for different choices of $N$. We also see the belonging error convergence rate.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/relative_error_Euler_norm.pdf}
@@ -577,7 +577,47 @@ Below in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_
         The four different lines show results for different step sizes $h = 50/N \mu s$ }
     \label{fig:relative_error_RK4_norm}
 \end{figure}
-Noticeably for both methods, the error decreases as the step size does too (increasing the number of points $N$) as expected. We see that the error convergence rate of the RK4 method is 4 while the less accurate Euler has a convergence rate of 1.397. Additionally, the logarithmic y-axis of the two figures are of different orders, showing the superiority of the RK4 method giving us more accurate results for $N=4000$ than Euler manages to do for $N=32000$. We also notice an oscillating nature of the relative error over time. 
+Noticeably for both methods, the error decreases as the step size does too (increasing the number of points $N$) as expected. We see that the error convergence rate of the RK4 method is 4 while the less accurate Euler has a convergence rate of 1.397. Additionally, the logarithmic y-axis of the two figures are of different orders, showing the superiority of the RK4 method giving us more accurate results for $N=4000$ than Euler manages to do for $N=32000$. We also notice an oscillating nature of the relative error over time.
+
+Under in table \ref{tab:convergence_euler}, \ref{tab:convergence_euler_x10} and \ref{tab:convergence_RK4} we see the individualy computed error convergence rates for different $N$ and the average as seen in figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_norm}.
+\begin{table}[H]
+    \centering
+    \caption{Error convergence rate for Euler using different values of $N$ where $N_k = 2N_{k-1}$}
+    \label{tab:convergence_euler}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $N_k$              & 8000  & 16000 & 32000 & \textbf{Average} \\
+        \hline
+        $r_{\text{err},k}$ & 1.712 & 1.325 & 1.154 & \textbf{1.397}   \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \caption{Error convergence rate for Euler as in table \ref{tab:convergence_euler} using 10 times as big $N$ values}
+    \label{tab:convergence_euler_x10}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $N_k$              & 80000 & 160000 & 320000 & \textbf{Average} \\
+        \hline
+        $r_{\text{err},k}$ & 1.060 & 1.030  & 1.015  & \textbf{1.035}   \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \caption{Error convergence rate for RK4 using different values of $N$ where $N_k = 2N_{k-1}$}
+    \label{tab:convergence_RK4}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $N_k$              & 8000  & 16000 & 32000 & \textbf{Average} \\
+        \hline
+        $r_{\text{err},k}$ & 3.999 & 4.000 & 4.000 & \textbf{4.000}   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+We notice in table \ref{tab:convergence_RK4} that we for RK4 compute stable error convergence rates for different $N$. For Euler we see that lower $N$ gives us higher convergence rates, and that even higher $N$ as seen in table \ref{tab:convergence_euler_x10} is needed to get convergence rates close to 1.
 
 Under in figure \ref{fig:wide_freq_p_left_N_5000} we can see a wide frequency scan for three different amplitudes using a frequency step of $0.02$MHz.
 Here we have again used $N=5000$ steps for the RK4 method
@@ -585,8 +625,8 @@ Here we have again used $N=5000$ steps for the RK4 method
     \centering
     \includegraphics[width=.5\textwidth]{../figures/wide_freq_p_left_N_5000.pdf}
     \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in [0.2,2.5]$ MHz. Each color
-            shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions}
-            and $N = 5000$.}
+        shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions}
+        and $N = 5000$.}
     \label{fig:wide_freq_p_left_N_5000}
 \end{figure}
 We see 4 main frequency bands giving us a resonance in the motion of our particles. These are around a frequency of 0.45, 0.65, 1.4 and 2.2 MHz. We also see that the more narrow resonance bands need a higher amplitude to throw the particles out of the Penningtrap. The most efficient ressonance frequencies are in other words the ones where even an amplitude of 0.1 is enough.
@@ -597,8 +637,8 @@ We continue with a frequency analysis and zoom in on frequencies in the interval
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom.pdf}
     \caption{The fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
-            is shown. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
-            different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
+        is shown. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
+        different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_zoom}
 \end{figure}
 We see the same as we saw in figure \ref{fig:wide_freq_p_left_N_5000} just now with more details giving us a smoother plot.
@@ -609,7 +649,7 @@ By turning on particle interaction and looking at the same frequency spectrum we
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_interaction_zoom.pdf}
     \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
-            different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
+        different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
 \end{figure}
 We see that some frequencies now resonates better than before and others that resonates worse. This is especially visible for frequencies from 2.05 to 2.125 for $f=0.7$ which now have lower fractions left in the trap, and for frequencies of around 2.175 for $f=0.1$ that now have a higher fraction of particles left in the trap. We also see that most frequencies have lost at least some of the particles which compared to figure \ref{} where mostly all or no particles were lost.
@@ -617,7 +657,7 @@ We see that some frequencies now resonates better than before and others that re
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 
-Initial simulations present results showing the general behavior of our numerical Penning trap. 
+Initial simulations present results showing the general behavior of our numerical Penning trap.
 % Particel motion discussion
 Comparing figure \ref{fig:RK4_2_xy_no_interaction_xy} and \ref{fig:RK4_2_xy_with_interaction_xy} shows that the Coulomb force has a noticeable effect on
 the particles motion, this matches expectations from a physical point of view since two positively charged particles will repel each other. This is exactly what happens in figure \ref{fig:RK4_2_xy_with_interaction_xy}. Here we look at only two particles interacting and the results with and without interactions are not extremely different,
@@ -633,12 +673,14 @@ particle interactions, and figure \ref{fig:3D_2_particles_with_interaction}, wit
 Already for two particles the paths are hard to follow, and other figures give more valuable information, but they give us a more intuitive representation of particle trajectories in a Penning trap. Especially for the unrealistic case without Coulomb interaction the particles stay within specific boundaries.
 
 %ERROR Discussion
-We saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods work. Euler uses the current position and velocity to step forward which for too large time steps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in an atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity. The oscillating behavior of the relative error indicates that our methods perform worse for some particle positions than others.
+In figure \ref{relative_error_Euler_norm} and \ref{relative_error_RK4_norm} we saw that the RK4 method was more accurate than Euler when comparing to the analytical solution for one particle. This makes sense when it comes to how the two numerical methods work. Euler uses the current position and velocity to step forward which for too large time steps can result in the updated values deviating from the analytical solution. This means that the next forward step will use wrong values. Calculated values from the Euler method could then go towards infinity even in an atomic scale physics problem. This is avoided using RK4 where the forward stepping is determined by the slope at the beginning, midpoint and end of the interval. This way of stepping forward ensures a stability in our method as well as lowering our global error meaning that we for a too small $N$ only would see inaccurate values but not results going towards infinity. The oscillating behavior of the relative error indicates that our methods perform worse for some particle positions than others.
+
+We also see that the RK4 method has an error convergence rate of 4 which indicates how efficient the method's error converges towards zero. This value is what we would expect for RK4 based on its global error proportional to the fourth order time step $h^4$. For Euler on the other hand we would expect a convergence rate of 1. Our value of 1.397 is not exactly 1 which may be a result of the Euler method starting to blow up for $N=4000$. This would give $\log(\Delta_{\text{max},k}/\Delta_{\text{max},k-1})$ a larger negative value which in turn will increase $r_{\text{err}}$. When looking at \ref{tab:convergence_euler} this is exactly what we see. The convergence rate calculated for $N_k = 8000$ and $N_{k-1} = 4000$ indicates a global error proportional to $h^2$. When we look at table \ref{tab:convergence_euler_x10} on the other hand we see what we would expect with an error convergence closer to 1, and can therefore conclude that both our methods perform as expected.
 
 %frequency Discussion
-Having confirmed an acceptable precision of the RK4 method we move on to larger simulations exploring resonance phenomena. Certain angular frequencies cause all particles to escape whilst others result in all particles remain as seen in figure \ref{fig:wide_freq_p_left_N_5000}. 
+Having confirmed an acceptable precision of the RK4 method we move on to larger simulations exploring resonance phenomena. Certain angular frequencies cause all particles to escape whilst others result in all particles remain as seen in figure \ref{fig:wide_freq_p_left_N_5000}.
 
-Comparing results in figures \ref{fig:narrow_freq_p_left_N_5000_zoom} and \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} we see that particle interaction clearly has an impact on how well the frequencies resonate with the motion of the particles. 
+Comparing results in figures \ref{fig:narrow_freq_p_left_N_5000_zoom} and \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} we see that particle interaction clearly has an impact on how well the frequencies resonate with the motion of the particles.
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}

@@ -100,26 +100,33 @@ def plot_X(X, x_axis, y_axis, linestyle="-", label="",show=False):
     if show:
         plt.show()
 
-def plot_Xt(X, t, y_axis, linestyle="-", label="", ylim=False, first_index =0):
+def plot_Xt(X, t, y_axis, linestyle="-", label="", linewidth=2, ylim=False, first_index =0):
     """
     Function to plot either position or velocities of particles as a function of time
     Takes in:
     - X                 3D array containing ([x,y,z], particle, r(t))
     - t                 time array matching length of X
-    - y_axis            Axis of X to plot on y axis (0, 1 or 2)
+    - y_axis            Axis of X to plot on y axis (0, 1 or 2 or "norm" for length of vector)
     - linestyle (opt)   Linestyle for plot default "-"
     - label (opt)       label for plot when using one particle
     - ylim (opt)        if True adds y limits [-600,600] to x and y plots
     - first_index (opt) First index to plot for
     """
     
-    if np.size(X, axis=1) == 1: 
-        plt.plot(t[first_index:], X[y_axis, 0, first_index:], linestyle=linestyle, label="%s" %(label))
-        if (y_axis==0) or (y_axis==1) and ylim==True:
-            plt.ylim(-600, 600)
+    if y_axis == "norm":
+        X = np.linalg.norm(X, axis=0)
+        
+        plt.plot(t[first_index:], X[0, first_index:], linestyle=linestyle, linewidth=linewidth, label="%s" %(label))
+        plt.ylim(0, 600)
+
     else:
-        for i in range(np.size(X, axis=1)):
-            plt.plot(t, X[y_axis, i, :], linestyle=linestyle, label = "P_%i %s" %(i+1, label))
+        if np.size(X, axis=1) == 1: 
+            plt.plot(t[first_index:], X[y_axis, 0, first_index:], linestyle=linestyle, label="%s" %(label))
+            if (y_axis==0) or (y_axis==1) and ylim==True:
+                plt.ylim(-600, 600)
+        else:
+            for i in range(np.size(X, axis=1)):
+                plt.plot(t, X[y_axis, i, :], linestyle=linestyle, label = "P_%i %s" %(i+1, label))
 
     if y_axis == 0:
         y_label = "x"
@@ -388,6 +395,12 @@ def main():
         plot_Xt(r, t, y_axis, linestyle="-",ylim=True, first_index=3000, label="Constant $V_0$")
         plot_Xt(r_t, t, y_axis, linestyle="--",ylim=True, first_index=3000, label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
         plt.savefig("../figures/%s.pdf" %("ressonance_p1_f%.2f_omega_%.2f_x_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
+        plt.show()
+
+        y_axis = "norm"
+        plot_Xt(r, t, y_axis, linestyle="-",ylim=True, first_index=3000, label="Constant $V_0$")
+        plot_Xt(r_t, t, y_axis, linestyle="-",linewidth=0.5, ylim=True, first_index=3000, label="Time dependent $V_0$ $f=$%.1f $\omega_V=$%.2f" %(f, omega))
+        plt.savefig("../figures/%s.pdf" %("ressonance_p1_norm_f%.2f_omega_%.2f_x_%i" %(f, omega, T)), dpi=300, bbox_inches="tight")
         plt.show()
 
     if compare_RK4_analytic:
