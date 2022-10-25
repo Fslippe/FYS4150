@@ -329,12 +329,12 @@ def main():
     plot_compare_analytic = False # Compares Euler, RK4 and Euler for chosen parameters above and saviing figures
     phase_space_and_position = False # Phase space plots + 3D plots for two particles with and without interaction 
     compare_error_plot = False # Relative Error plots with convergence rate
-    particle_escape = True #
+    particle_escape = False #
     compare_RK4_analytic = False  
 
     """Uses N=5000, T=500, n=100"""
     wide_freq_scan = False
-    narrow_freq_scan = False
+    narrow_freq_scan = True
     narrow_freq_scan_interaction = False 
 
     """Comparing to analytic solutions"""
