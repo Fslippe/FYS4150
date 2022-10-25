@@ -7,7 +7,7 @@ import seaborn as sns
 # https://github.com/Fslippe/FYS4150/tree/main/project3
 
 plt.rcParams.update({"lines.linewidth": 2})
-plt.rcParams.update({"font.size": 10})
+plt.rcParams.update({"font.size": 12})
 sns.set_style("whitegrid")
 
 
@@ -216,6 +216,12 @@ def compare_analytic(N, T, x_axis, y_axis, Euler=True, save=False):
     r_A = run(N, T, 1, "false", "Analytic")
     r_E, v_E = run(N, T, 1, "false", "Euler")
     r_RK, v_RK = run(N, T, 1, "false", "RK4")
+    t = np.linspace(0, T, N+1)
+    if save == "analytic_RK4":
+        r_RK = r_RK[:,:,3000:]
+        r_A = r_A[3000:,:]
+        t = t[3000:]
+
     plt.title("Compare Numerical and Analytic solutions")
 
     plt.plot(r_A[:,x_axis], r_A[:,y_axis], "k-", label="Analytic")
@@ -228,7 +234,6 @@ def compare_analytic(N, T, x_axis, y_axis, Euler=True, save=False):
         plt.savefig("../figures/%s_axis_%i_%i_N%i.pdf" %(save, x_axis, y_axis, N), dpi=300, bbox_inches="tight")
     plt.show()
 
-    t = np.linspace(0, T, N+1)
     plt.plot(t, r_A[:,y_axis], "k-", label="Analytic")
     plot_Xt(r_RK, t, y_axis, linestyle="--", label="RK4")
     if Euler:
@@ -330,11 +335,11 @@ def main():
     phase_space_and_position = False # Phase space plots + 3D plots for two particles with and without interaction 
     compare_error_plot = False # Relative Error plots with convergence rate
     particle_escape = False #
-    compare_RK4_analytic = False  
+    compare_RK4_analytic = True  
 
     """Uses N=5000, T=500, n=100"""
     wide_freq_scan = False
-    narrow_freq_scan = True
+    narrow_freq_scan = False
     narrow_freq_scan_interaction = False 
 
     """Comparing to analytic solutions"""
