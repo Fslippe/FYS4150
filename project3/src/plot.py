@@ -7,7 +7,7 @@ import seaborn as sns
 # https://github.com/Fslippe/FYS4150/tree/main/project3
 
 plt.rcParams.update({"lines.linewidth": 2})
-plt.rcParams.update({"font.size": 12})
+plt.rcParams.update({"font.size": 14})
 sns.set_style("whitegrid")
 
 
@@ -198,6 +198,8 @@ def plot_3D(r, N, save=False):
         plt.savefig("../figures/%s_N%i.pdf" %(save, N), dpi=300, bbox_inches="tight")
 
     plt.show()
+    plt.rcParams.update({"font.size": 14})
+
 
 def compare_analytic(N, T, x_axis, y_axis, Euler=True, save=False):
     """
@@ -334,7 +336,7 @@ def main():
     plot_compare_analytic = False # Compares Euler, RK4 and Euler for chosen parameters above and saviing figures
     phase_space_and_position = False # Phase space plots + 3D plots for two particles with and without interaction 
     compare_error_plot = False # Relative Error plots with convergence rate
-    particle_escape = False #
+    particle_escape = True #
     compare_RK4_analytic = True  
 
     """Uses N=5000, T=500, n=100"""
