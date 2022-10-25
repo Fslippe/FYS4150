@@ -326,18 +326,18 @@ def main():
     """Compile c++ file frequency_scan.cpp"""
     #run_frequency_scan(1, 1, 1, "false", 0, 1, 1, compile=True)
 
-    N = 5000 #Timesteps
-    T = 500 #Time
+    N = 10000 #Timesteps
+    T = 50 #Time
     n = 1 #particles
     f = 0.1 # Amplitude
     omega = 2.2 # Frequency
     N_array = np.array([4000, 8000, 16000, 32000]) # To use for relative error plot
     
-    plot_compare_analytic = False # Compares Euler, RK4 and Euler for chosen parameters above and saviing figures
+    plot_compare_analytic = True # Compares Euler, RK4 and Euler for chosen parameters above and saviing figures
     phase_space_and_position = False # Phase space plots + 3D plots for two particles with and without interaction 
     compare_error_plot = False # Relative Error plots with convergence rate
-    particle_escape = True #
-    compare_RK4_analytic = True  
+    particle_escape = False #
+    compare_RK4_analytic = False  
 
     """Uses N=5000, T=500, n=100"""
     wide_freq_scan = False
