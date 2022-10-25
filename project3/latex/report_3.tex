@@ -83,7 +83,7 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-   We implement a numerical simulation of a Penning trap by solving a system of coupled differential equations. Analysis shows the superiority of the fourth order Runge-Kutta (RK4) method over the forward Euler method. We have a convergence rate of $1.397$ for Euler compared to $4$ for RK4. The RK4s high precision allows accurate simulations for a relatively low value of $N= 5000$. Running the simulation with and without Coulomb interaction between particles gives different results indicating that interaction plays an important role in particle motion within the trap. Finally, exploring resonance phenomena, we find three frequency domains resulting in all particles escaping, or rather, being ejected from the trap after a period of 500 $\mu$s. For the remaining frequencies close to no particles escape. A more fine-grained frequency scan is performed for one of the resonance domains showing that particle interaction again is an important factor.
+    We implement a numerical simulation of a Penning trap by solving a system of coupled differential equations. Analysis shows the superiority of the fourth order Runge-Kutta (RK4) method over the forward Euler method. We have a convergence rate of $1.397$ for Euler compared to $4$ for RK4. The RK4s high precision allows accurate simulations for a relatively low value of $N= 5000$. Running the simulation with and without Coulomb interaction between particles gives different results indicating that interaction plays an important role in particle motion within the trap. Finally, exploring resonance phenomena, we find three frequency domains resulting in all particles escaping, or rather, being ejected from the trap after a period of 500 $\mu$s. For the remaining frequencies close to no particles escape. A more fine-grained frequency scan is performed for one of the resonance domains showing that particle interaction again is an important factor.
 \end{abstract}
 \maketitle
 
@@ -345,8 +345,8 @@ with charges $\{q_1,...,q_n\}$ and masses $\{m_1,..,m_n\}$.
 
 To numerically solve the above equations they will be reformulated as coupled first-order differential equations:
 \begin{align}
-   \dot{\textbf{r}} &= \textbf{v} \\
-   \dot{\textbf{v}} &= \frac{\textbf{F}}{m}
+    \dot{\textbf{r}} & = \textbf{v}           \\
+    \dot{\textbf{v}} & = \frac{\textbf{F}}{m}
 \end{align}
 % ===========================================
 \subsection*{The algorithms}
@@ -460,7 +460,7 @@ We again compare the three solutions but now using a smaller time step of $n=500
     \caption{Horizontal motion of a single particle over 50 $\mu s$ for $N=10000$. The analytic, Euler and RK4 solutions are shown.}
     \label{fig:compare_analytic_axis_0_1_N10000}
 \end{figure}
-Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical methods perform similarly for all spatial axes of the simulation. 
+Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical methods perform similarly for all spatial axes of the simulation.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/compare_analytic_axis_0_1_N5000.pdf}
@@ -629,9 +629,7 @@ Here we have again used $N=5000$ steps for the RK4 method
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/wide_freq_p_left_N_5000.pdf}
-    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in [0.2,2.5]$ MHz. Each color
-        shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions}
-        and $N = 5000$.}
+    \caption{The plot shows the fraction of particles that are left after 500 $\mu$s for angular frequencies $\omega_V \in [0.2,2.5]$ MHz Each color shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
     \label{fig:wide_freq_p_left_N_5000}
 \end{figure}
 We see 4 main frequency bands giving us a resonance in the motion of our particles. These are around a frequency of 0.45, 0.65, 1.4 and 2.2 MHz. We also see that the more narrow resonance bands need a higher amplitude to throw the particles out of the Penningtrap. The most efficient ressonance frequencies are in other words the ones where even an amplitude of 0.1 is enough.
@@ -641,9 +639,7 @@ We continue with a frequency analysis and zoom in on frequencies in the interval
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_zoom.pdf}
-    \caption{The fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range
-        is shown. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
-        different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
+    \caption{The fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range is shown. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{without interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_zoom}
 \end{figure}
 We see the same as we saw in figure \ref{fig:wide_freq_p_left_N_5000} just now with more details giving us a smoother plot.
@@ -653,8 +649,7 @@ By turning on particle interaction and looking at the same frequency spectrum we
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/narrow_freq_p_left_N_5000_interaction_zoom.pdf}
-    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a
-        different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
+    \caption{Shows the fraction of particles that are left after 500 $\mu$s for a zoomed in section of the frequency range. The angular frequencies $\omega_V \in [2.05,2.35]$ MHz are visible. Each color shows results for a different amplitude $f$. The simulation is for 100 random particles \textbf{with interactions} and $N = 5000$.}
     \label{fig:narrow_freq_p_left_N_5000_interaction_zoom}
 \end{figure}
 \begin{figure}[H]
@@ -703,8 +698,13 @@ We also see that the RK4 method has an error convergence rate of 4 which indicat
 %frequency Discussion
 Having confirmed an acceptable precision of the RK4 method we move on to larger simulations exploring resonance phenomena. Certain angular frequencies cause all particles to escape whilst others result in all particles remaining as seen in figure \ref{fig:wide_freq_p_left_N_5000}.
 
+It is clear that a higher amplitude of $f=0.7$ allows more resonance frequencies, but this does not tell us if these frequencies also resonate for lower amplitudes or not. Here we have not tested to see what happens for a simulation over a longer time period which may be what allows more particles to escape for the lower amplitudes. When we look at figure \ref{fig:ressonance_p1_norm_f0} we see that the increase in length $|\boldsymbol{r}|$ is a slow process that for lower amplitudes would need even more time. At the same time can we from the definition of the magnetic field force $F_B =q \boldsymbol{v}\times \boldsymbol{B}$ see that an amplitude and following velocity increase would influence this restrictive force. This means that a resonating frequency for a lower amplitude may never be enough for some particles to escape. What frequencies and amplitudes gives a stable penning trap is left as possible further research.
+
 Comparing results in figures \ref{fig:narrow_freq_p_left_N_5000_zoom} and \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} we see that particle interaction clearly has an impact on how well the frequencies resonate with the motion of the particles.
 
+The particle interaction seem to allow some particles to escape for almost all frequencies. This can be explained by the randomly generated positions and velocities of our particles. Some of them may be placed so close to each other that the Coloumb force would accelerate them to high enough speeds for them to escape.
+
+We also notice in figure \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} that an amplitude of $f=0.1$ sees a decrease in the fraction of particles that escape around $\omgega_V=2.2$MHz. This can also be explained by particle interactions. For this amplitude we saw that not every particle escaped in figure \ref{fig:narrow_freq_p_left_N_5000_zoom} which means that this combination of frequencies and amplitude is already not optimal. A slight change of the system by adding particle interactions may be all that was needed to change its balance. This is again only speculations and can not properly be confirmed before a more thorough analysis of the particle trajectories is made. A statistical analysis of the project by performing more computations and taking the average over them would also help us to more accurately explain our results.
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
 \textit{In this section we state three things in a concise manner: what we have done, what we have found, and what should or could be done in the future.}
