@@ -59,6 +59,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{subfigure}
 \usepackage{tikz}
+\bibliographystyle{apsrev4-1}
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
 % Blending two colors:  blue!80!black  =  80% blue and 20% black
@@ -82,7 +83,7 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    We implement a numerical simulation of a Penning trap by solving a system of coupled differential equations. Analysis shows the superiority of the fourth order Runge-Kutta (RK4) method over the forward Euler method. We have a convergence rate of $1.397$ for Euler compared to $4$ for RK4. The RK4s high precision allows accurate simulations for a relatively low value of $N= 5000$. Running the simulation with and without Coulomb interaction between particles gives different results indicating that interaction plays an important role in particle motion within the trap. Finally, exploring resonance phenomena, we find three frequency domains resulting in all particles escaping, or rather, being ejected from the trap after a period of 500 $\mu$s. For the remaining frequencies close to no particles escape. A more fine-grained frequency scan is performed for one of the resonance domains showing that particle interaction again is an important factor.
+    We implement a numerical simulation of a Penning trap by solving a system of coupled differential equations. Analysis shows the superiority of the fourth order Runge-Kutta (RK4) method over the forward Euler method. We have a convergence rate of $1.397$ for Euler compared to $4$ for RK4. The RK4s high precision allows accurate simulations for a relatively low value of $N= 5000$. Running the simulation with and without Coulomb interaction between particles gives different results indicating that interaction plays an important role in particle motion within the trap. Finally, exploring resonance phenomena, we find three frequency domains of the applied electrical potential resulting in all particles escaping, or rather, being ejected from the trap after a period of 500 $\mu$s. For the remaining frequencies close to no particles escape. A more fine-grained frequency scan is performed for one of the resonance domains showing that particle interaction again is an important factor.
 \end{abstract}
 \maketitle
 
@@ -132,6 +133,9 @@ followed by a summary and potential for further experiments in section \ref{sec:
 
 % ===========================================
 \section{Methods}\label{sec:methods}
+GitHub repository containing code and more information on how to reproduce the results of this report can be found following this link:
+\url{https://github.com/Fslippe/FYS4150/tree/main/project3}
+\newline\newline
 The physical laws used to implement the Penning trap simulation will be from electrodynamics and classical mechanics, we will not take quantum aspects into account.
 The following equations will be used:
 
@@ -428,9 +432,18 @@ looked at closely with smaller step sizes of 0.001 MHz once with Coulomb interac
 To check the validity of our methods and gauge how realistic our Penning trap simulations are, we perform an error analysis of the
 numerical methods implemented. This is done by considering the simple case of a single particle, making it easy to compare the numerical
 to analytic results. The simulation with Particle 1 is run over 50 $\mu$s. This is done for four different step sizes $h_k = 50 / n_k \mu$s.
-The chosen step sizes are for $n_1 = 4000, n_2 = 8000, n_3 = 16000, n_4 = 32000$. For each step size the relative error of $\textbf{r}_i$
+The chosen step sizes are $n_1 = 4000, n_2 = 8000, n_3 = 16000, n_4 = 32000$. For each step size the relative error of $\textbf{r}_i$
 for each time step $t_i$ is calculated for both algorithms.
+\begin{align}
+    \text{Relative error} = \frac{|\boldsymbol{r}_{numerical,i} - \boldsymbol{r}_{analytical,i} |}{|\boldsymbol{r}_{analytical,i}|}
+\end{align}
 Additionally, these results are used to calculate the error convergence rate in both cases.
+\begin{align}
+    r_\text{err} = \frac{1}{3}\sum_{k=2}^4 \frac{\log(\Delta_{max,k}/\Delta_{max,k-1})}{\log(h_k/h_{k-1})}
+\end{align}
+
+
+
 % % ===========================================
 \section{Results}\label{sec:results}
 First we test our Penning trap's behavior for a single particle to see if it produces the expected motion in this simple case.
