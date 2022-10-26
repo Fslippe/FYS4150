@@ -13,4 +13,7 @@
 *.dat
 *.txt
 *.vscode/
+*.bcf
+*.run.xml
+
 
