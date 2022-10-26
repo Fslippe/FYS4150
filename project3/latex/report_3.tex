@@ -175,7 +175,7 @@ $\textbf{B}$ is the homogenous magnetic field and is dictated by the field stren
 
 \subsection*{Equations for single particle motion}
 Now starting from Newton's second law and using the equations above we can express the time evolution of a single particle's motion.
-The sum of forces will be the Lonretz force. Putting eq. \ref{eq:lorentz} into eq. \ref{eq:N2L} leads to:
+The sum of forces will be the Lorentz force. Putting eq. \ref{eq:lorentz} into eq. \ref{eq:N2L} leads to:
 \begin{equation}\label{eq:N2L_lorentz}
     m \ddot{\textbf{r}} = q\textbf{E} + q \textbf{v} \cross \textbf{B}
 \end{equation}
@@ -358,7 +358,7 @@ Consider the forward difference approximation for the first derivative based on 
 \begin{equation}
     y_n' = \frac{y_{n+1}  - y_n}{h}, \quad h = t_{t-1} -t_n
 \end{equation}
-Rearranging this results in the forward Euler method which has a local trncation error of $\mathcal{O}(h^2)$ and global truncation error of $\mathcal{O}(h)$,
+Rearranging this results in the forward Euler method which has a local truncation error of $\mathcal{O}(h^2)$ and global error of $\mathcal{O}(h)$,
 making it only first order accurate. The method is easy to implement and will be used for comparisons
 and checking of the main algorithm.
 %
@@ -384,7 +384,7 @@ and checking of the main algorithm.
 
 Similarly to the forward Euler, Runge-Kutta fourth order (RK4) is based on Taylor expansion, but by adding several intermediate
 steps to the computation of $y_{i+1}$ it generally yields better solutions for ODEs. RK4 has a local truncation error of $\mathcal{O}(h^5)$
-and global truncation error of $\mathcal{O}(h^4)$ \cite{compendium}.
+and global error of $\mathcal{O}(h^4)$ \cite{compendium}.
 
 \begin{figure}[H]
     % NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
@@ -462,7 +462,7 @@ We again compare the three solutions but now using a smaller time step of $n=500
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/compare_analytic_t_axis_2_N5000.pdf}
-    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=5000$. The analytic, Euler and RK4 solutions are shown.}
+    \caption{Here we see the vertical path of a single particle over 50 $\mu s$ for $N=5000$. The analytic, Euler and RK4 solutions are shown. We have for this motion $\omega_z^2 = 0.473$}
     \label{fig:compare_analytic_tz_5000}
 \end{figure}
 
@@ -481,9 +481,16 @@ Figure \ref{fig:compare_analytic_axis_0_1_N10000} displays that the numerical me
     \label{fig:compare_analytic_axis_0_1_N5000}
 \end{figure}
 Above in figure \ref{fig:compare_analytic_tz_5000} and \ref{fig:compare_analytic_axis_0_1_N5000} we see a growing error for Euler while RK4 still agrees well with the analytic solution.
-We also notice that a change in number of timesteps from $N=10000$ to $N=5000$ impacts the performence of the Euler method, while RK4 keeps its accuracy indicating the superiority of this method.
+We also notice that a change in number of timesteps from $N=10000$ to $N=5000$ impacts the performance of the Euler method, while RK4 keeps its accuracy indicating the superiority of this method.
 All this means that we now especially can trust the RK4 method but also Euler while keeping the timestep $h=T/N$ low.
 
+%x-y motion over 500 , RK4 vs analytic
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/analytic_RK4_axis_0_1_N5000.pdf}
+    \caption{Horizontal motion of a single particle from 300 $\mu$s to  500 $\mu$s for $N=5000$. The analytic and RK4 solutions are shown.}
+    \label{fig:analytic_RK4_axis_0_1_N5000}
+\end{figure}
 %z motion over 500 , RK4 vs analytic
 \begin{figure}[H]
     \centering
@@ -492,7 +499,7 @@ All this means that we now especially can trust the RK4 method but also Euler wh
     \label{fig:analytic_RK4_t_axis_2_N5000}
 \end{figure}
 
-Figure \ref{fig:analytic_RK4_t_axis_2_N5000} shows that the RK4 method agrees with the analytic solution even for a longer time period of 500 $\mu$s
+Figure \ref{fig:analytic_RK4_t_axis_2_N5000} and \ref{fig:analytic_RK4_axis_0_1_N5000} shows that the RK4 method agrees with the analytic solution even for a longer time period of 500 $\mu$s.
 Based on this we continue using $N=5000$ time steps and the RK4 method to plot the motion of Particle 1 and Particle 2 in the $xy$-plane when they do not interact.
 That is, disregarding the Coulomb force.
 %two particles
@@ -687,12 +694,14 @@ Figure \ref{fig:ressonance_p1_norm_f0} shows a Particle's distance from the cent
 \section{Discussion}\label{sec:discussion}
 
 %Analytic numerical compare
-Initial simulations present results showing the general behavior of our numerical Penning trap. In the comparison of analytic and numerical solutions in figures \ref{fig:compare_analytic_tz} and \ref{fig:compare_analytic_axis_0_1_N10000} the RK4 approximation matches the analytical solution very closely allowing us to use it as the main method for future simulations. The Euler does a reasonable job for the $z$ motion, but gives a poor approximation of the motion in the $xy$-plane. This is caused by greater directional changes. Seeing the RK4 perform well here and even still for a larger step size in figure \ref{fig:compare_analytic_axis_0_1_N5000} allows us to run larger simulations faster since we maintain precision even for a fairly low value of $N = 5000$.
+Initial simulations present results showing the general behavior of our numerical Penning trap. In the comparison of analytic and numerical solutions in figures \ref{fig:compare_analytic_tz} and \ref{fig:compare_analytic_axis_0_1_N10000} the RK4 approximation matches the analytical solution very closely allowing us to use it as the main method for future simulations. The Euler does a reasonable job for the $z$ motion, but gives a poor approximation of the motion in the $xy$-plane. This is caused by greater horizontal accelerations. Seeing the RK4 perform well here and even still for a larger step size in figure \ref{fig:compare_analytic_axis_0_1_N5000} allows us to run larger simulations faster since we maintain precision even for a fairly low value of $N = 5000$.
+
+Without directly comparing our numerical $z$-motion to the analytical results we can look at the value of $\omega_z$. For our parameters for a single Ca+ ion we have $\omega_z^2 = 0.473$ giving us $\ddot{z} = - 0.473z$. This equals a spring motion following Hooke's law with $\omega_z^2 = k/m$ where $k$ is the spring constant.  We would then expect the largest acceleration in the z-direction where the position has its largest absolute value. This is exactly what we see in \ref{fig:compare_analytic_tz_5000}. And this restoring force is what makes the z motion a stable oscillating system.
 
 % Particel motion discussion
 Comparing figure \ref{fig:RK4_2_xy_no_interaction_xy} and \ref{fig:RK4_2_xy_with_interaction_xy} shows that the Coulomb force has a noticeable effect on
-the particles motion, this matches expectations from a physical point of view since two positively charged particles will repel each other. This is exactly what happens in figure \ref{fig:RK4_2_xy_with_interaction_xy}. Here we look at only two particles interacting and the results with and without interactions are not extremely different,
-but in a case of $n$ particles we would expect larger deviations between motion with and without interactions for increasing $n$ since all the equations of motion are coupled.
+the particles motion, this matches expectations from a physical point of view since two positively charged particles will repel each other. This is exactly what happens in figure \ref{fig:RK4_2_xy_with_interaction_xy}. Here we look at only two particles interacting and the results with and without interactions are not extremely different.
+In a case of $n$ particles we would on the other hand expect larger deviations between motion with and without interactions for increasing $n$ since all the motion equations are coupled.
 
 Similarly, there are noticeable differences with and without interactions for the phase space $(x, v_x)$ in figure \ref{fig:RK4_2_x_phasespace_no_interaction_phasespace_xy}
 and \ref{fig:RK4_2_x_phasespace_with_interaction_phasespace_xy} and the phase space $(z, v_z)$ in figure \ref{fig:K4_2_z_phasespace_no_interaction_phasespace_xy}
@@ -708,12 +717,12 @@ In figure \ref{fig:relative_error_Euler_norm} and \ref{fig:relative_error_RK4_no
 
 The oscillating behavior of the relative error in figure \ref{fig:relative_error_Euler_norm} indicates that our methods perform worse for some particle positions than others. This most likely correlates with the acceleration of the particle as is the case for the Euler method in figure \ref{fig:compare_analytic_axis_0_1_N10000}. Whilst the particle is on a straight trajectory the approximations will be good, but as it gets redirected towards the center by the magnetic or electric field our numerical methods can't keep up as well.
 
-We also see that the RK4 method has an error convergence rate of 4 which indicates how efficiently the method's error converges towards zero. This value is what we would expect for RK4 based on its global error proportional to the fourth order time step $h^4$. For Euler on the other hand we would expect a convergence rate of 1. Our value of 1.397 is not exactly 1 which may be a result of the Euler method starting to blow up for $N=4000$. This would give $\log(\Delta_{\text{max},k}/\Delta_{\text{max},k-1})$ a larger negative value which in turn will increase $r_{\text{err}}$. When looking at \ref{tab:convergence_euler} this is exactly what we see. The convergence rate calculated for $N_k = 8000$ and $N_{k-1} = 4000$ indicates a global error proportional to $h^2$. When we look at table \ref{tab:convergence_euler_x10} on the other hand we see what we would expect with an error convergence closer to 1, and can therefore conclude that both our methods perform as expected.
+We also see that the RK4 method has an error convergence rate of 4 which indicates how efficiently the method's error converges towards zero. This value is what we would expect for RK4 based on its global error proportional to the fourth order time step $h^4$. For Euler on the other hand we would expect a convergence rate of 1. Our value of 1.397 is not exactly 1 which may be a result of the Euler method starting to blow up for $N=4000$. This would give $\log(\Delta_{\text{max},k}/\Delta_{\text{max},k-1})$ a larger negative value which in turn will increase $r_{\text{err}}$. When looking at table \ref{tab:convergence_euler} this is exactly what we see. The convergence rate calculated for $N_k = 8000$ and $N_{k-1} = 4000$ indicates a global error proportional to $h^2$. When we look at table \ref{tab:convergence_euler_x10} on the other hand we see what we would expect with an error convergence closer to 1, and can therefore conclude that both our methods perform as expected.
 
 %frequency Discussion
 Having confirmed an acceptable precision of the RK4 method we move on to larger simulations exploring resonance phenomena. Certain angular frequencies cause all particles to escape whilst others result in all particles remaining as seen in figure \ref{fig:wide_freq_p_left_N_5000}.
 
-It is clear that a higher amplitude of $f=0.7$ allows more resonance frequencies, but this does not tell us if these frequencies also resonate for lower amplitudes or not. Here we have not tested to see what happens for a simulation over a longer time period which may be what allows more particles to escape for the lower amplitudes. When we look at figure \ref{fig:ressonance_p1_norm_f0} we see that the increase in length $|\boldsymbol{r}|$ is a slow process that for lower amplitudes would need even more time. At the same time we can see from the definition of the magnetic field force $F_B =q \boldsymbol{v}\times \boldsymbol{B}$ that an amplitude and following velocity increase would influence this restrictive force. This means that a resonating frequency for a lower amplitude may never be enough for some particles to escape. What frequencies and amplitudes gives a stable penning trap is left as possible further research.
+It is clear that a higher amplitude of $f=0.7$ allows more resonance frequencies, but this does not tell us if these frequencies also resonate for lower amplitudes or not. Here we have not tested to see what happens for a simulation over a longer time period which may be what allows more particles to escape for the lower amplitudes. When we look at figure \ref{fig:ressonance_p1_norm_f0} we see that the increase in length $|\boldsymbol{r}|$ is a slow process that for lower amplitudes would need even more time. At the same time we can see from the definition of the magnetic field force $F_B =q \boldsymbol{v}\times \boldsymbol{B}$ that an amplitude and following velocity increase would influence this restrictive force. This means that a resonating frequency for a lower amplitude may never be enough for some particles to escape. What frequencies and amplitudes gives a stable penning trap will need more data of higher statistical quality and is therefore left as possible further research.
 
 Comparing results in figures \ref{fig:narrow_freq_p_left_N_5000_zoom} and \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} we see that particle interaction clearly has an impact on how well the frequencies resonate with the motion of the particles.
 
@@ -725,7 +734,7 @@ We also notice in figure \ref{fig:narrow_freq_p_left_N_5000_interaction_zoom} th
 
 We have investigated the behavior of a Penning trap through numerical simulations, first exploring the basic motion of the particles in the simulation to then focus on resonance phenomena resulting in the particles escaping. This was done by solving coupled differential equations to evolve the system over time. The simulated particle motion matches what is expected from a physical point of view.
 Error analysis of the Euler and RK4 methods implemented match the expected known truncation errors. For RK4 we calculate a convergence rate of $4$, matching the global truncation error of $\mathcal{O}(h^4)$. The convergence rate for the Euler method came to be $1.397$ which is higher than the expected value of $1$ to match the Euler's global error of $\mathcal{O}(h)$. Closer analysis indicates that this is caused by Euler being unstable for low $N$. Calculating the convergence rate for higher values of $N$ gets us closer to 1.
-Our results show that resonance occurs in three frequency domains and that particle interaction has an important effect on particle motion and thus also resonance. Further studies could explore why these specific frequencies result in resonance. A larger Amplitude $f$ results in more resonance frequencies, but further experiments over longer periods of time are needed to see if lower amplitudes also resonate at these frequencies given more time. Lastly, the accuracy of the 100 particle simulations can be greatly increased by a more statistical approach, taking the average values of several random simulations.
+Our results show that resonance occurs in three frequency domains and that particle interaction has an important effect on particle motion and thus also resonance. Further studies could explore why these specific frequencies result in resonance. A larger Amplitude $f$ results in more resonance frequencies, but further experiments over longer periods of time are needed to see if lower amplitudes also resonate at these frequencies given more time. Lastly, the accuracy of the 100 particle simulations can be greatly increased by a more statistical approach, taking the average values of several random simulations, but at a great cost of computing time.
 \onecolumngrid
 
 %\bibliographystyle{apalike}
