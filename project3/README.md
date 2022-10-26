@@ -6,7 +6,7 @@ Alessio Canclini and Filip Severin von der Lippe
 This folder of the repository FYS4150 contains all files used for Project 3 in FYS4150 Autumn 2022.
 - figures contains both figures used in the report of this project and other relevant figures produced by the included code.
 - latex Contains .tex and .pdf of the report for this project
-- src contains all code used to prouduce the reults discussed in the report aswell as the figures found in the figures folder
+- code contains all code used to prouduce the reults discussed in the report aswell as the figures found in the figures folder
 
 ## Code structure and how to run
 The programming languages python and c++ have been used. To run the code make sure to use python 3 and c++11, and have the following packages for python which can be installed with pip by using the following commands:
