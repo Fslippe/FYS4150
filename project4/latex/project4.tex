@@ -44,17 +44,52 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    NB! abstract here
+    NB! Abstract here
 \end{abstract}
 \maketitle
 
 
 % ===========================================
 \section{Introduction}
+This report will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose is determining a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. 
 
+... more about Ising model and phase transitions
++ Mote Carlo methods and Markov chains.
 
 % ===========================================
 \section{Methods}\label{sec:methods}
+The square 2D lattices for our Ising model will have a length of $L$ containing $N$ spins with the relation $N = L^2$. Each spin $s_i$ will have two possible states of 
+\begin{equation}
+    s_i = -1 \text{ or } s_i = +1.
+\end{equation}
+The total spin state or \textbf{spin configuration} of a lattice will be represented as $\textbf{s} = (s_1, s_2, ..., s_N)$. The following equations will be used:
+\begin{equation}
+    E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l
+\end{equation}
+$E$ is the total energy where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors.
+\begin{equation}
+    M(\textbf{s}) = \sum^N_i s_i
+\end{equation}
+Here $M$ is the magnetization of the entire system expressed as a sum over all spins.
+\begin{equation}
+    \epsilon(\textbf{s}) = \frac{E(\textbf{s})}{N}
+\end{equation}
+\begin{equation}
+    m(\textbf{s}) = \frac{M(\textbf{s})}{N}
+\end{equation}
+$\epsilon$ is the energy per spin and $m$ the magnetization per spin. These will be used to compare results.
+\begin{equation}
+    \beta = \frac{1}{k_B T}
+\end{equation}
+$\beta$ describes the ``inverse temperature'' with the systems' temperature $T$ and the Boltzmann constant $k_B$.
+\begin{equation}
+    Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}
+\end{equation}
+$Z$ is the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distridution} given bellow.
+\begin{equation}
+    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}
+\end{equation}
+
 For comparison with early numerical implementations we will fist consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
 
 % Please add the following required packages to your document preamble:
@@ -62,29 +97,30 @@ For comparison with early numerical implementations we will fist consider an ana
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[H]
     \centering
-    \caption{Analytical values for sixteen \textbf{spin configurations} of $2 \cross 2$ Ising model lattice.} 
+    \caption{Analytic values for the sixteen \textbf{spin configurations} of $2 \cross 2$ Ising model lattice.} 
     \begin{tabular}{|l|l|l|l|}
     \hline
-    \begin{tabular}[c]{@{}l@{}}Nr of spins \\ in state +1\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} & Degeneracy \\ \hline
+    \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} & Degeneracy \\ \hline
     \hline
-    0   & -8 & -4   & 1 \\    \hline
-    1   & 0  & -2   & 4 \\    \hline
-    1   & 0  & -2   & 4 \\    \hline
-    1   & 0  & -2   & 4 \\    \hline
-    1   & 0  & -2   & 4 \\    \hline
-    2   & 0  & 0    & 4 \\    \hline
-    2   & 0  & 0    & 4 \\    \hline
-    2   & 8  & 0    & 2 \\    \hline
-    2   & 0  & 0    & 4 \\    \hline
-    2   & 0  & 0    & 4 \\    \hline
-    2   & 8  & 0    & 2 \\    \hline
-    3   & 0  & 2    & 4 \\    \hline
-    3   & 0  & 2    & 4 \\    \hline
-    3   & 0  & 2    & 4 \\    \hline
-    3   & 0  & 2    & 4 \\    \hline
-    4   & -8 & 4    & 1 \\    \hline                                 
+    0   & -8 & -4  & 1 \\    \hline
+    1   & 0  & -2  & 4 \\    \hline
+    1   & 0  & -2  & 4 \\    \hline
+    1   & 0  & -2  & 4 \\    \hline
+    1   & 0  & -2  & 4 \\    \hline
+    2   & 0  & 0   & 4 \\    \hline
+    2   & 0  & 0   & 4 \\    \hline
+    2   & 8  & 0   & 2 \\    \hline
+    2   & 0  & 0   & 4 \\    \hline
+    2   & 0  & 0   & 4 \\    \hline
+    2   & 8  & 0   & 2 \\    \hline
+    3   & 0  & 2   & 4 \\    \hline
+    3   & 0  & 2   & 4 \\    \hline
+    3   & 0  & 2   & 4 \\    \hline
+    3   & 0  & 2   & 4 \\    \hline
+    4   & -8 & 4   & 1 \\    \hline                                 
     \end{tabular} \label{tab:analytic}
-    \end{table} 
+\end{table} 
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case.
 % ===========================================
 \section{Results}\label{sec:results}
 
