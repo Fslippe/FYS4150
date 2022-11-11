@@ -85,10 +85,10 @@ $\beta$ describes the ``inverse temperature'' with the systems' temperature $T$ 
 \begin{equation}
     Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}
 \end{equation}
-$Z$ is the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distridution} given bellow.
+$Z$ is the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution} given bellow. This will be the probability distribution used for random sampling in our Monte Carlo approach. 
 \begin{equation}
-    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}
-\end{equation}
+    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})} \label{eq:prob_dist}
+\end{equation} 
 
 For comparison with early numerical implementations we will fist consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
 
@@ -120,7 +120,40 @@ For comparison with early numerical implementations we will fist consider an ana
     4   & -8 & 4   & 1 \\    \hline                                 
     \end{tabular} \label{tab:analytic}
 \end{table} 
-Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case.
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case. More comprehensive calculations of the analytic solutions can be found in appendix ??. The specific partition function becomes
+\begin{equation}
+    Z = 2 e^{\beta 8} + 2 e^{- \beta 8} + 12
+\end{equation}
+Additionally we will calculate a few expectation values. The general formula sis given as
+\begin{equation}
+    \langle A \rangle = \sum_s A_s p(s)
+\end{equation}
+which is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case eq. \ref{eq:prob_dist}.
+\begin{equation}
+    \langle E \rangle = \frac{16J}{Z} \left( e^{-\beta 8} - e^{\beta 8} \right)
+\end{equation}
+\begin{equation}
+    \langle E^2 \rangle = \frac{128 J^2}{Z} \left( e^{-\beta 8} + e^{\beta 8} \right)
+\end{equation}
+\begin{equation}
+    \langle \epsilon \rangle = \frac{4J}{Z} \left( e^{-\beta 8} - e^{\beta 8} \right)
+\end{equation}
+\begin{equation}
+    \langle \epsilon^2 \rangle = \frac{32 J^2}{Z} \left( e^{-\beta 8} + e^{\beta 8} \right)
+\end{equation}
+\begin{equation}
+    \langle |M| \rangle = \frac{8}{Z} \left( e^{\beta 8} + 2 \right)
+\end{equation}
+\begin{equation}
+    \langle M^2 \rangle = \frac{8}{Z} \left( e^{\beta 8} + 1 \right)
+\end{equation}
+\begin{equation}
+    \langle |m| \rangle = \frac{2}{Z} \left( e^{\beta 8} + 2 \right)
+\end{equation}
+\begin{equation}
+    \langle m^2 \rangle = \frac{2}{Z} \left( e^{\beta 8} + 1 \right)
+\end{equation}
+
 % ===========================================
 \section{Results}\label{sec:results}
 
