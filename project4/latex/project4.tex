@@ -22,6 +22,8 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{subfigure}
 \usepackage{tikz}
+\usepackage{mathrsfs}
+
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
 % Blending two colors:  blue!80!black  =  80% blue and 20% black
@@ -37,7 +39,7 @@
 
 \begin{document}
 
-\title{Markov Chain Monte Carlo approximation \\of the infinite lattice Ising model}  % self-explanatory
+\title{Markov Chain Monte Carlo approximation \\of the 2D Ising model}  % self-explanatory
 \author{Alessio Canclini, Filip von der Lippe} % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
@@ -54,17 +56,21 @@
 This report will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose is determining a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. 
 
 ... more about Ising model and phase transitions
-+ Mote Carlo methods and Markov chains.
++ Mote Carlo methods and Markov chains. \cite{compendium}
 
 % ===========================================
 \section{Methods}\label{sec:methods}
 The square 2D lattices for our Ising model will have a length of $L$ containing $N$ spins with the relation $N = L^2$. Each spin $s_i$ will have two possible states of 
-\begin{equation}
+\begin{equation*}
     s_i = -1 \text{ or } s_i = +1.
-\end{equation}
-The total spin state or \textbf{spin configuration} of a lattice will be represented as $\textbf{s} = (s_1, s_2, ..., s_N)$. The total energy of the system will be expressed as
+\end{equation*}
+The total spin state or \textbf{spin configuration} of a lattice will be represented as $\textbf{s} = (s_1, s_2, ..., s_N)$. In its simplest form the total energy of the system is expressed as
+\begin{equation*}
+    E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l - \mathscr{B} \sum^N_{k} s_k.
+\end{equation*}
+Here $\mathscr{B}$ is an external magnetic field. Since we will be looking at the Ising model without an external magnetic field the equation will be simplified to
 \begin{equation}
-    E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l
+    E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l,
 \end{equation}
 where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors.
 \begin{equation}
@@ -103,72 +109,62 @@ For comparison with early numerical implementations we will fist consider an ana
     \caption{Analytic values for the sixteen \textbf{spin configurations} of $2 \cross 2$ Ising model lattice.} 
     \begin{tabular}{|l|l|l|l|}
     \hline
-    \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} & Degeneracy \\ \hline
+    \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & Degeneracy & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} \\ \hline
     \hline
-    0   & -8 & -4  & 1 \\    \hline
-    1   & 0  & -2  & 4 \\    \hline
-    1   & 0  & -2  & 4 \\    \hline
-    1   & 0  & -2  & 4 \\    \hline
-    1   & 0  & -2  & 4 \\    \hline
-    2   & 0  & 0   & 4 \\    \hline
-    2   & 0  & 0   & 4 \\    \hline
-    2   & 8  & 0   & 2 \\    \hline
-    2   & 0  & 0   & 4 \\    \hline
-    2   & 0  & 0   & 4 \\    \hline
-    2   & 8  & 0   & 2 \\    \hline
-    3   & 0  & 2   & 4 \\    \hline
-    3   & 0  & 2   & 4 \\    \hline
-    3   & 0  & 2   & 4 \\    \hline
-    3   & 0  & 2   & 4 \\    \hline
-    4   & -8 & 4   & 1 \\    \hline                                 
+    0    & 1 & -8J & -4  \\    \hline
+    1    & 4 & 0  & -2  \\    \hline
+    2    & 4 & 0  & 0   \\    \hline
+    2    & 2 & 8J  & 0   \\    \hline
+    3    & 4 & 0  & 2   \\    \hline
+    4    & 1 & -8J & 4   \\    \hline                                 
     \end{tabular} \label{tab:analytic}
 \end{table} 
-Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case. More comprehensive calculations of the analytic solutions can be found in appendix \ref{appendix:A}. The specific partition function becomes
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. More comprehensive calculations of the analytic solutions can be found in appendix \ref{appendix:A}. The specific partition function becomes
 \begin{equation}
-    Z = 2 e^{\beta 8} + 2 e^{- \beta 8} + 12
+    Z = 2 e^{\beta 8J} + 2 e^{- \beta 8J} + 12 = 4 (\cosh(8 \beta J) + 3)
 \end{equation}
-Additionally we will calculate a few expectation values. The general formula sis given as
+Additionally we will calculate a few expectation values for which the general formula is given as
 \begin{equation}
-    \langle A \rangle = \sum_s A_s p(s)
+    \langle A \rangle = \sum_s A_s p(s).
 \end{equation}
-which is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case eq. \ref{eq:prob_dist}.
+This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}.
 \begin{equation}
-    \langle E \rangle = \frac{16J}{Z} \left( e^{-\beta 8} - e^{\beta 8} \right)
-\end{equation}
-\begin{equation}
-    \langle E^2 \rangle = \frac{128 J^2}{Z} \left( e^{-\beta 8} + e^{\beta 8} \right)
+    \langle E \rangle = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
 \end{equation}
 \begin{equation}
-    \langle \epsilon \rangle = \frac{4J}{Z} \left( e^{-\beta 8} - e^{\beta 8} \right)
+    \langle E^2 \rangle = \frac{128ß J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
 \end{equation}
 \begin{equation}
-    \langle \epsilon^2 \rangle = \frac{32 J^2}{Z} \left( e^{-\beta 8} + e^{\beta 8} \right)
+    \langle \epsilon \rangle = \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
 \end{equation}
 \begin{equation}
-    \langle |M| \rangle = \frac{8}{Z} \left( e^{\beta 8} + 2 \right)
+    \langle \epsilon^2 \rangle = \frac{32 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
 \end{equation}
 \begin{equation}
-    \langle M^2 \rangle = \frac{8}{Z} \left( e^{\beta 8} + 1 \right)
+    \langle |M| \rangle = \frac{8J}{Z} \left( e^{\beta 8J} + 2 \right)
 \end{equation}
 \begin{equation}
-    \langle |m| \rangle = \frac{2}{Z} \left( e^{\beta 8} + 2 \right)
+    \langle M^2 \rangle = \frac{8J}{Z} \left( e^{\beta 8J} + 1 \right)
 \end{equation}
 \begin{equation}
-    \langle m^2 \rangle = \frac{2}{Z} \left( e^{\beta 8} + 1 \right)
+    \langle |m| \rangle = \frac{2}{Z} \left( e^{\beta 8J} + 2 \right)
+\end{equation}
+\begin{equation}
+    \langle m^2 \rangle = \frac{2}{Z} \left( e^{\beta 8J} + 1 \right)
 \end{equation}
 
 NB! Missing analytic $C_V$ and $X$
 \\ \\
 
-The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$- The energy shift induced by flipping a single spin 
+The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin 
 \begin{equation}
     \Delta E = E_{\text{after}} - E_{\text{before}}
 \end{equation}
-can only take five possible values. This is shown in appendix \ref{appendix:B}. The values are
+can only take five possible values in a 2D-lattice of arbitrary size. This is shown in appendix \ref{appendix:B}. These values are
 \begin{equation}
-    \Delta E = 0J, -8J, 8J, -16J, 16J.
+    \Delta E = 0, -4J, 4J, -8J, 8J.
 \end{equation}
-To avoid repeatedly calling the exponential function we precompute the corresponding Boltzmann factors and use the correct one by implementing a set of if-tests. 
+To avoid repeatedly calling the exponential function we pre-compute the corresponding Boltzmann factors in an array and use the correct one by implementing a set of if-tests.
 
 % ===========================================
 \section{Results}\label{sec:results}
@@ -192,8 +188,18 @@ To avoid repeatedly calling the exponential function we precompute the correspon
 
 \newpage
 \appendix
-\section{Analytical solutions}\label{appendix:A}
+\section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:A}
 
 \section{Possible $\Delta E$ values}\label{appendix:B}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llll}
+   & $\uparrow$ &    \\
+$\uparrow$ & $\uparrow$ & $\uparrow$ \\
+   & $\uparrow$ &    \\
+   &    &   
+\end{tabular}
+\end{table}
 
 \end{document}
