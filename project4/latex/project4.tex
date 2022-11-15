@@ -62,33 +62,36 @@ The square 2D lattices for our Ising model will have a length of $L$ containing 
 \begin{equation}
     s_i = -1 \text{ or } s_i = +1.
 \end{equation}
-The total spin state or \textbf{spin configuration} of a lattice will be represented as $\textbf{s} = (s_1, s_2, ..., s_N)$. The following equations will be used:
+The total spin state or \textbf{spin configuration} of a lattice will be represented as $\textbf{s} = (s_1, s_2, ..., s_N)$. The total energy of the system will be expressed as
 \begin{equation}
     E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l
 \end{equation}
-$E$ is the total energy where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors.
+where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors.
 \begin{equation}
     M(\textbf{s}) = \sum^N_i s_i
 \end{equation}
-Here $M$ is the magnetization of the entire system expressed as a sum over all spins.
+is the magnetization of the entire system expressed as a sum over all spins. The energy per spin is
 \begin{equation}
     \epsilon(\textbf{s}) = \frac{E(\textbf{s})}{N}
 \end{equation}
+and the magnetization per spin is given by
 \begin{equation}
-    m(\textbf{s}) = \frac{M(\textbf{s})}{N}
+    m(\textbf{s}) = \frac{M(\textbf{s})}{N}.
 \end{equation}
-$\epsilon$ is the energy per spin and $m$ the magnetization per spin. These will be used to compare results.
+These will be used to compare and analyze results.
 \begin{equation}
     \beta = \frac{1}{k_B T}
 \end{equation}
-$\beta$ describes the ``inverse temperature'' with the systems' temperature $T$ and the Boltzmann constant $k_B$.
+describes the ``inverse temperature'' with the systems' temperature $T$ and the Boltzmann constant $k_B$.
 \begin{equation}
     Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}
 \end{equation}
-$Z$ is the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution} given bellow. This will be the probability distribution used for random sampling in our Monte Carlo approach. 
+represents the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution},
 \begin{equation}
-    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})} \label{eq:prob_dist}
-\end{equation} 
+    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}. \label{eq:prob_dist}
+\end{equation}
+This will be the probability distribution used for random sampling in our Monte Carlo approach. 
+
 
 For comparison with early numerical implementations we will fist consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
 
@@ -120,7 +123,7 @@ For comparison with early numerical implementations we will fist consider an ana
     4   & -8 & 4   & 1 \\    \hline                                 
     \end{tabular} \label{tab:analytic}
 \end{table} 
-Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case. More comprehensive calculations of the analytic solutions can be found in appendix ??. The specific partition function becomes
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions bellow for the $2 \cross 2$ lattice case. More comprehensive calculations of the analytic solutions can be found in appendix \ref{appendix:A}. The specific partition function becomes
 \begin{equation}
     Z = 2 e^{\beta 8} + 2 e^{- \beta 8} + 12
 \end{equation}
@@ -154,6 +157,19 @@ which is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability d
     \langle m^2 \rangle = \frac{2}{Z} \left( e^{\beta 8} + 1 \right)
 \end{equation}
 
+NB! Missing analytic $C_V$ and $X$
+\\ \\
+
+The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$- The energy shift induced by flipping a single spin 
+\begin{equation}
+    \Delta E = E_{\text{after}} - E_{\text{before}}
+\end{equation}
+can only take five possible values. This is shown in appendix \ref{appendix:B}. The values are
+\begin{equation}
+    \Delta E = 0J, -8J, 8J, -16J, 16J.
+\end{equation}
+To avoid repeatedly calling the exponential function we precompute the corresponding Boltzmann factors and use the correct one by implementing a set of if-tests. 
+
 % ===========================================
 \section{Results}\label{sec:results}
 
@@ -174,5 +190,10 @@ which is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability d
 %\bibliographystyle{apalike}
 \bibliography{ref}
 
+\newpage
+\appendix
+\section{Analytical solutions}\label{appendix:A}
+
+\section{Possible $\Delta E$ values}\label{appendix:B}
 
 \end{document}
