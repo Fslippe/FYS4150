@@ -132,7 +132,7 @@ and the susceptibility
     \chi = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
 \end{equation}
 \subsection*{Periodic boundary conditions}
-The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice.
+The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice. NB! HOW ARE THESE IMPLEMENTED IN THE CODE.
 \begin{table}[H]
     \centering
     \begin{tabular}{llll}
@@ -140,7 +140,7 @@ The Ising model simulations we will be implemented using periodic boundary condi
     $\uparrow$ & $\uparrow$ & $\uparrow$ \\
        & $\uparrow$ & 
     \end{tabular}\label{tab:neighbors}
-    \caption{An example of a spin and its neighbors. Here all five spins are in a positive state (+1).} 
+    \caption{An example of a spin and its neighbors. Here all five spins are in an up state (+1).} 
     \end{table}
 
 \subsection*{Markov chains}
@@ -149,15 +149,19 @@ The Ising model simulations we will be implemented using periodic boundary condi
 
 \subsection*{The Metropolis algorithm}
 
+\subsection*{Optimization and parallelization}
+
 The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin 
 \begin{equation}
     \Delta E = E_{\text{after}} - E_{\text{before}}
 \end{equation}
-can only take five possible values in a 2D-lattice of arbitrary size. This is shown in appendix \ref{appendix:B}. These values are
+can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) This is shown in appendix \ref{appendix:B}. These values are
 \begin{equation}
-    \Delta E = 0, -4J, 4J, -8J, 8J.
+    \Delta E = 8J, 4J, 0, -4J, -8J.
 \end{equation}
 To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array. NB MORE HERE.
+
+Furthermore, the code is written such that it can be run in series. This allows for easy parallelization using OpneMP to reduce runtimes.
 
 % ===========================================
 \section{Results}\label{sec:results}
@@ -266,16 +270,87 @@ and the susceptibility
 
 
 \section{Possible $\Delta E$ values}\label{appendix:B}
-
+Considering a 2D lattice of arbitrary size $(L>2)$ and remembering that we are working with periodic boundary conditions, we can show that there are only a few possible values of $\Delta E$. The calculation of $\Delta E$ between spin configurations will be limited to the flipping of a single spin. To find the possible energy differences we will look at a spin at a random position. This central spin will start in an up state(+1) and then be flipped (-1). We remind that $ E(\textbf{s}) = - J \sum^4_{\langle kl \rangle} s_k s_l$ and $ \Delta E = E_{\text{after}} - E_{\text{before}}$.
 \begin{table}[H]
-\centering
+%\centering
 \begin{tabular}{llll}
    & $\uparrow$ &    \\
 $\uparrow$ & $\uparrow$ & $\uparrow$ \\
-   & $\uparrow$ &    \\
-   &    &   
+   & $\uparrow$ &  
 \end{tabular}
+has $E = -4J$, now flipping we have 
+\begin{tabular}{llll}
+    & $\uparrow$ &    \\
+ $\uparrow$ & $\downarrow$ & $\uparrow$ \\
+    & $\uparrow$ &  
+ \end{tabular}
+ and $E = 4J$, resulting in $\Delta E = 8J$.
 \end{table}
+This can be show for the four remaining possible starting configurations as well.
+\begin{table}[H]
+    %\centering
+    \begin{tabular}{llll}
+       & $\uparrow$ &    \\
+    $\downarrow$ & $\uparrow$ & $\uparrow$ \\
+       & $\uparrow$ &  
+    \end{tabular}
+    has $E = -2J$. Flipping we have 
+    \begin{tabular}{llll}
+        & $\uparrow$ &    \\
+     $\downarrow$ & $\downarrow$ & $\uparrow$ \\
+        & $\uparrow$ &  
+     \end{tabular}
+     and $E = 2J$, resulting in $\Delta E = 4J$.
+\end{table}
+    
+\begin{table}[H]
+    %\centering
+    \begin{tabular}{llll}
+       & $\uparrow$ &    \\
+    $\downarrow$ & $\uparrow$ & $\uparrow$ \\
+       & $\downarrow$ &  
+    \end{tabular}
+    has $E = 0$. Flipping we have 
+    \begin{tabular}{llll}
+        & $\uparrow$ &    \\
+     $\downarrow$ & $\downarrow$ & $\uparrow$ \\
+        & $\downarrow$ &  
+     \end{tabular}
+     and $E = 0$, resulting in $\Delta E = 0$.
+\end{table}
+
+\begin{table}[H]
+    %\centering
+    \begin{tabular}{llll}
+       & $\uparrow$ &    \\
+    $\downarrow$ & $\uparrow$ & $\downarrow$ \\
+       & $\downarrow$ &  
+    \end{tabular}
+    has $E = 2J$. Flipping we have 
+    \begin{tabular}{llll}
+        & $\uparrow$ &    \\
+     $\downarrow$ & $\downarrow$ & $\downarrow$ \\
+        & $\downarrow$ &  
+     \end{tabular}
+     and $E = -2J$, resulting in $\Delta E = -4J$.
+\end{table}
+
+\begin{table}[H]
+    %\centering
+    \begin{tabular}{llll}
+       & $\downarrow$ &    \\
+    $\downarrow$ & $\uparrow$ & $\downarrow$ \\
+       & $\downarrow$ &  
+    \end{tabular}
+    has $E = 4J$. Flipping we have 
+    \begin{tabular}{llll}
+        & $\downarrow$ &    \\
+     $\downarrow$ & $\downarrow$ & $\downarrow$ \\
+        & $\downarrow$ &  
+     \end{tabular}
+     and $E = -4J$, resulting in $\Delta E = -8J$.
+\end{table}
+The five possible values of the energy difference are thus, $\Delta E = 8J, 4J, 0, -4J, -8J$.
 
 \section{Metropolis algorithm flow chart}\label{appendix:C}
 
