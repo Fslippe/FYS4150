@@ -108,7 +108,6 @@ For comparison with early numerical implementations we will fist consider an ana
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[H]
     \centering
-    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
     \begin{tabular}{|l|l|l|l|}
     \hline
     \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & Degeneracy & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} \\ \hline
@@ -120,6 +119,7 @@ For comparison with early numerical implementations we will fist consider an ana
     3    & 4 & 0  & 2   \\    \hline
     4    & 1 & -8J & 4   \\    \hline                                 
     \end{tabular} \label{tab:analytic}
+    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
 \end{table} 
 Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:A} and are used to test early versions of the code.
 
@@ -140,7 +140,7 @@ The Ising model simulations we will be implemented using periodic boundary condi
     $\uparrow$ & $\uparrow$ & $\uparrow$ \\
        & $\uparrow$ & 
     \end{tabular}\label{tab:neighbors}
-    \caption{An example of a spin and its neighbors. Here all spins are in a positive state (+1).} 
+    \caption{An example of a spin and its neighbors. Here all five spins are in a positive state (+1).} 
     \end{table}
 
 \subsection*{Markov chains}
@@ -181,42 +181,88 @@ To reduce computational cost we will avoid repeatedly calling the exponential fu
 
 \newpage
 \appendix
-\section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:A}
-The specific partition function becomes
-\begin{equation}
-    Z = 2 e^{\beta 8J} + 2 e^{- \beta 8J} + 12 = 4 (\cosh(8 \beta J) + 3)
-\end{equation}
-Additionally we will calculate a few expectation values for which the general formula is given as
-\begin{equation}
-    \langle A \rangle = \sum_s A_s p(s).
-\end{equation}
-This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}.
-\begin{equation}
-    \langle E \rangle = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
-\end{equation}
-\begin{equation}
-    \langle E^2 \rangle = \frac{128ß J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
-\end{equation}
-\begin{equation}
-    \langle \epsilon \rangle = \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
-\end{equation}
-\begin{equation}
-    \langle \epsilon^2 \rangle = \frac{32 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
-\end{equation}
-\begin{equation}
-    \langle |M| \rangle = \frac{8J}{Z} \left( e^{\beta 8J} + 2 \right)
-\end{equation}
-\begin{equation}
-    \langle M^2 \rangle = \frac{8J}{Z} \left( e^{\beta 8J} + 1 \right)
-\end{equation}
-\begin{equation}
-    \langle |m| \rangle = \frac{2}{Z} \left( e^{\beta 8J} + 2 \right)
-\end{equation}
-\begin{equation}
-    \langle m^2 \rangle = \frac{2}{Z} \left( e^{\beta 8J} + 1 \right)
-\end{equation}
+\raggedbottom
 
-NB! Missing analytic $C_V$ and $X$
+\section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:A}
+For the case of a 2$\cross$2 lattice with $L=2$ and $N=4$ we have sixteen possible spin configurations show in table \ref{tab:analytic}. These values will be used for the analytic solutions. The specific partition function becomes
+\begin{align*}
+    Z &=  \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})} 
+    = 2e^{- \beta (-8J)} + 2e^{- \beta 8J} + 12e^0 
+    = 2 e^{\beta 8J} + 2 e^{- \beta 8J} + 12 
+    = 4 (\cosh(8 \beta J) + 3).
+\end{align*}
+Additionally, we will calculate a few expectation values for which the general formula is given as
+\begin{align*}
+    \langle A \rangle = \sum_s A_s p(s).
+\end{align*}
+This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}. For the energy we have
+\begin{align*}
+    \langle E \rangle &=  \sum_s E(\textbf{s})  p(\textbf{s};T) 
+    = \frac{1}{Z} \sum_s E(\textbf{s})  e^{-\beta E(\textbf{s})} 
+    = \frac{1}{Z} \left( 2 \cdot (-8J)e^{\beta8J} + 2 \cdot 8J e^{-\beta 8J}\right) \\
+    &= \frac{1}{Z} \left( -16 e^{\beta8J} + 16 e^{-\beta 8J}\right)
+    = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right),
+\\
+\\
+    \langle E^2 \rangle &=  \sum_s E(\textbf{s})^2  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s E(\textbf{s})^2  e^{-\beta E(\textbf{s})} 
+    = \frac{1}{Z} \left( 2 \cdot (-8J)^2e^{\beta8J} + 2 \cdot (8J)^2 e^{-\beta 8J}\right) \\
+    &= \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right),
+\\
+\\
+    \langle \epsilon \rangle &=  \sum_s \epsilon_s  p(\textbf{s};T)
+    =  \sum_s \frac{E(\textbf{s})}{N}  p(\textbf{s};T)
+    =  \frac{1}{N} \sum_s E(\textbf{s})  p(\textbf{s};T)
+    =  \frac{\langle E \rangle }{4}
+    = \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right),
+\\
+\\
+    \langle \epsilon^2 \rangle &=  \sum_s \epsilon_s^2  p(\textbf{s};T)
+    =  \sum_s \frac{E(\textbf{s})^2}{N}  p(\textbf{s};T)
+    =  \frac{1}{N} \sum_s E(\textbf{s})^2  p(\textbf{s};T)
+    =  \frac{\langle E^2 \rangle }{4}
+    = \frac{32 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right).
+\end{align*}
+Then for the magnetization we have
+\begin{align*}
+    \langle |M| \rangle &=  \sum_s |M(\textbf{s})|  p(\textbf{s};T) 
+    = \frac{1}{Z} \sum_s |M(\textbf{s})| e^{-\beta E(\textbf{s})} 
+    = \frac{1}{Z} \left( |-4|e^{\beta8J} + 4 |-2| e^0 + 4|2|e^0 + |4|e^{\beta 8J}\right) \\
+    &= \frac{1}{Z} \left( 4e^{\beta8J} + 8 + 8 + 4e^{\beta 8J}\right)
+    = \frac{8}{Z} \left( e^{\beta 8J} + 2 \right),
+\\
+\\
+    \langle M^2 \rangle &= \sum_s M(\textbf{s})^2  p(\textbf{s};T) 
+    = \frac{1}{Z} \sum_s M(\textbf{s})^2 e^{-\beta E(\textbf{s})} 
+    = \frac{1}{Z} \left( (-4)^2 e^{\beta8J} + 4 (-2)^2 e^0 + 4(2)^2 e^0 + (4)^2 e^{\beta 8J}\right) \\
+    &= \frac{1}{Z} \left( 16 e^{\beta8J} + 16 + 16 + 16 e^{\beta 8J}\right)
+    = \frac{32}{Z} \left( e^{\beta 8J} + 1 \right),
+\\
+\\
+    \langle |m| \rangle&= \sum_s |m(\textbf{s})|  p(\textbf{s};T) 
+    = \frac{1}{Z} \sum_s \bigg| \frac{M(\textbf{s})}{N} \bigg| e^{-\beta E(\textbf{s})}
+    = \frac{\langle|M| \rangle}{4}
+    = \frac{2}{Z} \left( e^{\beta 8J} + 2 \right),
+\\
+\\
+    \langle m^2 \rangle &= \sum_s m(\textbf{s})^2  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s \left( \frac{M(\textbf{s})}{N} \right)^2 e^{-\beta E(\textbf{s})}
+    = \frac{ \langle M^2 \rangle}{4^2}
+    = \frac{ \langle M^2 \rangle}{16}
+    = \frac{2}{Z} \left( e^{\beta 8J} + 1 \right).
+\end{align*}
+
+Finally, we find analytical expressions for the specific heat capacity
+\begin{align*}
+    C_V = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
+    = \frac{1}{4} \frac{1}{k_B T^2} \left( \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right) - \left( \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right) \right)^2 \right)
+    ,
+\end{align*}
+and the susceptibility
+\begin{align*}
+    \chi = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right)
+    = \frac{1}{4} \frac{1}{k_B T^2} \left( \frac{32}{Z} \left( e^{\beta 8J} + 1 \right) - \left( \frac{8}{Z} \left( e^{\beta 8J} + 2 \right) \right)^2 \right).
+\end{align*}
 
 
 \section{Possible $\Delta E$ values}\label{appendix:B}
