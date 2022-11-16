@@ -1,3 +1,11 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <random>
+#include <chrono>
+
+
+
 void Metropolis(int n_spins, long& idum, int **spin_matrix, double& E, double&M, double *w)
 {
     // loop over all spins

@@ -1,11 +1,9 @@
-
 #ifndef __ising_model_hpp__
 #define __ising_model_hpp__
 
 #include <string>
 #include <armadillo>
 #include <time.h>
-
 
 class IsingModel
 {
@@ -17,26 +15,32 @@ class IsingModel
         int ix;
         int iy;
         double rand_n;
+        int dE;
+        double T;
+        arma::vec average;
 
     public:
         int N;
         int dim;
-        arma::vec M; 
-        arma::vec E; 
-        arma::vec dE;
+        arma::vec average_norm;
+        // arma::vec dE;
         arma::mat lattice; 
         arma::vec E_diff;
         int M;
+        int E;
 
         arma::vec s; 
         std::mt19937 generator;
         std::uniform_real_distribution<double> rnd;
 
-    IsingModel(int dim);
+    IsingModel(int dim_in);
+    void init_lattice(double T);
+    int test();
+    void MC_sample(int cycles);
+    void output(int cycles);
     int energy(int ix, int iy);
     void total_energy(int i);
     void total_magnetization(int i);
-    void init_lattice(double T);
     int periodic(int idx, int lim, int offset);
     void metropolis();
 };
