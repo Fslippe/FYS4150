@@ -129,7 +129,7 @@ We will study properties of the system at equilibrium for different lattice size
 \end{equation}
 and the susceptibility
 \begin{equation}
-    \chi = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
+    \chi = \frac{1}{N} \frac{1}{k_B T} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
 \end{equation}
 \subsection*{Periodic boundary conditions}
 The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice. NB! HOW ARE THESE IMPLEMENTED IN THE CODE.
@@ -143,9 +143,8 @@ The Ising model simulations we will be implemented using periodic boundary condi
     \caption{An example of a spin and its neighbors. Here all five spins are in an up state (+1).} 
     \end{table}
 
-\subsection*{Markov chains}
-
-\subsection*{Monte Carlo methods}
+\subsection*{Markov chain Monte Carlo method}
+A Markov chain is a stok
 
 \subsection*{The Metropolis algorithm}
 
@@ -222,10 +221,10 @@ This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability di
 \\
 \\
     \langle \epsilon^2 \rangle &=  \sum_s \epsilon_s^2  p(\textbf{s};T)
-    =  \sum_s \frac{E(\textbf{s})^2}{N}  p(\textbf{s};T)
+    =  \sum_s \left(\frac{E(\textbf{s})}{N}\right)^2  p(\textbf{s};T) 
     =  \frac{1}{N} \sum_s E(\textbf{s})^2  p(\textbf{s};T)
-    =  \frac{\langle E^2 \rangle }{4}
-    = \frac{32 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right).
+    =  \frac{\langle E^2 \rangle }{16}
+    = \frac{8 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right).
 \end{align*}
 Then for the magnetization we have
 \begin{align*}
@@ -264,8 +263,8 @@ Finally, we find analytical expressions for the specific heat capacity
 \end{align*}
 and the susceptibility
 \begin{align*}
-    \chi = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right)
-    = \frac{1}{4} \frac{1}{k_B T^2} \left( \frac{32}{Z} \left( e^{\beta 8J} + 1 \right) - \left( \frac{8}{Z} \left( e^{\beta 8J} + 2 \right) \right)^2 \right).
+    \chi = \frac{1}{N} \frac{1}{k_B T} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right)
+    = \frac{1}{4} \frac{1}{k_B T} \left( \frac{32}{Z} \left( e^{\beta 8J} + 1 \right) - \left( \frac{8}{Z} \left( e^{\beta 8J} + 2 \right) \right)^2 \right).
 \end{align*}
 
 
