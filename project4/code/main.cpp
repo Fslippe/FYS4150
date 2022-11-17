@@ -4,9 +4,12 @@
 
 int main()
 {
-    IsingModel IM = IsingModel(2);
-    IM.init_lattice(1);
-    int a = IM.test();
-    std::cout << a; //.MC_sample(1);
+    int seed = 1032;
+    double T = 2.4;
+    int cycles = 20;
+    int lattice_dim = 2;
+    IsingModel IM = IsingModel(lattice_dim);
+    IM.init_lattice(T, seed, false);
+    IM.MC_sample(cycles);
     return 0;
 }
