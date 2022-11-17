@@ -30,7 +30,11 @@ public:
     arma::vec E_diff;
     int M;
     int E;
-
+    double e_avg;
+    double m_abs;
+    double Cv_avg;
+    double chi_avg;
+    arma::vec val_vec;
     arma::vec s;
     std::mt19937 generator;
     std::uniform_real_distribution<double> rnd;
