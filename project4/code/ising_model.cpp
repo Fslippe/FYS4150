@@ -84,17 +84,16 @@ void IsingModel::metropolis()
         {
             ix = rnd(generator) * dim;
             iy = rnd(generator) * dim;
-            // std::cout << "ix iy " << ix << " " << iy << "\n";
+            std::cout << "ix iy " << ix << " " << iy << "\n";
             dE = energy(ix, iy);
             std::cout << "dE " << dE << "\n";
             if (rnd(generator) <= E_diff[dE + 8])
             {
-                // std::cout << "FLIP\n";
                 lattice(ix, iy) *= -1;
                 M += 2 * lattice(ix, iy);
                 E += dE;
             }
-            std::cout << "E:  " << E << "\n";
+            // std::cout << "E:  " << E << "\n";
         }
     }
 }
