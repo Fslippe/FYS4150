@@ -22,16 +22,15 @@ double M_pow2(double beta, int J, double Z);
 //print this val
 double m(double beta, int J, double Z);
 // print this val
-double C_v(double beta, int J, double Z, int T);
+double C_v(double beta, int J, double Z, double T);
 
 // print this val
-double X(double beta, int J, double Z, int T);
+double X(double beta, int J, double Z, double T);
 
 int main()
 {
     int J = 1;
-    int T = 1*J;
-
+    double T = 1*J;
     // inverse temperature
     double beta = 1 / T;
 
@@ -44,11 +43,14 @@ int main()
     double expect_m = m(beta, J, Z);
     double expect_C_v = C_v(beta, J, Z, T);
     double expect_X = X(beta, J, Z, T);
+    cout << "\nT: " << T;
     cout << "\ne: " << expect_e;
     cout << "\nm: " << expect_m;
     cout << "\nC_v: " << expect_C_v;
     cout << "\nX: " << expect_X;
-
+    //cout << "\nM: " << M(beta, J, Z);
+    //cout<<"\nE :"<<E(beta , J, Z);
+    //cout<<"\nE^2 :"<<E_pow2(beta , J, Z);
     
     return 0;
 }
@@ -86,15 +88,16 @@ double m(double beta, int J, double Z)
     return M(beta, J, Z) / 4;
 }
 // print this val
-double C_v(double beta, int J, double Z, int T)
+double C_v(double beta, int J, double Z, double T)
 {
-    return (E_pow2(beta , J, Z) - ((E(beta, J, Z)*E(beta, J, Z)))) / (4 * T);
+    return (E_pow2(beta , J, Z) - ((E(beta, J, Z)*E(beta, J, Z)))) / (4 * T*T);
+     // C_v is the n in k_b
 }
 
 // print this val
-double X(double beta, int J, double Z, int T)
+double X(double beta, int J, double Z, double T)
 {
     return (M_pow2(beta , J, Z) - (M(beta, J, Z)*M(beta, J, Z))) / (4 * T);
-    // where does the last k_b go?
+   
 }
 
