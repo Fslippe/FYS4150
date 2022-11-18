@@ -18,34 +18,41 @@ def analytic(T):
     X  = (M_2 - M*M) / (4 * T)
     return E, E_2, e, M, M_2, m, C_v, X
 
-def plot_T(data):
-
+def plot_T(data, plot_analytic=True):
     t = data[0,:]
     E, E_2, e, M, M_2, m, C_v, X = analytic(t) 
 
-    plt.subplot(2, 2, 1)
-    sns.lineplot(t, e, color="r")
+    plt.figure()
+    if plot_analytic:
+        sns.lineplot(t, e, color="r", label="Analytic")
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$\left<\epsilon\right> [J]$")
-    sns.scatterplot(t, data[1,:])
+    sns.scatterplot(t, data[1,:],  label="Numeric")
+    plt.savefig("../figures/numeric_analytic_e_T.pdf", dpi=300, bbox_inches='tight')
 
-    plt.subplot(2, 2, 2)
-    sns.lineplot(t, m, color="r")
-    sns.scatterplot(t, data[2,:])
+    plt.figure()
+    if plot_analytic:
+        sns.lineplot(t, m, color="r", label="Analytic")
+    sns.scatterplot(t, data[2,:],  label="Numeric")
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$\left< m \right> [J]$")
+    plt.savefig("../figures/numeric_analytic_m_T.pdf", dpi=300, bbox_inches='tight')
 
-    plt.subplot(2, 2, 3)
-    sns.lineplot(t, C_v, color="r")
-    sns.scatterplot(t, data[3,:])
+    plt.figure()
+    if plot_analytic:
+        sns.lineplot(t, C_v, color="r", label="Analytic")
+    sns.scatterplot(t, data[3,:],  label="Numeric")
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$C_v [k_b]$")
- 
-    plt.subplot(2, 2, 4)
-    sns.lineplot(t, X, color="r")
+    plt.savefig("../figures/numeric_analytic_c_v_T.pdf", dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    if plot_analytic:
+        sns.lineplot(t, X, color="r", label="Analytic")
     sns.scatterplot(t, data[4,:], label="Numeric")
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$\chi[k_b^{-1}]$")
+    plt.savefig("../figures/numeric_analytic_X_T.pdf", dpi=300, bbox_inches='tight')
 
     plt.show()
 
@@ -60,36 +67,89 @@ def plot_diff(data):
     C_v_diff = np.abs(data[3,:] - C_v)
     X_diff = np.abs(data[4,:] - X)
 
-    plt.subplot(2, 2, 1)
-
-    sns.lineplot(cycles, e_diff, markers=True, label="Analytic")
+    plt.figure()
+    sns.lineplot(cycles, e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta \left<\epsilon\right> [J]$")
     plt.xscale("log")
     plt.yscale("log")
+    plt.savefig("../figures/numeric_diff_e.pdf", dpi=300, bbox_inches='tight')
 
-    plt.subplot(2, 2, 2)
-
-    sns.lineplot(cycles, m_diff, markers=True, label="Analytic")
+    plt.figure()
+    sns.lineplot(cycles, m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta \left< m \right> [J]$")
     plt.xscale("log")
     plt.yscale("log")
+    plt.savefig("../figures/numeric_diff_m.pdf", dpi=300, bbox_inches='tight')
 
-    plt.subplot(2, 2, 3)
-
-    sns.lineplot(cycles, C_v_diff, markers=True, label="Analytic")
+    plt.figure()
+    sns.lineplot(cycles, C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta C_v [k_b]$")
     plt.xscale("log")
     plt.yscale("log")
+    plt.savefig("../figures/numeric_diff_c_v.pdf", dpi=300, bbox_inches='tight')
 
-    plt.subplot(2, 2, 4)
-    sns.lineplot(cycles, X_diff, markers=True, label="Analytic")
+    plt.figure()
+    sns.lineplot(cycles, X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta \chi[k_b^{-1}]$")
     plt.xscale("log")
     plt.yscale("log")
+    plt.savefig("../figures/numeric_diff_X.pdf", dpi=300, bbox_inches='tight')
     plt.show()
 
+def plot_data(data, L, T):
+    cycles = data[0,:]
+    e = data[1,:]
+    m = data[2,:]
+    C_v = data[3,:]
+    X = data[4,:]
+
+
+    plt.figure()
+    sns.lineplot(cycles, e, markers=True, label=r"$\epsilon$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta \left<\epsilon\right> [J]$")
+    
+    plt.xscale("log")
+    plt.savefig("../figures/numeric_L_%i_T_%.1f_e.pdf" %(L, T), dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    sns.lineplot(cycles, m, markers=True, label=r"$m$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\left< m \right> [J]$")
+    
+    plt.xscale("log")
+    plt.savefig("../figures/numeric_L_%i_T_%.1f_m.pdf" %(L, T), dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    sns.lineplot(cycles, C_v, markers=True, label=r"$C_{v}$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$C_v [k_b]$")
+    
+    plt.xscale("log")
+    plt.savefig("../figures/numeric_L_%i_T_%.1f_c_v.pdf" %(T, L), dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    sns.lineplot(cycles, X, markers=True, label=r"$\chi$")
+    plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\chi[k_b^{-1}]$")
+    
+    plt.xscale("log")
+    plt.savefig("../figures/numeric_L_%i_T_%.1f_X.pdf" %(L, T), dpi=300, bbox_inches='tight')
+    plt.show()
 
 def main():
     data_1 = pa.mat()
     data_2 = pa.mat()
+    data_3 = pa.mat()
+    data_3.load("cycles_L_20_T_1.dat")
     data_2.load("data/T_val_1mill.dat")
     data_1.load("data/cycle_val.dat")
+    plot_data(np.array(data_3), 20, 1)
+
     plot_diff(np.array(data_1))
 
     plot_T(np.array(data_2))
