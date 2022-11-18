@@ -2,7 +2,27 @@ import seaborn as sns
 import numpy as np 
 import pyarma as pa 
 import matplotlib.pyplot as plt 
+import os
 sns.set_style("darkgrid")
+
+def run(threads, T, lattice_dim, order, compile=False):
+    """
+    Compile and run c++ code for different parameters
+    - threads           
+    - T
+    - lattice_dim
+    - order
+    """
+    if compile == True:
+        print("Compiling...\n")
+        compile_cpp = os.system("g++ main.cpp ising_model.cpp -o main -larmadillo -fopenmp -O2"),
+    print("Running")
+    save_cycles = "cycles_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+    save_temp = "temp_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+    save_hist = "histograp_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+
+    run_cpp = os.system("./main %s %s %s %s %s %s %s" %(threads, T, lattice_dim, order, save_cycles, save_temp, save_hist))   
+
 
 def analytic(T):
     J = 1
@@ -147,6 +167,11 @@ def plot_hist(data):
     plt.show()
 
 def main():
+    run(threads=8,
+        T=1,
+        lattice_dim=20,
+        order="false")
+
     data_1 = pa.mat()
     data_2 = pa.mat()
     data_3 = pa.mat()

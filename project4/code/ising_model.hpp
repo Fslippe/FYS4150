@@ -43,7 +43,7 @@ public:
 
     IsingModel(int dim_in);
     void init_lattice(double T, int seed, bool spin_order);
-    void MC_sample(int cycles, bool histogram = false);
+    void MC_sample(int cycles, bool histogram);
     void output(int cycles);
     int energy(int ix, int iy);
     void total_energy(int i);
