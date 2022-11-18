@@ -9,8 +9,17 @@ int main(int argc, char *argv[])
     int threads = atoi(argv[1]);
     double T = atof(argv[2]);
     int lattice_dim = atoi(argv[3]);
-    std::string save1(argv[4]);
-    std::string save2(argv[5]);
+    std::string order(argv[4]);
+    if (order == "false")
+    {
+        bool order = false;
+    }
+    else
+    {
+        bool order = true;
+    }
+    std::string save1(argv[5]);
+    std::string save2(argv[6]);
 
     int seed = 2;
     int cycles = 1000000;
