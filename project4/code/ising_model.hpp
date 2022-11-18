@@ -20,6 +20,7 @@ private:
     int n_spins;
     int temp_idx;
     arma::vec average;
+    arma::vec average_global;
 
 public:
     int N;
@@ -47,7 +48,7 @@ public:
     void total_energy(int i);
     void total_magnetization(int i);
     int periodic(int idx, int lim, int offset);
-    void metropolis();
+    double metropolis(double E_loc, double M_loc);
 };
 
 #endif

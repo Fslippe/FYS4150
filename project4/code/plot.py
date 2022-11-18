@@ -41,6 +41,8 @@ def plot_T(data):
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$C_v [k_b]$")
  
+    plt.subplot(2, 2, 4)
+    sns.lineplot(t, X, color="r")
     sns.scatterplot(t, data[4,:], label="Numeric")
     plt.xlabel(r"$T [J/k_b]$")
     plt.ylabel(r"$\chi[k_b^{-1}]$")

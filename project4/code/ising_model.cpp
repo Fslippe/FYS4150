@@ -1,5 +1,5 @@
 #include "ising_model.hpp"
-
+#include "omp.h"
 IsingModel::IsingModel(int dim_in)
 {
 
@@ -73,7 +73,7 @@ int IsingModel::energy(int ix, int iy)
     return 2 * lattice(ix, iy) * (up + down + left + right);
 }
 
-void IsingModel::metropolis()
+double IsingModel::metropolis(double E_loc, double M_loc)
 {
     // E_diff.print();
     // lattice.print();
@@ -92,36 +92,52 @@ void IsingModel::metropolis()
             if (rnd(generator) <= E_diff[dE + 8])
             {
                 lattice(ix, iy) *= -1;
-                M += 2 * lattice(ix, iy);
-                E += dE;
+                M_loc += 2 * lattice(ix, iy);
+                E_loc += dE;
             }
             // lattice.print();
             //   std::cout << "E:  " << E << "\n";
         }
     }
+    return E_loc, M_loc;
 }
 
 void IsingModel::MC_sample(int cycles)
 {
-    // std::cout << "\n EFIRST " << E << "\n";
 
-    for (int i = 0; i < cycles; i++)
+    average_global = arma::zeros(5);
+    arma::vec average_loc;
+#pragma omp parallel private(average_loc) shared(average_global)
     {
-        metropolis();
-        // std::cout << E << "\n";
-        average(0) += E;
-        average(1) += E * E;
-        average(2) += M;
-        average(3) += M * M;
-        average(4) += std::fabs(M);
+        double E_loc = E, M_loc = M;
+        double E_test = 0;
+        average_loc = arma::zeros(5);
+        const int n_threads = omp_get_num_threads();
+        const double weight = 1.0 / n_threads;
+        const int cycle_threads = cycles * weight;
+
+#pragma omp for
+        for (int i = 0; i < cycle_threads; i++)
+        {
+            E_loc, M_loc = metropolis(E_loc, M_loc);
+            // std::cout << E << "\n";
+            average_loc(0) += E_loc;
+            average_loc(1) += E_loc * E_loc;
+            average_loc(2) += M_loc;
+            average_loc(3) += M_loc * M_loc;
+            average_loc(4) += std::fabs(M_loc);
+        }
+#pragma omp critical
+        average_global += weight * average_loc;
     }
     output(cycles);
 }
 
 void IsingModel::output(int cycles)
 {
+
     double norm = 1 / ((double)cycles);
-    arma::vec average_norm = average * norm;
+    arma::vec average_norm = average_global * norm;
 
     double E_avg = average_norm(0);
     double E2_avg = average_norm(1);
@@ -137,7 +153,7 @@ void IsingModel::output(int cycles)
     val_vec[1] = m_abs;
     val_vec[2] = Cv_avg;
     val_vec[3] = chi_avg;
-    val_vec.print();
+    // val_vec.print();
     int J = 1;
     double beta = 1 / T;
     double Z = 4 * (std::cosh(8 * beta * J) + 3);

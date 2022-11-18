@@ -12,7 +12,7 @@ int main()
     IsingModel IM = IsingModel(lattice_dim);
     int n_T = 20;
     int n_cycles = 40;
-    arma::vec cycle_array = arma::logspace(1, 8, n_cycles);
+    arma::vec cycle_array = arma::logspace(1, 6, n_cycles);
 
     arma::mat cycle_val = arma::mat(5, n_cycles);
     cycle_array.print();
@@ -26,9 +26,10 @@ int main()
             cycle_val(i, j) = IM.val_vec(i - 1);
         }
     }
-    cycle_val.print();
+    std::cout << "FERDIGE\n";
+    // cycle_val.print();
     cycle_val.save("data/cycle_val.dat");
-
+    std::cout << "NÅ\n";
     std::cout << "\nTEMPERATURE DIFFERENCE";
     arma::vec temp = arma::linspace(0.5, 4, n_T);
     arma::mat T_val = arma::mat(5, n_T);
