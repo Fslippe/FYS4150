@@ -101,21 +101,37 @@ void IsingModel::metropolis()
     }
 }
 
-void IsingModel::MC_sample(int cycles)
+void IsingModel::MC_sample(int cycles, bool histogram)
 {
     // std::cout << "\n EFIRST " << E << "\n";
-
-    for (int i = 0; i < cycles; i++)
+    if (histogram)
     {
-        metropolis();
-        // std::cout << E << "\n";
-        average(0) += E;
-        average(1) += E * E;
-        average(2) += M;
-        average(3) += M * M;
-        average(4) += std::fabs(M);
+        histogram_values = arma::mat(cycles, 5);
+        for (int i = 0; i < cycles; i++)
+        {
+            metropolis();
+            // std::cout << E << "\n";
+            histogram_values(i, 0) = E;
+            histogram_values(i, 1) = E * E;
+            histogram_values(i, 2) = M;
+            histogram_values(i, 3) = M * M;
+            histogram_values(i, 4) = std::fabs(M);
+        }
     }
-    output(cycles);
+    else
+    {
+        for (int i = 0; i < cycles; i++)
+        {
+            metropolis();
+            // std::cout << E << "\n";
+            average(0) += E;
+            average(1) += E * E;
+            average(2) += M;
+            average(3) += M * M;
+            average(4) += std::fabs(M);
+        }
+        output(cycles);
+    }
 }
 
 void IsingModel::output(int cycles)

@@ -25,6 +25,8 @@ public:
     int N;
     int dim;
     arma::vec average_norm;
+    arma::mat histogram_values;
+
     // arma::vec dE;
     arma::mat lattice;
     arma::vec E_diff;
@@ -41,7 +43,7 @@ public:
 
     IsingModel(int dim_in);
     void init_lattice(double T, int seed, bool spin_order);
-    void MC_sample(int cycles);
+    void MC_sample(int cycles, bool histogram = false);
     void output(int cycles);
     int energy(int ix, int iy);
     void total_energy(int i);

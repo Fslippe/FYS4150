@@ -141,6 +141,11 @@ def plot_data(data, T, order, savename):
     plt.savefig("../figures/%s_X.pdf" %(savename), dpi=300, bbox_inches='tight')
     plt.show()
 
+def plot_hist(data):
+    print(data[:,0])
+    sns.histplot(data[:,0])
+    plt.show()
+
 def main():
     data_1 = pa.mat()
     data_2 = pa.mat()
@@ -148,21 +153,23 @@ def main():
     data_4 = pa.mat()
     data_5 = pa.mat()
     data_6 = pa.mat()
+    data_7 = pa.mat()
 
+    data_7.load("histogram_T_1")
+    data_6.load("cycles_L_20_T_2.4_order.dat")
     data_6.load("cycles_L_20_T_2.4_order.dat")
     data_5.load("cycles_L_20_T_1_order.dat")
     data_4.load("cycles_L_20_T_2.4.dat")
     data_3.load("cycles_L_20_T_1.dat")
     data_2.load("data/T_val_1mill.dat")
     data_1.load("data/cycle_val.dat")
-    #plot_data(np.array(data_3), 1, "random", savename="numeric_L_20_T_1")
-    #plot_data(np.array(data_4), 2.4, "random", savename="numeric_L_20_T_2.4")
-    #plot_data(np.array(data_5), 1, "ordered", savename="numeric_L_20_T_1_order")
-    #plot_data(np.array(data_6), 2.4, "ordered", savename="numeric_L_20_T_2.4_order")
+    plot_hist(data_7)
+    plot_data(np.array(data_3), 1, "random", savename="numeric_L_20_T_1")
+    plot_data(np.array(data_4), 2.4, "random", savename="numeric_L_20_T_2.4")
+    plot_data(np.array(data_5), 1, "ordered", savename="numeric_L_20_T_1_order")
+    plot_data(np.array(data_6), 2.4, "ordered", savename="numeric_L_20_T_2.4_order")
 
-
-    #plot_diff(np.array(data_1))
-
+    plot_diff(np.array(data_1))
     plot_T(np.array(data_2))
 
 if __name__ == "__main__":
