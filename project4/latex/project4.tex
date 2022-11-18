@@ -39,7 +39,7 @@
 
 \begin{document}
 
-\title{A study of phase transition in the 2D Ising model\\through Markov Chain Monte Carlo simulation}  % self-explanatory
+\title{A study of phase transition in the 2D Ising model\\using Markov Chain Monte Carlo simulation}  % self-explanatory
 \author{Alessio Canclini, Filip von der Lippe} % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
@@ -49,16 +49,26 @@
     NB! Abstract here
 \end{abstract}
 \maketitle
+%\raggedbottom
 
 
 % ===========================================
 \section{Introduction}
-This report will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose is determining a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase.
+This report will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature, past this point the magnetic spins are no longer aligned causing the given ferromagnetic material to lose its magnetization. 
 
-The Ising model is a widely studied model in statistical physics. Work on the Ising model has shown to be usfull for the analysis of several complex systems 
+With the Ising model we can easily model a magnetic materials' response to thermal energy. Magnet spins in the model have two states, either up or down. These can be flipped by energy input and each individual spin influences the total state of the system.
 
-... more about Ising model and phase transitions
-+ Mote Carlo methods and Markov chains. \cite{compendium}
+The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen.\cite{compendium}
+
+After testing our numerical method we will finally try to approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, our goal is not to necessarily find this temperature, but rather analyze how well our chosen Markov Chain Monte Carlo (MCMC) approach can approximate such a complex problem.
+
+To allow for reasonable runtimes for the larger computations our MCMC code is parallelized using OpenMP.
+
+Section \ref{sec:methods} will cover the theoretical background of the Ising model and MCMC method as well as some analytical solutions. More comprehensive derivations of the analytical values can be found in appendix \ref{appendix:A} and \ref{appendix:B}.
+
+In section \ref{sec:results} we present results from our Ising model simulations. These cover comparison betwween analytic and numerical results, an analysis of burn-in time for a larger lattice size of $L = 20$ and finally an investigation of phase transitions.
+
+A detailed discussion of the results and methods is then presented in section \ref{sec:discussion} followed by a summary and concluding thoughts in section \ref{sec:conclusion}.
 
 % ===========================================
 \section{Methods}\label{sec:methods}
@@ -96,7 +106,7 @@ describes the ``inverse temperature'' with the systems' temperature $T$ and the 
 \end{equation}
 represents the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution},
 \begin{equation}
-    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}. \label{eq:prob_dist}
+    p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}.\label{eq:prob_dist}
 \end{equation}
 This will be the probability distribution used for random sampling in our Monte Carlo approach. 
 
@@ -123,16 +133,16 @@ For comparison with early numerical implementations we will fist consider an ana
 \end{table} 
 Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:A} and are used to test early versions of the code.
 
-We will study properties of the system at equilibrium for different lattice sizes as a function of temperature $T$. The analysis will focus on four main properties. The mean energy (eq. \ref{eq:mean_E}), mean magnetization (eq. \ref{eq:mean_M}), specific heat capacity
+We will study properties of the system at equilibrium for different lattice sizes as a function of temperature $T$. The analysis will focus on four main properties. The mean energy (eq. \ref{eq:mean_E}), mean magnetization (eq. \ref{eq:mean_M}), specific heat capacity normalized to number of spins
 \begin{equation}
     C_V = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle E^2 \rangle - \langle E \rangle^2 \right),
 \end{equation}
-and the susceptibility
+and the susceptibility normalized to number of spins
 \begin{equation}
     \chi = \frac{1}{N} \frac{1}{k_B T} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
 \end{equation}
 \subsection*{Periodic boundary conditions}
-The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice. NB! HOW ARE THESE IMPLEMENTED IN THE CODE.
+The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice.
 \begin{table}[H]
     \centering
     \begin{tabular}{llll}
@@ -140,15 +150,17 @@ The Ising model simulations we will be implemented using periodic boundary condi
     $\uparrow$ & $\uparrow$ & $\uparrow$ \\
        & $\uparrow$ & 
     \end{tabular}\label{tab:neighbors}
-    \caption{An example of a spin and its neighbors. Here all five spins are in an up state (+1).} 
-    \end{table}
+    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).} 
+\end{table}
 
 \subsection*{Markov chain Monte Carlo method}
 A Markov chain is a stok
 
 \subsection*{The Metropolis algorithm}
+A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:C}.
 
 \subsection*{Optimization and parallelization}
+Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
 
 The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin 
 \begin{equation}
@@ -158,14 +170,106 @@ can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) Th
 \begin{equation}
     \Delta E = 8J, 4J, 0, -4J, -8J.
 \end{equation}
-To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array. NB MORE HERE.
+To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array.
 
-Furthermore, the code is written such that it can be run in series. This allows for easy parallelization using OpneMP to reduce runtimes.
+Furthermore, the code is written such that it can be run parallelized. This allows us to run it on several threads using OpneMP to reduce runtimes.
 
 % ===========================================
+%\newpage
 \section{Results}\label{sec:results}
+To check the numerical implementation we compare analytical and numerical results for a $2 \times 2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_e_T.pdf}
+    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the energy per spin $\epsilon$ plotted against different temperatures $T$.}
+    \label{fig:numeric_analytic_e_T}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_m_T.pdf}
+    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the magnetization per spin $m$ plotted against different temperatures $T$.}
+    \label{fig:numeric_analytic_m_T}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_c_v_T.pdf}
+    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the heat capacity $C_V$ (normalized to number of spins) plotted against different temperatures $T$.}
+    \label{fig:numeric_analytic_c_v_T}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_X_T.pdf}
+    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the susceptibility $\chi$ (normalized to number of spins) plotted against different temperatures $T$.}
+    \label{fig:numeric_analytic_X_T}
+\end{figure}
+
+% NB! Problem 4 c)
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% study burn in time for L=20
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1.0_e.pdf}
+%     \caption{Here numerical estimates $\langle \epsilon \rangle$ are plotted agains MC cycles   }
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1.0_m.pdf}
+%     \caption{Herer }
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
+%     \caption{}
+%     \label{fig:}
+% \end{figure}
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
@@ -204,27 +308,31 @@ This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability di
     = \frac{1}{Z} \sum_s E(\textbf{s})  e^{-\beta E(\textbf{s})} 
     = \frac{1}{Z} \left( 2 \cdot (-8J)e^{\beta8J} + 2 \cdot 8J e^{-\beta 8J}\right) \\
     &= \frac{1}{Z} \left( -16 e^{\beta8J} + 16 e^{-\beta 8J}\right)
-    = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right),
+    = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
+    = - \frac{32 J \sinh(8J \beta )}{Z},
 \\
 \\
     \langle E^2 \rangle &=  \sum_s E(\textbf{s})^2  p(\textbf{s};T)
     = \frac{1}{Z} \sum_s E(\textbf{s})^2  e^{-\beta E(\textbf{s})} 
     = \frac{1}{Z} \left( 2 \cdot (-8J)^2e^{\beta8J} + 2 \cdot (8J)^2 e^{-\beta 8J}\right) \\
-    &= \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right),
+    &= \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
+    = \frac{256 J^2 \cosh(8J \beta)}{Z},
 \\
 \\
     \langle \epsilon \rangle &=  \sum_s \epsilon_s  p(\textbf{s};T)
     =  \sum_s \frac{E(\textbf{s})}{N}  p(\textbf{s};T)
     =  \frac{1}{N} \sum_s E(\textbf{s})  p(\textbf{s};T)
     =  \frac{\langle E \rangle }{4}
-    = \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right),
+    %= \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
+    = - \frac{8J \sinh(8J \beta)}{Z},
 \\
 \\
     \langle \epsilon^2 \rangle &=  \sum_s \epsilon_s^2  p(\textbf{s};T)
     =  \sum_s \left(\frac{E(\textbf{s})}{N}\right)^2  p(\textbf{s};T) 
-    =  \frac{1}{N} \sum_s E(\textbf{s})^2  p(\textbf{s};T)
+    =  \frac{1}{N^2} \sum_s E(\textbf{s})^2  p(\textbf{s};T)
     =  \frac{\langle E^2 \rangle }{16}
-    = \frac{8 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right).
+    %= \frac{8 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
+    = \frac{16 J^2 \cosh(8J \beta)}{Z}.
 \end{align*}
 Then for the magnetization we have
 \begin{align*}
@@ -258,7 +366,7 @@ Then for the magnetization we have
 Finally, we find analytical expressions for the specific heat capacity
 \begin{align*}
     C_V = \frac{1}{N} \frac{1}{k_B T^2} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
-    = \frac{1}{4} \frac{1}{k_B T^2} \left( \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right) - \left( \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right) \right)^2 \right)
+    = \frac{1}{4} \frac{1}{k_B T^2} \left( \frac{256 J^2 \cosh(8J \beta)}{Z} - \left( - \frac{32 J \sinh(8J \beta )}{Z} \right)^2 \right)
     ,
 \end{align*}
 and the susceptibility
