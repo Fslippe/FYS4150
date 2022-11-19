@@ -4,7 +4,7 @@
 #include "omp.h"
 #include "time.h"
 
-void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads);
+void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads, double T_min, double T_max);
 void cycle_loop(int n_cycles, int seed, double T, int lattice_dim, bool order, std::string save2, int threads);
 
 int main(int argc, char *argv[])
@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     std::string save1(argv[5]);
     std::string save2(argv[6]);
     std::string save3(argv[7]);
+    double T_min = atof(argv[8]);
+    double T_max = atof(argv[9]);
 
     bool order;
     if (order_in == "false")
@@ -33,35 +35,54 @@ int main(int argc, char *argv[])
     int cycles = 1000000;
     int n_T = 40;
     int n_cycles = 40;
+    double duration_seconds;
 
     // Values depending on number of cycles
-    std::cout << "\nCYCLE DIFFERENCE\n";
-    clock_t t1 = clock();
-    // cycle_loop(n_cycles, seed, T, lattice_dim, order, save2, threads);
-    clock_t t2 = clock();
-    double duration_seconds = ((double)(t2 - t1)) / CLOCKS_PER_SEC / threads;
-    std::cout << "Cycles loop time used: " << duration_seconds << "s\n";
+    clock_t t1;
+    clock_t t2;
+    if (save1 != "none")
+    {
+        std::cout << "\nCYCLE DIFFERENCE\n";
+        t1 = clock();
+        cycle_loop(n_cycles, seed, T, lattice_dim, order, save1, threads);
+        t2 = clock();
+        duration_seconds = ((double)(t2 - t1)) / CLOCKS_PER_SEC / threads;
+        std::cout << "Cycles loop time used: " << duration_seconds << "s\n";
+    }
 
     // Values depending on temperature
-    std::cout << "\nTEMPERATURE DIFFERENCE\n";
-    t1 = clock();
-    // temp_loop(n_T, cycles, seed, T, lattice_dim, order, save1, threads);
-    t2 = clock();
-    duration_seconds = ((double)(t2 - t1)) / CLOCKS_PER_SEC / threads;
-    std::cout << "Temperature loop time used: " << duration_seconds << "s\n";
+    if (save2 != "none")
+    {
+        std::cout << "\nTEMPERATURE DIFFERENCE\n";
+        t1 = clock();
+        temp_loop(n_T, cycles, seed, T, lattice_dim, order, save2, threads, T_min, T_max);
+        t2 = clock();
+        duration_seconds = ((double)(t2 - t1)) / CLOCKS_PER_SEC / threads;
+        std::cout << "Temperature loop time used: " << duration_seconds << "s\n";
+    }
 
     // Histogram
-    IsingModel IM = IsingModel(lattice_dim);
-    IM.init_lattice(T, seed, order);
-    IM.MC_sample(cycles, true);
-    arma::mat hist = IM.histogram_values;
-    hist.save(save3);
+    if (save3 != "none")
+    {
+        arma::mat hist = arma::mat(cycles, 1);
+        std::cout << "\nHISTOGRAM\n";
+        t1 = clock();
+        IsingModel IM = IsingModel(lattice_dim);
+        IM.init_lattice(T, seed, order);
+        IM.MC_sample(cycles, true);
+        hist.col(0) = IM.histogram_values;
+        hist.save(save3);
+        t2 = clock();
+        duration_seconds = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
+        std::cout << "Temperature loop time used: " << duration_seconds << "s\n";
+    }
+
     return 0;
 }
 
-void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads)
+void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads, double T_min, double T_max)
 {
-    arma::vec temp = arma::linspace(0.5, 4, n_T);
+    arma::vec temp = arma::linspace(T_min, T_max, n_T); // change
     arma::mat T_val = arma::mat(5, n_T);
 
 #pragma omp parallel for num_threads(threads)

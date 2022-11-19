@@ -3,25 +3,42 @@ import numpy as np
 import pyarma as pa 
 import matplotlib.pyplot as plt 
 import os
+import time
 sns.set_style("darkgrid")
 
-def run(threads, T, lattice_dim, order, compile=False):
+def run(threads, T, lattice_dim, order, T_min=0.5, T_max=4, cycles=False, temp=False, hist=False, compile=False):
     """
     Compile and run c++ code for different parameters
-    - threads           
-    - T
-    - lattice_dim
-    - order
+    - threads               Threads to use in parallelization
+    - T                     Temperature
+    - lattice_dim           Dimension of lattice
+    - order                 ordered initial lattice spins (true), random (false)
+    - cycles=False          if True run cycle loop for chosen parameters 
+    - temp=False            if True run temperature loop for chosen parameters 
+    - hist=False            if True run histogram for chosen parameters 
+    - compile=False         if True compile c++ file 
     """
     if compile == True:
         print("Compiling...\n")
-        compile_cpp = os.system("g++ main.cpp ising_model.cpp -o main -larmadillo -fopenmp -O2"),
-    print("Running")
-    save_cycles = "cycles_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
-    save_temp = "temp_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
-    save_hist = "histograp_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+        compile_cpp = os.system("g++ main.cpp ising_model.cpp -o main -larmadillo -fopenmp -O"),
+    
+    if cycles:
+        save_cycles = "data/cycles_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+    else:
+        save_cycles = "none"
 
-    run_cpp = os.system("./main %s %s %s %s %s %s %s" %(threads, T, lattice_dim, order, save_cycles, save_temp, save_hist))   
+    if temp:
+        save_temp = "data/temp_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+    else:
+        save_temp = "none"
+
+    if hist:
+        save_hist = "data/histogram_L_%i_T_%.1f_%s.dat" %(lattice_dim, T, order)
+    else:
+        save_hist = "none"
+
+    print("Running")
+    run_cpp = os.system("./main %s %s %s %s %s %s %s %s %s" %(threads, T, lattice_dim, order, save_cycles, save_temp, save_hist, T_min, T_max))   
 
 
 def analytic(T):
@@ -44,84 +61,88 @@ def plot_T(data, plot_analytic=True):
 
     plt.figure()
     if plot_analytic:
-        sns.lineplot(t, e, color="r", label="Analytic")
+        sns.lineplot(x=t, y=e, color="r", label="Analytic")
     plt.xlabel(r"$T$ $[J/k_b]$")
     plt.ylabel(r"$\left<\epsilon\right>$ $[J]$")
-    sns.scatterplot(t, data[1,:],  label="Numeric")
+    sns.scatterplot(x=t, y=data[1,:],  label="Numeric")
     plt.savefig("../figures/numeric_analytic_e_T.pdf", dpi=300, bbox_inches='tight')
 
     plt.figure()
     if plot_analytic:
-        sns.lineplot(t, m, color="r", label="Analytic")
-    sns.scatterplot(t, data[2,:],  label="Numeric")
+        sns.lineplot(x=t, y=m, color="r", label="Analytic")
+    sns.scatterplot(x=t, y=data[2,:],  label="Numeric")
     plt.xlabel(r"$T$ $[J/k_b]$")
     plt.ylabel(r"$\left< m \right>$ $[J]$")
     plt.savefig("../figures/numeric_analytic_m_T.pdf", dpi=300, bbox_inches='tight')
 
     plt.figure()
     if plot_analytic:
-        sns.lineplot(t, C_v, color="r", label="Analytic")
-    sns.scatterplot(t, data[3,:],  label="Numeric")
+        sns.lineplot(x=t, y=C_v, color="r", label="Analytic")
+    sns.scatterplot(x=t, y=data[3,:],  label="Numeric")
     plt.xlabel(r"$T$ $[J/k_b]$")
     plt.ylabel(r"$C_v$ $[k_b]$")
     plt.savefig("../figures/numeric_analytic_c_v_T.pdf", dpi=300, bbox_inches='tight')
 
     plt.figure()
     if plot_analytic:
-        sns.lineplot(t, X, color="r", label="Analytic")
-    sns.scatterplot(t, data[4,:], label="Numeric")
+        sns.lineplot(x=t, y=X, color="r", label="Analytic")
+    sns.scatterplot(x=t, y=data[4,:], label="Numeric")
     plt.xlabel(r"$T$ $[J/k_b]$")
     plt.ylabel(r"$\chi$ $[k_b^{-1}]$")
     plt.savefig("../figures/numeric_analytic_X_T.pdf", dpi=300, bbox_inches='tight')
 
     plt.show()
 
-def plot_diff(data):
-    t = 1
-    E, E_2, e, M, M_2, m, C_v, X = analytic(t) 
+def plot_diff(data, T):
+    E, E_2, e, M, M_2, m, C_v, X = analytic(T) 
+    print("analytic  ", C_v)
     cycles = data[0,:]
-    print(cycles)
+    #print(cycles)
     e_diff = np.abs(data[1,:] - e)
-    print(e_diff)
+    print(data[4,:])
     m_diff = np.abs(data[2,:] - m)
     C_v_diff = np.abs(data[3,:] - C_v)
     X_diff = np.abs(data[4,:] - X)
 
     plt.figure()
-    sns.lineplot(cycles, e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\Delta \left<\epsilon\right>$ $[J]$")
-    plt.xscale("log")
-    plt.yscale("log")
-    plt.savefig("../figures/numeric_diff_e.pdf", dpi=300, bbox_inches='tight')
+    sns.lineplot(x=cycles, y=e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$")
+    #plt.xlabel(r"$MCMC$ $cycles$")
+    #plt.ylabel(r"$\Delta \left<\epsilon\right>$ $[J]$")
+    #plt.xscale("log")
+    #plt.yscale("log")
+    #plt.savefig("../figures/numeric_diff_e.pdf", dpi=300, bbox_inches='tight')
+    #plt.figure()
 
-    plt.figure()
-    sns.lineplot(cycles, m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\Delta \left< m \right>$ $[J]$")
-    plt.xscale("log")
-    plt.yscale("log")
-    plt.savefig("../figures/numeric_diff_m.pdf", dpi=300, bbox_inches='tight')
+    sns.lineplot(x=cycles, y=m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$")
+    #plt.xlabel(r"$MCMC$ $cycles$")
+    #plt.ylabel(r"$\Delta \left< m \right>$ $[J]$")
+    #plt.xscale("log")
+    #plt.yscale("log")
+    #plt.savefig("../figures/numeric_diff_m.pdf", dpi=300, bbox_inches='tight')
+    #plt.figure()
 
-    plt.figure()
-    sns.lineplot(cycles, C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\Delta C_v$ $[k_b]$")
-    plt.xscale("log")
-    plt.yscale("log")
-    plt.savefig("../figures/numeric_diff_c_v.pdf", dpi=300, bbox_inches='tight')
+    sns.lineplot(x=cycles, y=C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$")
+    #plt.xlabel(r"$MCMC$ $cycles$")
+    #plt.ylabel(r"$\Delta C_v$ $[k_b]$")
+    #plt.xscale("log")
+    #plt.yscale("log")
+    #plt.savefig("../figures/numeric_diff_c_v.pdf", dpi=300, bbox_inches='tight')
+    #plt.figure()
 
-    plt.figure()
-    sns.lineplot(cycles, X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\Delta \chi$ $[k_b^{-1}]$")
+    sns.lineplot(x=cycles, y=X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$")
+    #plt.xlabel(r"$MCMC$ $cycles$")
+    plt.ylabel(r"$\Delta (numerical analytical)$")
     plt.xscale("log")
-    plt.yscale("log")
-    plt.savefig("../figures/numeric_diff_X.pdf", dpi=300, bbox_inches='tight')
+    #plt.yscale("log")
+    #plt.savefig("../figures/numeric_diff_X.pdf", dpi=300, bbox_inches='tight')
     plt.show()
 
-def plot_data(data, T, order, savename):
-    cycles = data[0,:]
+def plot_data(data, data_order, T, savename):
+    cycles = data_order[0,:]
+    e_order = data_order[1,:]
+    m_order = data_order[2,:]
+    C_v_order = data_order[3,:]
+    X_order = data_order[4,:]
     e = data[1,:]
     m = data[2,:]
     C_v = data[3,:]
@@ -129,73 +150,117 @@ def plot_data(data, T, order, savename):
 
 
     plt.figure()
-    plt.title(r"%s  $T=$%.1f $J/k_b$" %(order, T))
-    sns.lineplot(cycles, e, markers=True, label=r"$\epsilon$")
+    plt.title(r"$T=$%.1f $J/k_b$" %(T))
+    sns.lineplot(x=cycles, y=e, markers=True, label=r"$\epsilon$")
+    sns.lineplot(x=cycles, y=e_order, linestyle="--", markers=True, label=r"$\epsilon_{order}$")
     plt.xlabel(r"$MCMC$ $cycles$")
     plt.ylabel(r"$\left<\epsilon\right>$ $[J]$")
     plt.xscale("log")
     plt.savefig("../figures/%s_e.pdf" %(savename), dpi=300, bbox_inches='tight')
 
     plt.figure()
-    plt.title(r"%s  $T=$%.1f $J/k_b$" %(order, T))
-    sns.lineplot(cycles, m, markers=True, label=r"$m$")
+    plt.title(r"$T=$%.1f $J/k_b$" %(T))
+    sns.lineplot(x=cycles, y=m, markers=True, label=r"$m$")
+    sns.lineplot(x=cycles, y=m_order, linestyle="--", markers=True, label=r"$m_{order}$")
     plt.xlabel(r"$MCMC$ $cycles$")
     plt.ylabel(r"$\left< m \right>$ $[J]$")
     plt.xscale("log")
     plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches='tight')
 
-    plt.figure()
-    plt.title(r"%s  $T=$%.1f $J/k_b$" %(order, T))
-    sns.lineplot(cycles, C_v, markers=True, label=r"$C_{v}$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$C_v$ $[k_b]$")
-    plt.xscale("log")
-    plt.savefig("../figures/%s_c_v.pdf" %(savename), dpi=300, bbox_inches='tight')
-
-    plt.figure()
-    plt.title(r"%s  $T=$%.1f $J/k_b$" %(order, T))
-    sns.lineplot(cycles, X, markers=True, label=r"$\chi$")
-    plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\chi$ $[k_b^{-1}]$")
-    plt.xscale("log")
-    plt.savefig("../figures/%s_X.pdf" %(savename), dpi=300, bbox_inches='tight')
     plt.show()
 
-def plot_hist(data):
-    print(data[:,0])
-    sns.histplot(data[:,0])
+def plot_hist(data, savename):
+    print("min: ", np.min(data[:,0]))
+    print("max: ", np.max(data[:,0]))
+    print("mean: ", np.mean(data[:,0]))
+    sns.histplot(data[:,0], stat="probability", bins=50)
+    plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches='tight')
+
     plt.show()
+
+def timing_test():
+    print("\n\nTime used with 1 thread:\n")
+    thread1 = time.time()
+    os.system("./main %s %s %s %s %s %s %s" %(1, 1, 5, True, "none", "test", "none"))
+    thread1_total = time.time() - thread1
+
+    time.sleep(10) # to cool down computer for fair compairison
+    print("\n\nTime used with 8 threads:\n")
+    thread8 = time.time()
+    os.system("./main %s %s %s %s %s %s %s" %(8, 1, 5, True, "none", "test", "none"))
+    thread8_total = time.time() - thread8
+    time.sleep(10) # to cool down computer for fair compairison
+    print("\n\nTime used with 8 threads:\n")
+    thread4 = time.time()
+    os.system("./main %s %s %s %s %s %s %s" %(4, 1, 5, True, "none", "test", "none"))
+    thread4_total = time.time() - thread4
+    print("\n Speed up factor from 1 to 8 threads: ", thread8_total/thread1_total)
+    print("\n Speed up factor from 1 to 4 threads: ", thread4_total/thread1_total)
+    print("\n Speed up factor from 4 to 8 threads: ", thread8_total/thread4_total)
+
+
 
 def main():
-    run(threads=8,
-        T=1,
-        lattice_dim=20,
-        order="false")
+    cycle_L_2_1 = pa.mat()
+    temp_L_2 = pa.mat()
+    cycle_L20_1 = pa.mat()
+    cycle_L20_2_4 = pa.mat()
+    cycle_L20_1_order = pa.mat()
+    cycle_L20_2_4_order = pa.mat()
+    histogram_T_1 = pa.mat()
+    histogram_T_2_4 = pa.mat()
+    test = pa.mat()
 
-    data_1 = pa.mat()
-    data_2 = pa.mat()
-    data_3 = pa.mat()
-    data_4 = pa.mat()
-    data_5 = pa.mat()
-    data_6 = pa.mat()
-    data_7 = pa.mat()
 
-    data_7.load("histogram_T_1")
-    data_6.load("cycles_L_20_T_2.4_order.dat")
-    data_6.load("cycles_L_20_T_2.4_order.dat")
-    data_5.load("cycles_L_20_T_1_order.dat")
-    data_4.load("cycles_L_20_T_2.4.dat")
-    data_3.load("cycles_L_20_T_1.dat")
-    data_2.load("data/T_val_1mill.dat")
-    data_1.load("data/cycle_val.dat")
-    plot_hist(data_7)
-    plot_data(np.array(data_3), 1, "random", savename="numeric_L_20_T_1")
-    plot_data(np.array(data_4), 2.4, "random", savename="numeric_L_20_T_2.4")
-    plot_data(np.array(data_5), 1, "ordered", savename="numeric_L_20_T_1_order")
-    plot_data(np.array(data_6), 2.4, "ordered", savename="numeric_L_20_T_2.4_order")
 
-    plot_diff(np.array(data_1))
-    plot_T(np.array(data_2))
+    run_all = False
+    if run_all:
+        run(threads=8, T=2.4, lattice_dim=2, order="true", cycles=True, compile=True)
+        run(threads=8, T=2.4, lattice_dim=2, order="false", cycles=True, temp=True)
+        run(threads=8, T=1.0, lattice_dim=2, order="true", cycles=True)
+        run(threads=8, T=1.0, lattice_dim=2, order="false", cycles=True)
+        run(threads=8, T=2.4, lattice_dim=20, order="false", cycles=True, hist=True)
+        run(threads=8, T=1.0, lattice_dim=20, order="false", cycles=True, hist=True)
+        run(threads=8, T=2.4, lattice_dim=20, order="true", cycles=True)
+        run(threads=8, T=1.0, lattice_dim=20, order="true", cycles=True)
+
+    #run(threads=8, T=1.0, lattice_dim=40, order="false", temp=True, T_min=2.1, T_max = 2.4)
+    #run(threads=8, T=1.0, lattice_dim=60, order="false", temp=True, T_min=2.1, T_max = 2.4)
+    #run(threads=8, T=1.0, lattice_dim=80, order="false", temp=True, T_min=2.1, T_max = 2.4)
+    #run(threads=8, T=1.0, lattice_dim=100, order="false", temp=True, T_min=2.1, T_max = 2.4)
+
+
+
+    # cycle loop T = 2.4 
+    cycle_L20_2_4_order.load("data/cycles_L_20_T_2.4_true.dat")
+    cycle_L20_2_4.load("data/cycles_L_20_T_2.4_false.dat")
+    
+    # cycle loop T = 1.0 
+    cycle_L20_2_4_order.load("data/cycles_L_20_T_1.0_true.dat")
+    cycle_L20_2_4.load("data/cycles_L_20_T_1.0_false.dat")
+    histogram_T_1.load("data/histogram_L_20_T_1.0_false.dat")
+    histogram_T_2_4.load("data/histogram_L_20_T_2.4_false.dat")
+    cycle_L20_1_order.load("data/cycles_L_20_T_1.0_true.dat")
+    cycle_L20_1.load("data/cycles_L_20_T_1.0_false.dat")
+    temp_L_2.load("data/temp_L_2_T_2.4_false.dat")
+    cycle_L_2_1.load("data/cycles_L_2_T_1.0_false.dat")
+
+    test.load("data/temp_L_40_T_1.0_false.dat")
+    plot_T(np.array(test), plot_analytic=False)
+
+    plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
+    plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
+    # Histogram T
+
+    plot_hist(np.array(histogram_T_1), "histogram_T_1")
+    plot_hist(np.array(histogram_T_2_4),"histogram_T_2_4")
+
+    plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
+
+    plot_diff(np.array(cycle_L_2_1), 1)
+    plot_T(np.array(temp_L_2))
+    #timing_test()
+
 
 if __name__ == "__main__":
     main()

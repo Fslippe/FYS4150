@@ -25,7 +25,7 @@ public:
     int N;
     int dim;
     arma::vec average_norm;
-    arma::mat histogram_values;
+    arma::vec histogram_values;
 
     // arma::vec dE;
     arma::mat lattice;

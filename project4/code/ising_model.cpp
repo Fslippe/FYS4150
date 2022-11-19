@@ -106,17 +106,14 @@ void IsingModel::MC_sample(int cycles, bool histogram)
     // std::cout << "\n EFIRST " << E << "\n";
     if (histogram)
     {
-        histogram_values = arma::mat(cycles, 5);
+        histogram_values = arma::vec(cycles);
         for (int i = 0; i < cycles; i++)
         {
             metropolis();
             // std::cout << E << "\n";
-            histogram_values(i, 0) = E;
-            histogram_values(i, 1) = E * E;
-            histogram_values(i, 2) = M;
-            histogram_values(i, 3) = M * M;
-            histogram_values(i, 4) = std::fabs(M);
+            histogram_values(i) = E;
         }
+        histogram_values /= n_spins;
     }
     else
     {
