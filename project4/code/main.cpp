@@ -64,6 +64,8 @@ int main(int argc, char *argv[])
     // Histogram
     if (save3 != "none")
     {
+        int cycles = 10000000;
+
         arma::mat hist = arma::mat(cycles, 1);
         std::cout << "\nHISTOGRAM\n";
         t1 = clock();
@@ -82,8 +84,23 @@ int main(int argc, char *argv[])
 
 void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads, double T_min, double T_max)
 {
-    arma::vec temp = arma::linspace(T_min, T_max, n_T); // change
-    arma::mat T_val = arma::mat(5, n_T);
+    arma::mat T_val;
+    arma::vec temp;
+    if (T_min == 2.1)
+    {
+        arma::vec a = arma::linspace(T_min, 2.23, 15);
+        arma::vec b = arma::linspace(2.235, 2.33, 30);
+        arma::vec c = arma::linspace(2.335, T_max, 10);
+        temp = arma::join_cols(a, b, c);
+        // change
+        n_T = 55;
+        T_val = arma::mat(5, n_T);
+    }
+    else
+    {
+        temp = arma::linspace(T_min, T_max, n_T); // change
+        T_val = arma::mat(5, n_T);
+    }
 
 #pragma omp parallel for num_threads(threads)
     for (int j = 0; j < n_T; j++)
