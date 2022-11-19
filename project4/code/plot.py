@@ -65,7 +65,6 @@ def plot_T(data, plot_analytic=True):
     else:
         save = ""
         
-
     plt.figure()
     if plot_analytic:
         sns.lineplot(x=t, y=e, color="r", label="Analytic")
@@ -113,31 +112,15 @@ def plot_diff(data, T):
 
     plt.figure()
     sns.lineplot(x=cycles, y=e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$")
-    #plt.xlabel(r"$MCMC$ $cycles$")
-    #plt.ylabel(r"$\Delta \left<\epsilon\right>$ [ $J$ ]")
-    #plt.xscale("log")
-    #plt.yscale("log")
-    #plt.savefig("../figures/numeric_diff_e.pdf", dpi=300, bbox_inches='tight')
-    #plt.figure()
 
     sns.lineplot(x=cycles, y=m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$")
-    #plt.xlabel(r"$MCMC$ $cycles$")
-    #plt.ylabel(r"$\Delta \left< m \right>$ [ $J$ ]")
-    #plt.xscale("log")
-    #plt.yscale("log")
-    #plt.savefig("../figures/numeric_diff_m.pdf", dpi=300, bbox_inches='tight')
-    #plt.figure()
+
 
     sns.lineplot(x=cycles, y=C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$")
-    #plt.xlabel(r"$MCMC$ $cycles$")
-    #plt.ylabel(r"$\Delta C_v$ [ $k_b$ ]")
-    #plt.xscale("log")
-    #plt.yscale("log")
-    #plt.savefig("../figures/numeric_diff_c_v.pdf", dpi=300, bbox_inches='tight')
-    #plt.figure()
+
 
     sns.lineplot(x=cycles, y=X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$")
-    #plt.xlabel(r"$MCMC$ $cycles$")
+    plt.xlabel(r"$MCMC$ $cycles$")
     plt.ylabel(r"$\Delta (numerical analytical)$")
     plt.xscale("log")
     #plt.yscale("log")
@@ -206,6 +189,37 @@ def timing_test():
     print("\n Speed up factor from 1 to 4 threads: ", thread4_total/thread1_total)
     print("\n Speed up factor from 4 to 8 threads: ", thread8_total/thread4_total)
 
+def plot_temp_cycles(data, L_size):
+    t = data[0][0,:]
+
+    plt.figure()
+    for i in range(len(data)):
+        sns.scatterplot(x=t, y=data[i][1,:], s=70, label="L size: %i" %(L_size[i]))
+    plt.xlabel(r"$T$ [ $J/k_b$ ]")
+    plt.ylabel(r"$\left<\epsilon\right>$ [ $J$ ]")
+    plt.savefig("../figures/L_size_e_T.pdf", dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    for i in range(len(data)):
+        sns.scatterplot(x=t, y=data[i][2,:], s=70, label="L size: %i" %(L_size[i]))
+    plt.xlabel(r"$T$ [ $J/k_b$ ]")
+    plt.ylabel(r"$\left< m \right>$ [ $J$ ]")
+    plt.savefig("../figures/L_size_m_T.pdf", dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    for i in range(len(data)):
+        sns.scatterplot(x=t, y=data[i][3,:], s=70, label="L size: %i" %(L_size[i]))
+    plt.xlabel(r"$T$ [ $J/k_b$ ]")
+    plt.ylabel(r"$C_v$ [ $k_b$ ]")
+    plt.savefig("../figures/L_size_c_v_T.pdf", dpi=300, bbox_inches='tight')
+
+    plt.figure()
+    for i in range(len(data)):
+        sns.scatterplot(x=t, y=data[i][4,:], s=70, label="L size: %i" %(L_size[i]))
+    plt.xlabel(r"$T$ [ $J/k_b$ ]")
+    plt.ylabel(r"$\chi$ $[k_b^{-1}]$")
+    plt.savefig("../figures/L_size_X_T.pdf", dpi=300, bbox_inches='tight')
+    plt.show()
 
 
 def main():
@@ -217,7 +231,11 @@ def main():
     cycle_L20_2_4_order = pa.mat()
     histogram_T_1 = pa.mat()
     histogram_T_2_4 = pa.mat()
-    test = pa.mat()
+    L_40 = pa.mat()
+    L_60 = pa.mat()
+    L_80 = pa.mat()
+    L_100 = pa.mat()
+
 
     run_all = False
     run_long = False
@@ -271,14 +289,21 @@ def main():
     temp_L_2.load("data/temp_L_2_T_2.4_false.dat")
     cycle_L_2_1.load("data/cycles_L_2_T_1.0_false.dat")
 
-    test.load("data/temp_L_3_T_1.0_false.dat")
+    L_40.load("data/temp_L_40_T_1.0_false.dat")
+    L_60.load("data/temp_L_60_T_1.0_false.dat")
+    L_80.load("data/temp_L_80_T_1.0_false.dat")
+    L_100.load("data/temp_L_100_T_1.0_false.dat")
+    L_sizes = [40, 60, 80, 100]
+    all_data = np.array([L_40, L_60, L_80, L_100], dtype= object)
+    plot_temp_cycles(all_data, L_sizes)
+
 
     plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
     plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     # Histogram T
 
-    plot_hist(np.array(histogram_T_1), "histogram_T_1")
-    plot_hist(np.array(histogram_T_2_4),"histogram_T_2_4")
+    #plot_hist(np.array(histogram_T_1), "histogram_T_1")
+    #plot_hist(np.array(histogram_T_2_4),"histogram_T_2_4")
 
     plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
 
