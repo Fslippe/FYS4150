@@ -53,18 +53,18 @@
 
 
 % ===========================================
-\section{Introduction}
-This report will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature, past this point the magnetic spins are no longer aligned causing the given ferromagnetic material to lose its magnetization. 
+\section{Introduction}\label{sec:intro}
+This article will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature. Past this point the magnetic spins are no longer aligned, causing the given ferromagnetic material to lose its magnetization. 
 
 With the Ising model we can easily model a magnetic materials' response to thermal energy. Magnet spins in the model have two states, either up or down. These can be flipped by energy input and each individual spin influences the total state of the system.
 
 The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen.\cite{compendium}
 
-After testing our numerical method we will finally try to approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, our goal is not to necessarily find this temperature, but rather analyze how well our chosen Markov Chain Monte Carlo (MCMC) approach can approximate such a complex problem.
+We will simulate the Ising model using a Markov Chain Monte Carlo (MCMC) approach. After testing our numerical method we will finally try to approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, our goal is not to necessarily find this temperature, but rather analyze how well our chosen MCMC approach can approximate such a complex problem.
 
 To allow for reasonable runtimes for the larger computations our MCMC code is parallelized using OpenMP.
 
-Section \ref{sec:methods} will cover the theoretical background of the Ising model and MCMC method as well as some analytical solutions. More comprehensive derivations of the analytical values can be found in appendix \ref{appendix:A} and \ref{appendix:B}.
+Section \ref{sec:methods} will cover the theoretical background of the Ising model and MCMC method as well as some analytical solutions for code testing. More comprehensive derivations of the analytical values can be found in appendix \ref{appendix:analytic} and \ref{appendix:delta_E}.
 
 In section \ref{sec:results} we present results from our Ising model simulations. These cover comparison betwween analytic and numerical results, an analysis of burn-in time for a larger lattice size of $L = 20$ and finally an investigation of phase transitions.
 
@@ -96,7 +96,7 @@ and the magnetization per spin is given by
 \begin{equation}
     m(\textbf{s}) = \frac{M(\textbf{s})}{N}. \label{eq:mean_M}
 \end{equation}
-These will be used to compare and analyze results.
+These values will be used to compare and analyze results.
 \begin{equation}
     \beta = \frac{1}{k_B T}
 \end{equation}
@@ -131,7 +131,7 @@ For comparison with early numerical implementations we will fist consider an ana
     \end{tabular} \label{tab:analytic}
     \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
 \end{table} 
-Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:A} and are used to test early versions of the code.
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:analytic} and are used to test early versions of the code.
 
 We will study properties of the system at equilibrium for different lattice sizes as a function of temperature $T$. The analysis will focus on four main properties. The mean energy (eq. \ref{eq:mean_E}), mean magnetization (eq. \ref{eq:mean_M}), specific heat capacity normalized to number of spins
 \begin{equation}
@@ -141,23 +141,39 @@ and the susceptibility normalized to number of spins
 \begin{equation}
     \chi = \frac{1}{N} \frac{1}{k_B T} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
 \end{equation}
+Analytical solutions to these can also be found in appendix \ref{appendix:analytic}.
+
+\subsection*{Critical phenomena}
+The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
+\begin{equation*}
+    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
+\end{equation*}
+For our approximation we will use the scaling relation
+\begin{equation}
+    T_c(L) -T_c(L=\infty) = aL^{-1}.
+\end{equation}
+Here $a$ is constant. Theoretical background for this scaling realtion can be found in appendix \ref{appendix:critical}
+
+
 \subsection*{Periodic boundary conditions}
-The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice.
-\begin{table}[H]
+The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{fig:neighbors}, also at the boundaries of the lattice.
+\begin{figure}[H]
     \centering
     \begin{tabular}{llll}
        & $\uparrow$ &    \\
     $\uparrow$ & $\uparrow$ & $\uparrow$ \\
        & $\uparrow$ & 
-    \end{tabular}\label{tab:neighbors}
+    \end{tabular}\label{fig:neighbors}
     \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).} 
-\end{table}
+\end{figure}
 
 \subsection*{Markov chain Monte Carlo method}
 A Markov chain is a stok
 
 \subsection*{The Metropolis algorithm}
-A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:C}.
+The algorithm generates a Markov chain 
+
+A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
 
 \subsection*{Optimization and parallelization}
 Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
@@ -166,89 +182,103 @@ The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \
 \begin{equation}
     \Delta E = E_{\text{after}} - E_{\text{before}}
 \end{equation}
-can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) This is shown in appendix \ref{appendix:B}. These values are
+can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) This is shown in appendix \ref{appendix:delta_E}. These values are
 \begin{equation}
     \Delta E = 8J, 4J, 0, -4J, -8J.
 \end{equation}
 To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array.
-
 Furthermore, the code is written such that it can be run parallelized. This allows us to run it on several threads using OpneMP to reduce runtimes.
 
 % ===========================================
 %\newpage
 \section{Results}\label{sec:results}
-To check the numerical implementation we compare analytical and numerical results for a $2 \times 2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
+To check the numerical implementation we compare analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
+
+%\onecolumngrid
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_e_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the energy per spin $\epsilon$ plotted against different temperatures $T$.}
+    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the energy per spin $\epsilon$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
     \label{fig:numeric_analytic_e_T}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_m_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the magnetization per spin $m$ plotted against different temperatures $T$.}
+    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the magnetization per spin $m$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
     \label{fig:numeric_analytic_m_T}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_c_v_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the heat capacity $C_V$ (normalized to number of spins) plotted against different temperatures $T$.}
+    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the heat capacity $C_V$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
     \label{fig:numeric_analytic_c_v_T}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_X_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2 \times 2$ lattice case. Here one sees the expectation value for the susceptibility $\chi$ (normalized to number of spins) plotted against different temperatures $T$.}
+    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the susceptibility $\chi$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
     \label{fig:numeric_analytic_X_T}
 \end{figure}
+%\twocolumngrid
+Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for a good range of temperatures shown. 
 
-% NB! Problem 4 c)
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
+% diff of all four vlaues plot
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic.pdf}
+    \caption{}
+    \label{fig:numeric_analytic}
+\end{figure}
+In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical decreases for increasing MC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. 
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
+This allows us to move on to more complex computations of larger lattice sizes. The next figures show results to study the \textbf{burn-in} time for our MCMC method for a $20 \times 20$ lattice. Results are shown for both a lattice with random spins and an ordered lattice with all spins starting in an up $(\uparrow)$ state.
 
 % study burn in time for L=20
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1.0_e.pdf}
-%     \caption{Here numerical estimates $\langle \epsilon \rangle$ are plotted agains MC cycles   }
-%     \label{fig:}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_e.pdf}
+    \caption{}
+    \label{fig:numeric_L_20_T_1_e}
+\end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1.0_m.pdf}
-%     \caption{Herer }
-%     \label{fig:}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_m.pdf}
+    \caption{}
+    \label{fig:numeric_L_20_T_1_m}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_e.pdf}
+    \caption{}
+    \label{fig:numeric_L_20_T_2_4_e}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_m.pdf}
+    \caption{}
+    \label{fig:numeric_L_20_T_2_4_m}
+\end{figure}
+
+%histograms
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/histogram_T_1_m.pdf}
+    \caption{   }
+    \label{fig:}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/histogram_T_2_4_m.pdf}
+    \caption{Herer }
+    \label{fig:}
+\end{figure}
 
 % \begin{figure}[H]
 %     \centering
@@ -274,8 +304,7 @@ To check the numerical implementation we compare analytical and numerical result
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 %
-
-
+Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC "walkers" using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
 
@@ -290,7 +319,7 @@ To check the numerical implementation we compare analytical and numerical result
 \appendix
 \raggedbottom
 
-\section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:A}
+\section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:analytic}
 For the case of a 2$\cross$2 lattice with $L=2$ and $N=4$ we have sixteen possible spin configurations show in table \ref{tab:analytic}. These values will be used for the analytic solutions. The specific partition function becomes
 \begin{align*}
     Z &=  \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})} 
@@ -376,7 +405,7 @@ and the susceptibility
 \end{align*}
 
 
-\section{Possible $\Delta E$ values}\label{appendix:B}
+\section{Possible $\Delta E$ values}\label{appendix:delta_E}
 Considering a 2D lattice of arbitrary size $(L>2)$ and remembering that we are working with periodic boundary conditions, we can show that there are only a few possible values of $\Delta E$. The calculation of $\Delta E$ between spin configurations will be limited to the flipping of a single spin. To find the possible energy differences we will look at a spin at a random position. This central spin will start in an up state(+1) and then be flipped (-1). We remind that $ E(\textbf{s}) = - J \sum^4_{\langle kl \rangle} s_k s_l$ and $ \Delta E = E_{\text{after}} - E_{\text{before}}$.
 \begin{table}[H]
 %\centering
@@ -459,7 +488,24 @@ This can be show for the four remaining possible starting configurations as well
 \end{table}
 The five possible values of the energy difference are thus, $\Delta E = 8J, 4J, 0, -4J, -8J$.
 
-\section{Metropolis algorithm flow chart}\label{appendix:C}
+\newpage
+\section{Theoretical background for critical phenomena}\label{appendix:critical}
+Power laws with so-called critical exponents describe how a physical system behaves when close to its critical point. For the Ising model this is close to its critical temperature. For temperatures $T$ close to $T_c$ the \textit{infinite} 2D Ising model's mean magnetization, heat capacity and susceptibility behave as follows: 
+\begin{align*}
+    \langle |m| \rangle &\propto |T-T_c(L = \infty)|^\beta, \\
+    C_V &\propto |T-T_c(L = \infty)|^{-\alpha}, \\
+    \chi &\propto |T-T_c(L = \infty)|^{-\gamma}. 
+\end{align*}
+Here $\beta = 1/8$, $\alpha = 0$ and $\gamma = 7/4$ are the critical exponents. We see that $C_V$ and $\chi$ diverge close to $T_c$. The \textit{correlation length}
+\begin{equation}
+    \xi \propto |T-T_c(L=\infty)|^{-\nu} \label{eq:xi}
+\end{equation}
+with $\nu=1$ also diverges near $T_c$. For our finite system $\xi = L$ is the largest correlation length. Replacing for $\xi$ in eq. \ref{eq:xi} then leads to the scaling equation
+\begin{equation}
+    T_c(L) -T_c(L=\infty) = aL^{-1}.
+\end{equation}
+
+\section{Metropolis algorithm flow chart}\label{appendix:metro}
 
 \begin{figure}[H]
     \centering
