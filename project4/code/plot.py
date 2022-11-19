@@ -194,31 +194,31 @@ def plot_temp_cycles(data, L_size):
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][1,:], s=70, label="L size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][1,:], s=70, label="Lattice size: %i" %(L_size[i]))
     plt.xlabel(r"$T$ [ $J/k_b$ ]")
     plt.ylabel(r"$\left<\epsilon\right>$ [ $J$ ]")
-    plt.savefig("../figures/L_size_e_T.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/L_size_e_T.png", dpi=300, bbox_inches='tight')
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][2,:], s=70, label="L size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][2,:], s=70, label="Lattice size: %i" %(L_size[i]))
     plt.xlabel(r"$T$ [ $J/k_b$ ]")
     plt.ylabel(r"$\left< m \right>$ [ $J$ ]")
-    plt.savefig("../figures/L_size_m_T.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/L_size_m_T.png", dpi=300, bbox_inches='tight')
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][3,:], s=70, label="L size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][3,:], s=70, label="Lattice size: %i" %(L_size[i]))
     plt.xlabel(r"$T$ [ $J/k_b$ ]")
     plt.ylabel(r"$C_v$ [ $k_b$ ]")
-    plt.savefig("../figures/L_size_c_v_T.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/L_size_c_v_T.png", dpi=300, bbox_inches='tight')
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][4,:], s=70, label="L size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][4,:], s=70, label="Lattice size: %i" %(L_size[i]))
     plt.xlabel(r"$T$ [ $J/k_b$ ]")
     plt.ylabel(r"$\chi$ $[k_b^{-1}]$")
-    plt.savefig("../figures/L_size_X_T.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/L_size_X_T.png", dpi=300, bbox_inches='tight')
     plt.show()
 
 
