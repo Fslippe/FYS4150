@@ -246,7 +246,7 @@ def main():
     cycle_L_2_1.load("data/cycles_L_2_T_1.0_false.dat")
 
     test.load("data/temp_L_40_T_1.0_false.dat")
-    plot_T(np.array(test), plot_analytic=False)
+    #plot_T(np.array(test), plot_analytic=False)
 
     plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
