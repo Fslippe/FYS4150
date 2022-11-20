@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 sns.set_style("darkgrid")
-plt.rcParams.update({"font.size": 14})
+plt.rcParams.update({"font.size": 12})
 
 def run(threads, T, lattice_dim, order, T_min=0.5, T_max=4, cycles=False, temp=False, hist=False, compile=False):
     """
