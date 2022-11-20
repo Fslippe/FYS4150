@@ -46,7 +46,7 @@
     NB! Abstract here
 \end{abstract}
 \maketitle
-%raggedbottom
+\raggedbottom
 
 
 % ===========================================
@@ -218,13 +218,13 @@ To check the numerical implementation we compare analytical and numerical result
     \label{fig:numeric_analytic_X_T}
 \end{figure}
 
-Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for a good range of temperatures shown. 
+Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for the whole range of temperatures shown. 
 
 % diff of all four vlaues plot
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic.pdf}
-    \caption{The blue, yellow, green and red line show the change of the difference between numerical and analytical results as a function of MCMC cycles for $\langle \epsilon \rangle$, $\langle |m| \rangle$, $C_V$ and $\chi$ respectively. In this case $L=2$.}
+    \caption{The blue, yellow, green and red line show the change of the difference between numerical and analytical results as a function of MCMC cycles for $\langle \epsilon \rangle$, $\langle |m| \rangle$, $C_V$ and $\chi$ respectively. In this case $L=2$ and the results are presented on a log scale.}
     \label{fig:numeric_analytic}
 \end{figure}
 In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical results decreases for increasing MCMC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. Further computations will be run for $10^6$ cycles to ensure precision since enough computational power is available.
@@ -235,30 +235,32 @@ This allows us to move on to more complex computations of larger lattice sizes. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_e.pdf}
-    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_1_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_m.pdf}
-    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_1_m}
 \end{figure}
+Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that the MCMC method has a burn-in time of about $10^4$ cycles for $T=1.0J/k_B$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_e.pdf}
-    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_2_4_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_m.pdf}
-    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_2_4_m}
 \end{figure}
+For $T=1.0J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time look to be around $10^5$ cycles.
 
 Moving beyond expectation values we approximate the probability function $p_{\epsilon}(\epsilon ; T)$ using MCMC samples. This is done for both $T=1.0J/k_B$ and $T=2.4J/k_B$.
 %histograms
@@ -275,38 +277,46 @@ Moving beyond expectation values we approximate the probability function $p_{\ep
     \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=2.4 J/k_B$.}
     \label{fig:histogram_T_2_4_m}
 \end{figure}
+Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig:histogram_T_2_4_m} for $T=2.4 J/k_B$ the most noticeable result is the difference in variance. For $T=1.0 J/k_B$ an $\epsilon \approx -2$ is by far the most likely, whilst possible $\epsilon$ values for $T=2.4 J/k_B$ cover a larger range of approximately $[-1.7,-0.9]$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/L_size_e_T.pdf}
-    \caption{}
-    \label{fig:}
+    \caption{$\langle \epsilon \rangle$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
+    \label{fig:L_size_e_T}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/L_size_m_T.pdf}
-    \caption{}
-    \label{fig:}
+    \caption{$\langle |m| \rangle$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
+    \label{fig:L_size_m_T}
 \end{figure}
+Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing lattice size $L$. Looking closely in at $T \in [2.22,2.4]$ one can see that $\langle \epsilon \rangle$ increases slightly with increasing $L$. In figure \ref{fig:L_size_m_T} the mean magnetization changes more noticeably for different $L$. $\langle |m| \rangle$ tends toward zero for increasing $T$ and noticeably the graphs slope steepens around $T \in [2.25,2.30]$ for increasing lattice sizes.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/L_size_c_v_T.pdf}
-    \caption{}
-    \label{fig:}
+    \caption{$C_V$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
+    \label{fig:L_size_c_v_T}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/L_size_X_T.pdf}
-    \caption{}
-    \label{fig:}
+    \caption{$\chi$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
+    \label{fig:L_size_X_T}
 \end{figure}
+The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. 
+
 % ===========================================
+\newpage
 \section{Discussion}\label{sec:discussion}
+
+
+Could get at better approximation using smaller $\Delta T$ leading to better linear regression points.
 %
-Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC "walkers" using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
+Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
 
