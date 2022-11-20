@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 sns.set_style("darkgrid")
+plt.rcParams.update({"font.size": 14})
 
 def run(threads, T, lattice_dim, order, T_min=0.5, T_max=4, cycles=False, temp=False, hist=False, compile=False):
     """
@@ -111,17 +112,12 @@ def plot_diff(data, T):
     X_diff = np.abs(data[4,:] - X)
 
     plt.figure()
-    sns.lineplot(x=cycles, y=e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$")
-
-    sns.lineplot(x=cycles, y=m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$")
-
-
-    sns.lineplot(x=cycles, y=C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$")
-
-
-    sns.lineplot(x=cycles, y=X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$")
+    sns.lineplot(x=cycles, y=e_diff, markers=True, label=r"$|\epsilon_{Analytic}-\epsilon_{Numeric}|$ [ $J$ ]")
+    sns.lineplot(x=cycles, y=m_diff, markers=True, label=r"$|m_{Analytic}-m_{Numeric}|$ [ $J/k_B$ ]")
+    sns.lineplot(x=cycles, y=C_v_diff, markers=True, label=r"$|C_{v,Analytic}-C_{v,Numeric}|$ [ $k_B$ ]")
+    sns.lineplot(x=cycles, y=X_diff, markers=True, label=r"$|\chi_{Analytic}-\chi_{Numeric}|$ $[k_B^{-1}]$")
+    
     plt.xlabel(r"$MCMC$ $cycles$")
-    plt.ylabel(r"$\Delta (numerical analytical)$")
     plt.xscale("log")
     #plt.yscale("log")
     plt.savefig("../figures/numeric_analytic.pdf", dpi=300, bbox_inches="tight")
@@ -159,10 +155,11 @@ def plot_data(data, data_order, T, savename):
 
     plt.show()
 
-def plot_hist(data, savename, kde):
+def plot_hist(data, T, savename, kde):
     print("min: ", np.min(data[:,0]))
     print("max: ", np.max(data[:,0]))
     print("mean: ", np.mean(data[:,0]))
+    plt.title(r"T=%.1f $J/k_B$" %(T))
     sns.histplot(data[:,0], stat="probability", kde=kde, bins=33)
     plt.xlabel(r"$\epsilon$ [ $J$ ]")
     plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches="tight")
@@ -172,18 +169,18 @@ def plot_hist(data, savename, kde):
 def timing_test():
     print("\n\nTime used with 1 thread:\n")
     thread1 = time.time()
-    os.system("./main %s %s %s %s %s %s %s" %(1, 1, 5, True, "none", "test", "none"))
+    os.system("./main %s %s %s %s %s %s %s %s %s" %(1, 1, 5, True, "none", "test", "none", 1, 2))
     thread1_total = time.time() - thread1
 
     time.sleep(10) # to cool down computer for fair compairison
     print("\n\nTime used with 8 threads:\n")
     thread8 = time.time()
-    os.system("./main %s %s %s %s %s %s %s" %(8, 1, 5, True, "none", "test", "none"))
+    os.system("./main %s %s %s %s %s %s %s %s %s" %(8, 1, 5, True, "none", "test", "none", 1, 2))
     thread8_total = time.time() - thread8
     time.sleep(10) # to cool down computer for fair compairison
-    print("\n\nTime used with 8 threads:\n")
+    print("\n\nTime used with 4 threads:\n")
     thread4 = time.time()
-    os.system("./main %s %s %s %s %s %s %s" %(4, 1, 5, True, "none", "test", "none"))
+    os.system("./main %s %s %s %s %s %s %s %s %s" %(4, 1, 5, True, "none", "test", "none", 1, 2))
     thread4_total = time.time() - thread4
     print("\n Speed up factor from 1 to 8 threads: ", thread8_total/thread1_total)
     print("\n Speed up factor from 1 to 4 threads: ", thread4_total/thread1_total)
@@ -295,6 +292,7 @@ def main():
     L_100.load("data/temp_L_100_T_1.0_false.dat")
     L_sizes = [40, 60, 80, 100]
     all_data = np.array([L_40, L_60, L_80, L_100], dtype= object)
+    #timing_test()
     plot_temp_cycles(all_data, L_sizes)
 
 
@@ -302,15 +300,13 @@ def main():
     plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     # Histogram T
 
-    plot_hist(np.array(histogram_T_1), "histogram_T_1", False)
-    plot_hist(np.array(histogram_T_2_4),"histogram_T_2_4", True)
+    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
 
     plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
 
     plot_diff(np.array(cycle_L_2_1), 1)
     plot_T(np.array(temp_L_2))
-    #timing_test()
-
 
 if __name__ == "__main__":
     main()
