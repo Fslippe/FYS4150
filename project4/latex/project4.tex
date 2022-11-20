@@ -16,6 +16,7 @@
 \usepackage{hyperref}         % automagic cross-referencing
 \usepackage{listings}         % display code
 \usepackage{subfigure}        % imports a lot of cool and useful figure commands
+\usepackage{subcaption}
 % \usepackage{float}
 %\usepackage[section]{placeins}
 \usepackage{algorithm}
@@ -49,7 +50,7 @@
     NB! Abstract here
 \end{abstract}
 \maketitle
-%\raggedbottom
+%raggedbottom
 
 
 % ===========================================
@@ -58,7 +59,7 @@ This article will explore temperature-dependent behavior in ferromagnetism using
 
 With the Ising model we can easily model a magnetic materials' response to thermal energy. Magnet spins in the model have two states, either up or down. These can be flipped by energy input and each individual spin influences the total state of the system.
 
-The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen.\cite{compendium}
+The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen. Additionally, when it comes to studies of phase transition, theoretical approaches such as mean field models can actually predict wrong behavior, further motivating the use of the Ising model.\cite{compendium}
 
 We will simulate the Ising model using a Markov Chain Monte Carlo (MCMC) approach. After testing our numerical method we will finally try to approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, our goal is not to necessarily find this temperature, but rather analyze how well our chosen MCMC approach can approximate such a complex problem.
 
@@ -191,116 +192,126 @@ Furthermore, the code is written such that it can be run parallelized. This allo
 
 % ===========================================
 %\newpage
+\onecolumngrid
 \section{Results}\label{sec:results}
 To check the numerical implementation we compare analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
 
-%\onecolumngrid
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_e_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the energy per spin $\epsilon$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
-    \label{fig:numeric_analytic_e_T}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../figures/numeric_analytic_e_T.pdf}
+        \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the energy per spin $\epsilon$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cycles.}
+        \label{fig:numeric_analytic_e_T}
+    \end{subfigure}
+
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../figures/numeric_analytic_m_T.pdf}
+        \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the magnetization per spin $m$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
+        \label{fig:numeric_analytic_m_T}
+    \end{subfigure}
+
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../figures/numeric_analytic_c_v_T.pdf}
+        \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the heat capacity $C_V$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
+        \label{fig:numeric_analytic_c_v_T}
+    \end{subfigure}
+
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../figures/numeric_analytic_X_T.pdf}
+        \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the susceptibility $\chi$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
+        \label{fig:numeric_analytic_X_T}
+    \end{subfigure}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_m_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the magnetization per spin $m$ plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
-    \label{fig:numeric_analytic_m_T}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_c_v_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the heat capacity $C_V$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
-    \label{fig:numeric_analytic_c_v_T}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/numeric_analytic_X_T.pdf}
-    \caption{Comparison of the red analytic and blue numeric results in a $2\times2$ lattice case. Here one sees the expectation value for the susceptibility $\chi$ (normalized to number of spins) plotted against different temperatures $T$. Numerical results shown are for $10^6$ MC cylces.}
-    \label{fig:numeric_analytic_X_T}
-\end{figure}
-%\twocolumngrid
 Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for a good range of temperatures shown. 
 
 % diff of all four vlaues plot
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic.pdf}
-    \caption{}
+    \caption{The blue, yellow, green and red line show the change of the difference between numerical and analytical results as a function of MCMC cylces for $\langle \epsilon \rangle$, $\langle |m| \rangle$, $C_V$ and $\chi$ respectively. In this case $L=2$.}
     \label{fig:numeric_analytic}
 \end{figure}
-In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical decreases for increasing MC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. 
+In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical results decreases for increasing MCMC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. Further computations will be run for $10^6$ cycles to ensure precision since enough computational power is available.
 
-This allows us to move on to more complex computations of larger lattice sizes. The next figures show results to study the \textbf{burn-in} time for our MCMC method for a $20 \times 20$ lattice. Results are shown for both a lattice with random spins and an ordered lattice with all spins starting in an up $(\uparrow)$ state.
+This allows us to move on to more complex computations of larger lattice sizes. The next figures show results to study the \textbf{burn-in} time for our MCMC method for a $20 \times 20$ lattice. Results are shown for both a lattice with random spins and an ordered lattice with all spins starting in an up $(\uparrow)$ state. 
 
 % study burn in time for L=20
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_e.pdf}
-    \caption{}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
     \label{fig:numeric_L_20_T_1_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_m.pdf}
-    \caption{}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
     \label{fig:numeric_L_20_T_1_m}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_e.pdf}
-    \caption{}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
     \label{fig:numeric_L_20_T_2_4_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_m.pdf}
-    \caption{}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$.}
     \label{fig:numeric_L_20_T_2_4_m}
 \end{figure}
 
+Moving beyond expectation values we approximate the probability function $p_{\epsilon}(\epsilon ; T)$ using MCMC samples. This is done for both $T=1.0J/k_B$ and $T=2.4J/k_B$.
 %histograms
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/histogram_T_1_m.pdf}
-    \caption{   }
-    \label{fig:}
+    \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=1.0 J/k_B$.}
+    \label{fig:histogram_T_1_m}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/histogram_T_2_4_m.pdf}
-    \caption{Herer }
+    \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=2.4 J/k_B$.}
+    \label{fig:histogram_T_2_4_m}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/L_size_e_T.pdf}
+    \caption{}
     \label{fig:}
 \end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/L_size_m_T.pdf}
+    \caption{}
+    \label{fig:}
+\end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/L_size_c_v_T.pdf}
+    \caption{}
+    \label{fig:}
+\end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.5\textwidth]{../figures/  .pdf}
-%     \caption{}
-%     \label{fig:}
-% \end{figure}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/L_size_X_T.pdf}
+    \caption{}
+    \label{fig:}
+\end{figure}
+\twocolumngrid
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 %
