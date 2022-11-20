@@ -4,6 +4,8 @@ import pyarma as pa
 import matplotlib.pyplot as plt 
 import os
 import time
+from scipy.stats import linregress
+
 sns.set_style("darkgrid")
 plt.rcParams.update({"font.size": 12})
 
@@ -43,6 +45,10 @@ def run(threads, T, lattice_dim, order, T_min=0.5, T_max=4, cycles=False, temp=F
 
 
 def analytic(T):
+    """
+    computes analytic solution for lattice size 2
+    - T:            chosen temperature to calculate solution
+    """
     J = 1
     beta = 1/T
     Z = 2 * np.exp(beta*8) + 2*np.exp(-beta*8) + 12
@@ -56,43 +62,40 @@ def analytic(T):
     X  = (M_2 - M*M) / (4 * T)
     return E, E_2, e, M, M_2, m, C_v, X
 
-def plot_T(data, plot_analytic=True):
+def plot_T(data):
+    """
+    Plot compairison between analytic and numeric solution
+    for lattice size 2 as function of temperature
+    - data:             array containing temperature and computed values
+    """
     t = data[0,:]
     E, E_2, e, M, M_2, m, C_v, X = analytic(t) 
 
-    if plot_analytic:
-        save = "numeric_analytic_"
-        
-    else:
-        save = ""
+    save = "numeric_analytic_"
         
     plt.figure()
-    if plot_analytic:
-        sns.lineplot(x=t, y=e, color="r", label="Analytic")
+    sns.lineplot(x=t, y=e, color="r", label="Analytic")
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<\epsilon\right>$ [ $J$ ]")
     sns.scatterplot(x=t, y=data[1,:],  label="Numeric")
     plt.savefig("../figures/%se_T.pdf" %(save), dpi=300, bbox_inches="tight")
 
     plt.figure()
-    if plot_analytic:
-        sns.lineplot(x=t, y=m, color="r", label="Analytic")
+    sns.lineplot(x=t, y=m, color="r", label="Analytic")
     sns.scatterplot(x=t, y=data[2,:],  label="Numeric")
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<| m |\right>$ [ $J$ ]")
     plt.savefig("../figures/%sm_T.pdf" %(save), dpi=300, bbox_inches="tight")
 
     plt.figure()
-    if plot_analytic:
-        sns.lineplot(x=t, y=C_v, color="r", label="Analytic")
+    sns.lineplot(x=t, y=C_v, color="r", label="Analytic")
     sns.scatterplot(x=t, y=data[3,:],  label="Numeric")
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$C_v$ [ $k_B$ ]")
     plt.savefig("../figures/%sc_v_T.pdf"%(save), dpi=300, bbox_inches="tight")
 
     plt.figure()
-    if plot_analytic:
-        sns.lineplot(x=t, y=X, color="r", label="Analytic")
+    sns.lineplot(x=t, y=X, color="r", label="Analytic")
     sns.scatterplot(x=t, y=data[4,:], label="Numeric")
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\chi$ $[k_B^{-1}]$")
@@ -101,6 +104,11 @@ def plot_T(data, plot_analytic=True):
     plt.show()
 
 def plot_diff(data, T):
+    """
+    plot difference between analytic and nummeric solution for lattice size 2
+    - data:             array containing values from each MC-cycle 
+    - T:                temperature used to compute data
+    """
     E, E_2, e, M, M_2, m, C_v, X = analytic(T) 
     print("analytic  ", C_v)
     cycles = data[0,:]
@@ -124,6 +132,13 @@ def plot_diff(data, T):
     plt.show()
 
 def plot_data(data, data_order, T, savename):
+    """
+    Compare ordered and random initial spins for a chosen temperature
+    - data:             array with random initial spins
+    - data_order:       array with ordered initial spins
+    - T:                temperature used to compute the data 
+    - savename:         savename of plots 
+    """
     cycles = data_order[0,:]
     e_order = data_order[1,:]
     m_order = data_order[2,:]
@@ -133,7 +148,6 @@ def plot_data(data, data_order, T, savename):
     m = data[2,:]
     C_v = data[3,:]
     X = data[4,:]
-
 
     plt.figure()
     plt.title(r"$T=$ %.1f $J/k_B$" %(T))
@@ -156,6 +170,13 @@ def plot_data(data, data_order, T, savename):
     plt.show()
 
 def plot_hist(data, T, savename, kde):
+    """
+    Plots probability histogram
+    - data:         data array containing computed values at every cycle in MCMC
+    - T:            Temperature used in computation
+    - savename:     savename of plot
+    - kde:          if True compute a Kernel Distribution Estimation of the histogram
+    """
     print("min: ", np.min(data[:,0]))
     print("max: ", np.max(data[:,0]))
     print("mean: ", np.mean(data[:,0]))
@@ -167,59 +188,104 @@ def plot_hist(data, T, savename, kde):
     plt.show()
 
 def timing_test():
+    """
+    Compare speed with and without paralleization.
+    Optimal compairison for an 8 thread CPU 
+    """
     print("\n\nTime used with 1 thread:\n")
     thread1 = time.time()
     os.system("./main %s %s %s %s %s %s %s %s %s" %(1, 1, 5, True, "none", "test", "none", 1, 2))
     thread1_total = time.time() - thread1
-
+    print("\nPython timing 1 thread: ", thread1_total)
     time.sleep(10) # to cool down computer for fair compairison
+
     print("\n\nTime used with 8 threads:\n")
     thread8 = time.time()
     os.system("./main %s %s %s %s %s %s %s %s %s" %(8, 1, 5, True, "none", "test", "none", 1, 2))
     thread8_total = time.time() - thread8
+    print("\nPython timing 8 threads: ", thread8_total)
     time.sleep(10) # to cool down computer for fair compairison
+
     print("\n\nTime used with 4 threads:\n")
     thread4 = time.time()
     os.system("./main %s %s %s %s %s %s %s %s %s" %(4, 1, 5, True, "none", "test", "none", 1, 2))
     thread4_total = time.time() - thread4
+    print("\nPython timing 4 threads: ", thread4_total)
+
     print("\n Speed up factor from 1 to 8 threads: ", thread8_total/thread1_total)
     print("\n Speed up factor from 1 to 4 threads: ", thread4_total/thread1_total)
     print("\n Speed up factor from 4 to 8 threads: ", thread8_total/thread4_total)
 
-def plot_temp_cycles(data, L_size):
-    t = data[0][0,:]
+def funcinv(x, a, b):
+    return b + a/x
 
+def plot_temp_cycles(data, L_sizes):
+    """
+    Function to plot and save values as function of temperature for different lattice sizes
+    - data:         array containing 2D arrays of values for different Temperatures
+    - L_sizes:      Lattice dimensions of the arrays included in data
+    """
+    T_cv = np.zeros(len(L_sizes))
+    T_X = np.zeros(len(L_sizes))
+    L_inv = np.zeros(len(L_sizes))
+
+
+
+    t = data[0][0,:] 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][1,:], s=70, label="Lattice size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][1,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<\epsilon\right>$ [ $J$ ]")
     plt.savefig("../figures/L_size_e_T.png", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][2,:], s=70, label="Lattice size: %i" %(L_size[i]))
+        sns.scatterplot(x=t, y=data[i][2,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<| m |\right>$ [ $J$ ]")
     plt.savefig("../figures/L_size_m_T.png", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][3,:], s=70, label="Lattice size: %i" %(L_size[i]))
+        max_cv= np.argmax(data[i][3,:])
+        T_cv[i] = data[len(data)-i-1][3,:][max_cv]
+        L_inv[i] = 1/L_sizes[i]
+        sns.scatterplot(x=t, y=data[i][3,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
+        
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$C_v$ [ $k_B$ ]")
     plt.savefig("../figures/L_size_c_v_T.png", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
-        sns.scatterplot(x=t, y=data[i][4,:], s=70, label="Lattice size: %i" %(L_size[i]))
+        max_X= np.argmax(data[i][4,:])
+        T_X[i] = data[len(data)-i-1][4,:][max_X]
+        sns.scatterplot(x=t, y=data[i][4,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\chi$ $[k_B^{-1}]$")
     plt.savefig("../figures/L_size_X_T.png", dpi=300, bbox_inches="tight")
+
+    plt.figure()
+    slope, intercept, r, p, se = linregress(L_inv, T_X)
+    sns.scatterplot(L_inv, T_X)
+    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+
+    plt.figure()
+    slope, intercept, r, p, se = linregress(L_inv, T_cv)
+    sns.scatterplot(L_inv, T_cv, label=r"%.4fT_c + %.4f" %(slope, intercept))
+    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+
+    plt.legend()
+
+
+
+
     plt.show()
 
 
 def main():
+    """Settin up arrays to load files"""
     cycle_L_2_1 = pa.mat()
     temp_L_2 = pa.mat()
     cycle_L20_1 = pa.mat()
@@ -233,21 +299,22 @@ def main():
     L_80 = pa.mat()
     L_100 = pa.mat()
 
+    """Running c++ files to produce data"""
+    run_short = False # includes all data for lattice size 2x2. Runs fast 
+    run_middle = False # Includes all data for lattice size 20x20. Takes some time to run
+    run_long = False # Includes all data for lattice_dim 40,60,80 and 100 20x20. Takes hours to run
 
-    run_all = False
-    run_long = False
-
-    if run_all:
+    if run_short:
         run(threads=8, T=2.4, lattice_dim=2, order="true", cycles=True, compile=True)
         run(threads=8, T=2.4, lattice_dim=2, order="false", cycles=True, temp=True)
         run(threads=8, T=1.0, lattice_dim=2, order="true", cycles=True)
         run(threads=8, T=1.0, lattice_dim=2, order="false", cycles=True)
+    
+    if run_middle:
         run(threads=8, T=2.4, lattice_dim=20, order="false", cycles=True, hist=True)
         run(threads=8, T=1.0, lattice_dim=20, order="false", cycles=True, hist=True)
         run(threads=8, T=2.4, lattice_dim=20, order="true", cycles=True)
         run(threads=8, T=1.0, lattice_dim=20, order="true", cycles=True)
-    #run(threads=8, T=2.4, lattice_dim=20, order="false", cycles=True, hist=True, compile=True)
-    #run(threads=8, T=1.0, lattice_dim=20, order="false", cycles=True, hist=True)
     
     if run_long:
         print("Running lattice 40")
@@ -271,42 +338,46 @@ def main():
         print(time.time()-test)
 
 
-
-    # cycle loop T = 2.4 
+    """Loading data produced by running c++ files"""
+    # Ordered initial spins (+1) Lattice dim 20
     cycle_L20_2_4_order.load("data/cycles_L_20_T_2.4_true.dat")
-    cycle_L20_2_4.load("data/cycles_L_20_T_2.4_false.dat")
-    
-    # cycle loop T = 1.0 
-    cycle_L20_2_4_order.load("data/cycles_L_20_T_2.4_true.dat")
-    cycle_L20_2_4.load("data/cycles_L_20_T_2.4_false.dat")
-    histogram_T_1.load("data/histogram_L_20_T_1.0_false.dat")
-    histogram_T_2_4.load("data/histogram_L_20_T_2.4_false.dat")
     cycle_L20_1_order.load("data/cycles_L_20_T_1.0_true.dat")
+
+    # Random initial spins Lattice dim 20 
+    cycle_L20_2_4.load("data/cycles_L_20_T_2.4_false.dat")
     cycle_L20_1.load("data/cycles_L_20_T_1.0_false.dat")
+
     temp_L_2.load("data/temp_L_2_T_2.4_false.dat")
     cycle_L_2_1.load("data/cycles_L_2_T_1.0_false.dat")
+    histogram_T_1.load("data/histogram_L_20_T_1.0_false.dat")
+    histogram_T_2_4.load("data/histogram_L_20_T_2.4_false.dat")
 
+    # compare large Lattice sizes
     L_40.load("data/temp_L_40_T_1.0_false.dat")
     L_60.load("data/temp_L_60_T_1.0_false.dat")
     L_80.load("data/temp_L_80_T_1.0_false.dat")
     L_100.load("data/temp_L_100_T_1.0_false.dat")
     L_sizes = [40, 60, 80, 100]
     all_data = np.array([L_40, L_60, L_80, L_100], dtype= object)
-    #timing_test()
+
+    # Compare analytic and numeric for differnt T
+    #plot_T(np.array(temp_L_2))
+
+    # Diff analytic-nummeric
+    #plot_diff(np.array(cycle_L_2_1), 1)
+
+    # Compare ordered and random initial spins
+    #plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
+    #plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
+    
+    # Histogram T
+    #plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    #plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
+
+    # compare large Lattice sizes
     plot_temp_cycles(all_data, L_sizes)
 
-
-    plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
-    plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
-    # Histogram T
-
-    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
-    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
-
-    plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
-
-    plot_diff(np.array(cycle_L_2_1), 1)
-    plot_T(np.array(temp_L_2))
-
+    # Time used with and without paralleization
+    timing_test()
 if __name__ == "__main__":
     main()
