@@ -24,6 +24,12 @@ The python file "plot.py" reproduces all figures and results by compiling, linki
 ```
 python3 plot.py
 ```
+In the main function of this python file you are also left with the possbility to choose what results you want to reproduce. This is sorted by how long time it takes to run the c++ files. See the following lines in plot.py for more. 
+```
+311 run_short = True
+312 run_middle = True
+313 run_long = True
+```
 It is also possible to run the individual c++ codes by using the following commands:
 ```
 g++ main.cpp ising_model.cpp -o main -larmadillo -fopenmp -O  
