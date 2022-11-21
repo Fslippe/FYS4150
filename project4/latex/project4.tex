@@ -141,18 +141,6 @@ and the susceptibility normalized to number of spins
 Analytical solutions to these can also be found in appendix \ref{appendix:analytic}.
 
 
-\subsection*{Periodic boundary conditions}
-The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{fig:neighbors}, also at the boundaries of the lattice.
-\begin{figure}[H]
-    \centering
-    \begin{tabular}{llll}
-                   & $\uparrow$ &            \\
-        $\uparrow$ & $\uparrow$ & $\uparrow$ \\
-                   & $\uparrow$ &
-    \end{tabular}\label{fig:neighbors}
-    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).}
-\end{figure}
-
 \subsection*{Markov chain Monte Carlo method}
 A Markov chain is a stok
 
@@ -164,7 +152,7 @@ A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:
 \subsection*{Critical phenomena}
 The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
 \begin{equation*}
-    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
+    T_{c \text{ analytic}}(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
 \end{equation*}
 For our approximation we will use the scaling relation
 \begin{equation}
@@ -181,6 +169,17 @@ This relation will be approximated by performing linear regression using the sci
 will thus supply a value for $a$ and the interception point $b$ which in this case is $T_c(L=\infty)$.
 
 \subsection*{Optimization and parallelization}
+%\subsection*{Periodic boundary conditions}
+The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{fig:neighbors}, also at the boundaries of the lattice.
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{llll}
+                   & $\uparrow$ &            \\
+        $\uparrow$ & $\uparrow$ & $\uparrow$ \\
+                   & $\uparrow$ &
+    \end{tabular}\label{fig:neighbors}
+    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).}
+\end{figure}
 Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
 
 The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin
@@ -282,7 +281,7 @@ Moving beyond expectation values we approximate the probability function $p_{\ep
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/histogram_T_2_4_m.pdf}
-    \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=2.4 J/k_B$.}
+    \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=2.4 J/k_B$. The blue line shows the kernel distribution estimation of the histogram.}
     \label{fig:histogram_T_2_4_m}
 \end{figure}
 Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig:histogram_T_2_4_m} for $T=2.4 J/k_B$ the most noticeable result is the difference in variance. For $T=1.0 J/k_B$ an $\epsilon \approx -2$ is by far the most likely, whilst possible $\epsilon$ values for $T=2.4 J/k_B$ cover a larger range of approximately $[-1.7,-0.9]$.
@@ -315,7 +314,7 @@ Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing
     \caption{$\chi$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
     \label{fig:L_size_X_T}
 \end{figure}
-The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235$, specifically in [2.235,2.33] $\Delta T = 0.003$.
+The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235$, specifically for  $T \in [2.235,2.33]$ we have $\Delta T = 0.003$.
 
 \begin{figure}[H]
     \centering
@@ -358,19 +357,29 @@ Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize
 
 Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. The burn-in time for $\langle \epsilon \rangle$ at $T=2.4J/k_B$ in figure \ref{fig:numeric_L_20_T_2_4_e} is longer than in the $T=1.0 J/k_B$ case explaining the larger variance in figure \ref{fig:histogram_T_2_4_m} compared to figure \ref{fig:histogram_T_1_m}. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}.
 
-It could be argued that more precise results could be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as  would require further testing.
+It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing.
 
 %approximation of L=\infty
-Now that burn-in times
+Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. 
 
-Could get at better approximation using smaller $\Delta T$ (and more lattice sizes) leading to better linear regression points.
+The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{??????????????}.
+
+The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
+\begin{equation}
+    T_c(L=\infty) = 2.2686 J/k_B.
+\end{equation}
+This is an excellent approximation of Onsager's analytical result of
+\begin{equation}
+    T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B
+\end{equation}
+confirming the Markov Chain Monte Carlo method's applicability to complex problem-solving. To improve the approximation one could use an even smaller $\Delta T$ and more lattice sizes. This would result in a more precise set of data points for the linear regression.
 
 % optimization
-Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation.
+Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results.
 
 % Timing
 
-From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using a processor's all threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance than our time level parallelization overall as well as better scaling when using more threads. This would require further investigation.
+From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using all of a processor's threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance than our time level parallelization overall as well as better scaling when using more threads. This would require further investigation.
 
 
 % ===========================================
