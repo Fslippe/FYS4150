@@ -43,8 +43,7 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC).
-    The MCMC method is first
+    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC). The main parameters that are computed and analyzed are mean energy $\epsilon$, mean magnetization $m$, specific heat capacity $C_V$ and susceptibility $\chi$. The MCMC method is first compared to analytical solutions for a $2 \times 2$ lattice and burn-in times are studied for a $20 \times 20$ lattice. These result in $10^6$ MCMC cycles being the optimal compromise between precision and computational expense. The Ising model simulation is then run for lattice sizes $40 \times 40, 60 \times 60, 80 \times 80$ and $100\times 100$. The previously mentioned parameters are plotted against a temperature range of $T \in [2.1,2.4]J/k_B$ for each lattice size. These results show indications of a phase transition taking place at a critical temperature $T_c$. These $T_c$ points for different lattice sizes are then used to approximate the infinite lattice case through linear regression. Our final result is $T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. An impressive approximation when compared to Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. To be able to run the larger computations for reasonable runtimes the MCMC code has been parallelized using OpenMP achieving a speed-up factor of $3.92$ for 8 threads on an 8 thread quad-core CPU. 
 \end{abstract}
 \maketitle
 \raggedbottom
@@ -147,9 +146,7 @@ Analytical solutions to these can also be found in appendix \ref{appendix:analyt
 
 
 \subsection*{Markov chain Monte Carlo and the metropolis algorithm}
-We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$. We then check if $w$ is larger or equal some random number in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. We update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before an average of the cumulative sums is taken. In total can the metropolis algorithm together with the Monte Carlo sampling be viewed as a Markov Chain from how the probability to transition to a new state only is dependent on the current state spin configuration and following energy and magnetization.
-
-A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
+We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$. We then check if $w$ is larger or equal some random number in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. We update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before an average of the cumulative sums is taken. In total can the metropolis algorithm together with the Monte Carlo sampling be viewed as a Markov Chain from how the probability to transition to a new state only is dependent on the current state spin configuration and following energy and magnetization. A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
 
 \subsection*{Critical phenomena}
 The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
@@ -194,7 +191,9 @@ can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) Th
 \end{equation}
 To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array.
 Furthermore, the code is written such that it can be run parallelized. This allows us to run it on several threads using OpneMP to reduce runtimes.
-
+\onecolumngrid
+\newpage
+\twocolumngrid
 % ===========================================
 \section{Results}\label{sec:results}
 To check the numerical implementation we compare analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
@@ -396,8 +395,8 @@ From our timing test using parallelization at temperature level we saw a great r
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
-We have found the Markov Chain Monte Carlo method to give good approximations of mean energy, magnetization, heat capacity and susceptibility of the Ising model for different temperatures. The chosen $10^6$ MCMC cycles offers a good compromise between precision and computational cost. Studying the Ising model parameters' behavior over different temperatures such as in figure \ref{fig:L_size_c_v_T} shows indications of a phase tradition at a certain critical temperature $T_c$. Using eight data points of $T_c$ for four different lattice sizes we perform a linear regression allowing us to approximate the critical temperature for an infinite lattice. This results in $ T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. This is an impressive approximation of Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$.
-MORE ABOUT LOOSE ENDS AND FURTHER RESAERCH.
+We have found the Markov Chain Monte Carlo method to give good approximations of mean energy, magnetization, heat capacity and susceptibility of the Ising model for different temperatures. The chosen $10^6$ MCMC cycles offers a good compromise between precision and computational cost. Whether the chosen number of cycles is actually enough in comparison to the burn-in time for lattices larger than $20 \times 20$ could be an area of future research.
+Studying the Ising model parameters' behavior over different temperatures such as in figure \ref{fig:L_size_c_v_T} shows indications of a phase transition at a certain critical temperature $T_c$. Using eight data points of $T_c$ for four different lattice sizes we perform a linear regression allowing us to approximate the critical temperature for an infinite lattice. This results in $ T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. This is an impressive approximation of Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. A speed-up factor of $3.92$ was achieved when running the parallelized code across 8 threads on an 8 thread quad-core CPU. This was good enough for the chosen simulations, yet it is possible other parallelization implementations are more efficient. This again would require further research. Overall, running the same simulations for a higher number of MCMC cycles, more lattice sizes and smaller choices of $\Delta T$ would presumably give better results than presented.
 
 
 \onecolumngrid
