@@ -174,7 +174,7 @@ Here $a$ is constant. Theoretical background for this scaling relation can be fo
 \begin{equation}
     T_c(L) = aL^{-1} + T_c(L=\infty). \label{eq:scaling_linear}
 \end{equation}
-This relation will be approximated by performing linear regression using \texttt{scipy.stats.linregress}. The data set used will be $T_C$ values for different lattice sizes $L$ from plots of $C_V$ and $\chi$. In other words, the temperature at which $C_V$ and $\chi$ reach their peak value for different lattice sizes. The linear regression resulting in
+This relation will be approximated by performing linear regression using the scipy package in python. The data set used will be $T_C$ values for different lattice sizes $L$ from plots of $C_V$ and $\chi$. In other words, the temperature at which $C_V$ and $\chi$ reach their peak value for different lattice sizes. The linear regression resulting in
 \begin{equation}
     y = ax + b 
 \end{equation}
@@ -253,7 +253,7 @@ This allows us to move on to more complex computations of larger lattice sizes. 
     \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_1_m}
 \end{figure}
-Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that the MCMC method has a burn-in time of about $10^4$ cycles for $T=1.0J/k_B$.
+Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that the MCMC method has a burn-in time of about $10^4$ cycles for $T=1.0J/k_B$ in an unordered spin case. Starting with ordered spins there is no burn-in time at all.
 
 \begin{figure}[H]
     \centering
@@ -268,7 +268,7 @@ Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that t
     \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
     \label{fig:numeric_L_20_T_2_4_m}
 \end{figure}
-For $T=1.0J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time look to be around $10^5$ cycles.
+For $T=1.0J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time looks to be around $10^5$ cycles for both ordered and unordered spins.
 
 Moving beyond expectation values we approximate the probability function $p_{\epsilon}(\epsilon ; T)$ using MCMC samples. This is done for both $T=1.0J/k_B$ and $T=2.4J/k_B$.
 %histograms
@@ -315,7 +315,7 @@ Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing
     \caption{$\chi$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
     \label{fig:L_size_X_T}
 \end{figure}
-The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. 
+The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235$, specifically in [2.235,2.33] $\Delta T = 0.003$.
 
 \begin{figure}[H]
     \centering
@@ -338,11 +338,17 @@ with a standard error of $0.0129 J/k_B$.
 % numerical analytucal comparisson and reasonable agreement for L=2
 We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. 
 
-% burn-in time for L=20
+% burn-in time for L=20 and approximating probability distribution
+Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize on the correct values) for a $20 \times 20$ lattice for $T=1.0 J/k_B$ in figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} we see that the only noticeable burn-in time is for the unordered spin case. For $\epsilon$ in figure \ref{fig:numeric_L_20_T_1_e} this is between $10^3$ and $10^4$ cycles. This explains the small variance in figure \ref{fig:histogram_T_1_m} which is run for $10^6$ cycles, thus gathering an enormous amount of samples after the burn-in time. The ordered case of all spins being up already matches the expected energy, thus not having a burn-in time.
 
+Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. The burn-in time for $\langle \epsilon \rangle$ at $T=2.4J/k_B$ in figure \ref{fig:numeric_L_20_T_2_4_e} is longer than in the $T=1.0 J/k_B$ case explaining the larger variance in figure \ref{fig:histogram_T_2_4_m} compared to figure \ref{fig:histogram_T_1_m}. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}. 
+
+It could be argued that more precise results could be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as  would require further testing.
 
 %approximation of L=\infty
-Could get at better approximation using smaller $\Delta T$ leading to better linear regression points.
+Now that burn-in times 
+
+Could get at better approximation using smaller $\Delta T$ (and more lattice sizes) leading to better linear regression points.
 
 % optimization
 Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
