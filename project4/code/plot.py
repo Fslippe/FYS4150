@@ -180,11 +180,13 @@ def plot_hist(data, T, savename, kde):
     print("min: ", np.min(data[:,0]))
     print("max: ", np.max(data[:,0]))
     print("mean: ", np.mean(data[:,0]))
-    plt.title(r"T=%.1f $J/k_B$" %(T))
+    var = np.var(data[:,0])
+    print("variance: ", var)
+
+    plt.title(r"$T=$%.1f $J/k_B$,  $Var(\epsilon)=$%.6f [ $J$ ]" %(T, var))
     sns.histplot(data[:,0], stat="probability", kde=kde, bins=33)
     plt.xlabel(r"$\epsilon$ [ $J$ ]")
     plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches="tight")
-
     plt.show()
 
 def timing_test():
@@ -229,8 +231,6 @@ def plot_temp_cycles(data, L_sizes):
     T_X = np.zeros(len(L_sizes))
     L_inv = np.zeros(len(L_sizes))
 
-
-
     t = data[0][0,:] 
     plt.figure()
     for i in range(len(data)):
@@ -266,6 +266,7 @@ def plot_temp_cycles(data, L_sizes):
     plt.ylabel(r"$\chi$ $[k_B^{-1}]$")
     plt.savefig("../figures/L_size_X_T.pdf", dpi=300, bbox_inches="tight")
 
+    """Linear regression"""
     plt.figure()
     L_tot = np.append(L_inv, L_inv)
     T_tot = np.append(T_cv, T_X)
@@ -277,15 +278,12 @@ def plot_temp_cycles(data, L_sizes):
     sns.scatterplot(L_inv, T_X, label=r"data points from $\chi$")
     sns.scatterplot(L_inv, T_cv, label=r"data points from $C_v$")
 
-    sns.lineplot(L_tot, slope*L_tot+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+    sns.lineplot(L_tot, slope*L_tot+intercept, label=r"%.4f $L^{-1}$ + %.4f" %(slope, intercept))
     plt.xlabel(r"$L^{-1}$")
     plt.ylabel(r"$T$ $[ J/k_B ]$")
 
     plt.legend()
     plt.savefig("../figures/linregress.pdf", dpi=300, bbox_inches="tight")
-
-
-
 
     plt.show()
 
@@ -377,13 +375,13 @@ def main():
     #plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     
     # Histogram T
-    #plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
-    #plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
+    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
 
     # compare large Lattice sizes
-    plot_temp_cycles(all_data, L_sizes)
+    #plot_temp_cycles(all_data, L_sizes)
 
     # Time used with and without paralleization
-    timing_test()
+    #timing_test()
 if __name__ == "__main__":
     main()
