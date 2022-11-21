@@ -316,6 +316,20 @@ Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing
 \end{figure}
 The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235$, specifically for  $T \in [2.235,2.33]$ we have $\Delta T = 0.003$.
 
+\begin{table}
+    \centering
+    \caption{Critical temperature as a function of lattice size computed using both $\chi$ and $C_v$.}
+    \label{tab:critical_T}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Lattice sizes                & 40    & 60    & 80    & 100   \\
+        \hline
+        $T_C$ using $C_v$ [$J/k_B$]  & 2.287 & 2.284 & 2.274 & 2.271 \\
+        \hline
+        $T_C$ using $\chi$ [$J/k_B$] & 2.310 & 2.300 & 2.301 & 2.284 \\
+        \hline
+    \end{tabular}
+\end{table}
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/linregress.pdf}
@@ -360,11 +374,7 @@ Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=
 It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing.
 
 %approximation of L=\infty
-Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. 
-
-The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{??????????????}.
-
-The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
+Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
 \begin{equation}
     T_c(L=\infty) = 2.2686 J/k_B.
 \end{equation}

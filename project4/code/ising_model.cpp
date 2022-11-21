@@ -7,7 +7,7 @@ IsingModel::IsingModel(int dim_in)
     n_spins = dim * dim;
 
     lattice = arma::mat(dim, dim);
-    E_diff = arma::zeros(17);
+    w = arma::zeros(17);
     val_vec = arma::vec(4);
 }
 
@@ -52,11 +52,11 @@ void IsingModel::init_lattice(double T_in, int seed, bool spin_order)
         }
     }
 
-    for (int i = 0; i < E_diff.size(); i += 4)
+    for (int i = 0; i < w.size(); i += 4)
     {
-        E_diff[i] = std::exp(-(i - 8) / T);
+        w[i] = std::exp(-(i - 8) / T);
     }
-    // std::cout << "E after: " << E_diff << "\n";
+    // std::cout << "E after: " << w << "\n";
 }
 
 int IsingModel::periodic(int idx, int lim, int offset)
@@ -75,7 +75,7 @@ int IsingModel::energy(int ix, int iy)
 
 void IsingModel::metropolis()
 {
-    // E_diff.print();
+    // w.print();
     // lattice.print();
 
     for (int y = 0; y < dim; y++)
@@ -89,7 +89,7 @@ void IsingModel::metropolis()
 
             // std::cout << "\ndE " << dE << "\n\n";
 
-            if (rnd(generator) <= E_diff[dE + 8])
+            if (rnd(generator) <= w[dE + 8])
             {
                 lattice(ix, iy) *= -1;
                 M += 2 * lattice(ix, iy);

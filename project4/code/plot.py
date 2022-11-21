@@ -285,6 +285,10 @@ def plot_temp_cycles(data, L_sizes):
     plt.legend()
     plt.savefig("../figures/linregress.pdf", dpi=300, bbox_inches="tight")
 
+    print("---Cv---")
+    print(L_sizes, T_cv)
+    print("---X---")
+    print(L_sizes, T_X)
     plt.show()
 
 

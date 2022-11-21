@@ -29,7 +29,7 @@ public:
 
     // arma::vec dE;
     arma::mat lattice;
-    arma::vec E_diff;
+    arma::vec w;
     int M;
     int E;
     double e_avg;
