@@ -51,7 +51,7 @@
 
 % ===========================================
 \section{Introduction}\label{sec:intro}
-This article will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature. Past this point the magnetic spins are no longer aligned, causing the given ferromagnetic material to lose its magnetization. 
+This article will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature. Past this point the magnetic spins are no longer aligned, causing the given ferromagnetic material to lose its magnetization.
 
 With the Ising model we can easily model a magnetic materials' response to thermal energy. Magnet spins in the model have two states, either up or down. These can be flipped by energy input and each individual spin influences the total state of the system.
 
@@ -69,7 +69,7 @@ A detailed discussion of the results and methods is then presented in section \r
 
 % ===========================================
 \section{Methods}\label{sec:methods}
-The square 2D lattices for our Ising model will have a length of $L$ containing $N$ spins with the relation $N = L^2$. Each spin $s_i$ will have two possible states of 
+The square 2D lattices for our Ising model will have a length of $L$ containing $N$ spins with the relation $N = L^2$. Each spin $s_i$ will have two possible states of
 \begin{equation*}
     s_i = -1 \text{ or } s_i = +1.
 \end{equation*}
@@ -105,7 +105,7 @@ represents the partition function. This, the `inverse temperature'' and the tota
 \begin{equation}
     p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}.\label{eq:prob_dist}
 \end{equation}
-This will be the probability distribution used for random sampling in our Monte Carlo approach. 
+This will be the probability distribution used for random sampling in our Monte Carlo approach.
 
 
 For comparison with early numerical implementations we will fist consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
@@ -115,19 +115,19 @@ For comparison with early numerical implementations we will fist consider an ana
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[H]
     \centering
-    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
+    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.}
     \begin{tabular}{|l|l|l|l|}
-    \hline
-    \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & Degeneracy & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} \\ \hline
-    \hline
-    0    & 1 & -8J & -4  \\    \hline
-    1    & 4 & 0  & -2  \\    \hline
-    2    & 4 & 0  & 0   \\    \hline
-    2    & 2 & 8J  & 0   \\    \hline
-    3    & 4 & 0  & 2   \\    \hline
-    4    & 1 & -8J & 4   \\    \hline                                 
+        \hline
+        \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & Degeneracy & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} \\ \hline
+        \hline
+        0                          & 1          & -8J                        & -4                         \\    \hline
+        1                          & 4          & 0                          & -2                         \\    \hline
+        2                          & 4          & 0                          & 0                          \\    \hline
+        2                          & 2          & 8J                         & 0                          \\    \hline
+        3                          & 4          & 0                          & 2                          \\    \hline
+        4                          & 1          & -8J                        & 4                          \\    \hline
     \end{tabular} \label{tab:analytic}
-\end{table} 
+\end{table}
 Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:analytic} and are used to test early versions of the code.
 
 We will study properties of the system at equilibrium for different lattice sizes as a function of temperature $T$. The analysis will focus on four main properties. The mean energy (eq. \ref{eq:mean_E}), mean magnetization (eq. \ref{eq:mean_M}), specific heat capacity normalized to number of spins
@@ -146,18 +146,18 @@ The Ising model simulations we will be implemented using periodic boundary condi
 \begin{figure}[H]
     \centering
     \begin{tabular}{llll}
-       & $\uparrow$ &    \\
-    $\uparrow$ & $\uparrow$ & $\uparrow$ \\
-       & $\uparrow$ & 
+                   & $\uparrow$ &            \\
+        $\uparrow$ & $\uparrow$ & $\uparrow$ \\
+                   & $\uparrow$ &
     \end{tabular}\label{fig:neighbors}
-    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).} 
+    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).}
 \end{figure}
 
 \subsection*{Markov chain Monte Carlo method}
 A Markov chain is a stok
 
 \subsection*{The Metropolis algorithm}
-The algorithm generates a Markov chain 
+The algorithm generates a Markov chain
 
 A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
 
@@ -176,14 +176,14 @@ Here $a$ is constant. Theoretical background for this scaling relation can be fo
 \end{equation}
 This relation will be approximated by performing linear regression using the scipy package in python. The data set used will be $T_C$ values for different lattice sizes $L$ from plots of $C_V$ and $\chi$. In other words, the temperature at which $C_V$ and $\chi$ reach their peak value for different lattice sizes. The linear regression resulting in
 \begin{equation}
-    y = ax + b 
+    y = ax + b
 \end{equation}
 will thus supply a value for $a$ and the interception point $b$ which in this case is $T_c(L=\infty)$.
 
 \subsection*{Optimization and parallelization}
 Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
 
-The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin 
+The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin
 \begin{equation}
     \Delta E = E_{\text{after}} - E_{\text{before}}
 \end{equation}
@@ -226,7 +226,7 @@ To check the numerical implementation we compare analytical and numerical result
     \label{fig:numeric_analytic_X_T}
 \end{figure}
 
-Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for the whole range of temperatures shown. 
+Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement between numerical MCMC results and analytical results for the whole range of temperatures shown.
 
 % diff of all four vlaues plot
 \begin{figure}[H]
@@ -237,7 +237,7 @@ Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig
 \end{figure}
 In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical results decreases for increasing MCMC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. Further computations will be run for $10^6$ cycles to ensure precision since enough computational power is available.
 
-This allows us to move on to more complex computations of larger lattice sizes. The next figures show results to study the \textbf{burn-in} time for our MCMC method for a $20 \times 20$ lattice. Results are shown for both a lattice with random spins and an ordered lattice with all spins starting in an up $(\uparrow)$ state. 
+This allows us to move on to more complex computations of larger lattice sizes. The next figures show results to study the \textbf{burn-in} time for our MCMC method for a $20 \times 20$ lattice. Results are shown for both a lattice with random spins and an ordered lattice with all spins starting in an up $(\uparrow)$ state.
 
 % study burn in time for L=20
 \begin{figure}[H]
@@ -323,35 +323,56 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
     \caption{The blue line shows linear regression using critical temperature points $T_c$ from $\chi$ and $C_V$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
     \label{fig:linregress}
 \end{figure}
-Taking the temperature values for the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function 
+Taking the temperature values for the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function
 \begin{equation}
     T_c(L) = 1.2735 L^{-1} + 2.2686.
 \end{equation}
-This gives us $a=1.2735$ and letting $L=\infty$ we have 
+This gives us $a=1.2735$ and letting $L=\infty$ we have
 \begin{equation}
     T_c(L=\infty) = 2.2686 J/k_B
 \end{equation}
 with a standard error of $0.0129 J/k_B$.
 
+\begin{table}[H]
+    \centering
+    \caption{Time used for different number of threads in parallelization at temperature level. A quad-core, 8 thread CPU has been used for the ising model initialized with a $5\times5$ lattice with randomized initial spins and temperature $T= 1$ $J/k_B$}
+    \label{tab:timing}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Number of threads & 1     & 4    & 8    \\
+        \hline
+        Time used (s)     & 29.12 & 8.42 & 7.32 \\
+        \hline
+        speed-up factor   & 1     & 3.45 & 3.92 \\
+        \hline
+    \end{tabular}
+\end{table}
+In table \ref{tab:timing} we see that parallelizing our code can reduce computation time a factor of 0.25 using 8 threads for an 8 thread CPU. We also see that a 4 thread parallelization performs well with a speed-up factor of 3.45.
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 % numerical analytucal comparisson and reasonable agreement for L=2
-We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. 
+We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles.
 
 % burn-in time for L=20 and approximating probability distribution
 Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize on the correct values) for a $20 \times 20$ lattice for $T=1.0 J/k_B$ in figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} we see that the only noticeable burn-in time is for the unordered spin case. For $\epsilon$ in figure \ref{fig:numeric_L_20_T_1_e} this is between $10^3$ and $10^4$ cycles. This explains the small variance in figure \ref{fig:histogram_T_1_m} which is run for $10^6$ cycles, thus gathering an enormous amount of samples after the burn-in time. The ordered case of all spins being up already matches the expected energy, thus not having a burn-in time.
 
-Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. The burn-in time for $\langle \epsilon \rangle$ at $T=2.4J/k_B$ in figure \ref{fig:numeric_L_20_T_2_4_e} is longer than in the $T=1.0 J/k_B$ case explaining the larger variance in figure \ref{fig:histogram_T_2_4_m} compared to figure \ref{fig:histogram_T_1_m}. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}. 
+Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. The burn-in time for $\langle \epsilon \rangle$ at $T=2.4J/k_B$ in figure \ref{fig:numeric_L_20_T_2_4_e} is longer than in the $T=1.0 J/k_B$ case explaining the larger variance in figure \ref{fig:histogram_T_2_4_m} compared to figure \ref{fig:histogram_T_1_m}. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}.
 
 It could be argued that more precise results could be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as  would require further testing.
 
 %approximation of L=\infty
-Now that burn-in times 
+Now that burn-in times
 
 Could get at better approximation using smaller $\Delta T$ (and more lattice sizes) leading to better linear regression points.
 
 % optimization
-Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
+Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation.
+
+% Timing
+
+From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using a processor's all threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance than our time level parallelization overall as well as better scaling when using more threads. This would require further investigation.
+
+
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
 
@@ -369,9 +390,9 @@ Considering code optimization, we have chosen to parallelize the section of the 
 \section{Analytical solutions for a 2$\cross$2 lattice}\label{appendix:analytic}
 For the case of a 2$\cross$2 lattice with $L=2$ and $N=4$ we have sixteen possible spin configurations show in table \ref{tab:analytic}. These values will be used for the analytic solutions. The specific partition function becomes
 \begin{align*}
-    Z &=  \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})} 
-    = 2e^{- \beta (-8J)} + 2e^{- \beta 8J} + 12e^0 
-    = 2 e^{\beta 8J} + 2 e^{- \beta 8J} + 12 
+    Z & =  \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}
+    = 2e^{- \beta (-8J)} + 2e^{- \beta 8J} + 12e^0
+    = 2 e^{\beta 8J} + 2 e^{- \beta 8J} + 12
     = 4 (\cosh(8 \beta J) + 3).
 \end{align*}
 Additionally, we will calculate a few expectation values for which the general formula is given as
@@ -380,31 +401,31 @@ Additionally, we will calculate a few expectation values for which the general f
 \end{align*}
 This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}. For the energy we have
 \begin{align*}
-    \langle E \rangle &=  \sum_s E(\textbf{s})  p(\textbf{s};T) 
-    = \frac{1}{Z} \sum_s E(\textbf{s})  e^{-\beta E(\textbf{s})} 
-    = \frac{1}{Z} \left( 2 \cdot (-8J)e^{\beta8J} + 2 \cdot 8J e^{-\beta 8J}\right) \\
-    &= \frac{1}{Z} \left( -16 e^{\beta8J} + 16 e^{-\beta 8J}\right)
+    \langle E \rangle          & =  \sum_s E(\textbf{s})  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s E(\textbf{s})  e^{-\beta E(\textbf{s})}
+    = \frac{1}{Z} \left( 2 \cdot (-8J)e^{\beta8J} + 2 \cdot 8J e^{-\beta 8J}\right)              \\
+                               & = \frac{1}{Z} \left( -16 e^{\beta8J} + 16 e^{-\beta 8J}\right)
     = \frac{16J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
     = - \frac{32 J \sinh(8J \beta )}{Z},
-\\
-\\
-    \langle E^2 \rangle &=  \sum_s E(\textbf{s})^2  p(\textbf{s};T)
-    = \frac{1}{Z} \sum_s E(\textbf{s})^2  e^{-\beta E(\textbf{s})} 
-    = \frac{1}{Z} \left( 2 \cdot (-8J)^2e^{\beta8J} + 2 \cdot (8J)^2 e^{-\beta 8J}\right) \\
-    &= \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
+    \\
+    \\
+    \langle E^2 \rangle        & =  \sum_s E(\textbf{s})^2  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s E(\textbf{s})^2  e^{-\beta E(\textbf{s})}
+    = \frac{1}{Z} \left( 2 \cdot (-8J)^2e^{\beta8J} + 2 \cdot (8J)^2 e^{-\beta 8J}\right)        \\
+                               & = \frac{128 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
     = \frac{256 J^2 \cosh(8J \beta)}{Z},
-\\
-\\
-    \langle \epsilon \rangle &=  \sum_s \epsilon_s  p(\textbf{s};T)
+    \\
+    \\
+    \langle \epsilon \rangle   & =  \sum_s \epsilon_s  p(\textbf{s};T)
     =  \sum_s \frac{E(\textbf{s})}{N}  p(\textbf{s};T)
     =  \frac{1}{N} \sum_s E(\textbf{s})  p(\textbf{s};T)
     =  \frac{\langle E \rangle }{4}
     %= \frac{4J}{Z} \left( e^{-\beta 8J} - e^{\beta 8J} \right)
     = - \frac{8J \sinh(8J \beta)}{Z},
-\\
-\\
-    \langle \epsilon^2 \rangle &=  \sum_s \epsilon_s^2  p(\textbf{s};T)
-    =  \sum_s \left(\frac{E(\textbf{s})}{N}\right)^2  p(\textbf{s};T) 
+    \\
+    \\
+    \langle \epsilon^2 \rangle & =  \sum_s \epsilon_s^2  p(\textbf{s};T)
+    =  \sum_s \left(\frac{E(\textbf{s})}{N}\right)^2  p(\textbf{s};T)
     =  \frac{1}{N^2} \sum_s E(\textbf{s})^2  p(\textbf{s};T)
     =  \frac{\langle E^2 \rangle }{16}
     %= \frac{8 J^2}{Z} \left( e^{-\beta 8J} + e^{\beta 8J} \right)
@@ -412,27 +433,27 @@ This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability di
 \end{align*}
 Then for the magnetization we have
 \begin{align*}
-    \langle |M| \rangle &=  \sum_s |M(\textbf{s})|  p(\textbf{s};T) 
-    = \frac{1}{Z} \sum_s |M(\textbf{s})| e^{-\beta E(\textbf{s})} 
-    = \frac{1}{Z} \left( |-4|e^{\beta8J} + 4 |-2| e^0 + 4|2|e^0 + |4|e^{\beta 8J}\right) \\
-    &= \frac{1}{Z} \left( 4e^{\beta8J} + 8 + 8 + 4e^{\beta 8J}\right)
+    \langle |M| \rangle & =  \sum_s |M(\textbf{s})|  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s |M(\textbf{s})| e^{-\beta E(\textbf{s})}
+    = \frac{1}{Z} \left( |-4|e^{\beta8J} + 4 |-2| e^0 + 4|2|e^0 + |4|e^{\beta 8J}\right)            \\
+                        & = \frac{1}{Z} \left( 4e^{\beta8J} + 8 + 8 + 4e^{\beta 8J}\right)
     = \frac{8}{Z} \left( e^{\beta 8J} + 2 \right),
-\\
-\\
-    \langle M^2 \rangle &= \sum_s M(\textbf{s})^2  p(\textbf{s};T) 
-    = \frac{1}{Z} \sum_s M(\textbf{s})^2 e^{-\beta E(\textbf{s})} 
+    \\
+    \\
+    \langle M^2 \rangle & = \sum_s M(\textbf{s})^2  p(\textbf{s};T)
+    = \frac{1}{Z} \sum_s M(\textbf{s})^2 e^{-\beta E(\textbf{s})}
     = \frac{1}{Z} \left( (-4)^2 e^{\beta8J} + 4 (-2)^2 e^0 + 4(2)^2 e^0 + (4)^2 e^{\beta 8J}\right) \\
-    &= \frac{1}{Z} \left( 16 e^{\beta8J} + 16 + 16 + 16 e^{\beta 8J}\right)
+                        & = \frac{1}{Z} \left( 16 e^{\beta8J} + 16 + 16 + 16 e^{\beta 8J}\right)
     = \frac{32}{Z} \left( e^{\beta 8J} + 1 \right),
-\\
-\\
-    \langle |m| \rangle&= \sum_s |m(\textbf{s})|  p(\textbf{s};T) 
+    \\
+    \\
+    \langle |m| \rangle & = \sum_s |m(\textbf{s})|  p(\textbf{s};T)
     = \frac{1}{Z} \sum_s \bigg| \frac{M(\textbf{s})}{N} \bigg| e^{-\beta E(\textbf{s})}
     = \frac{\langle|M| \rangle}{4}
     = \frac{2}{Z} \left( e^{\beta 8J} + 2 \right),
-\\
-\\
-    \langle m^2 \rangle &= \sum_s m(\textbf{s})^2  p(\textbf{s};T)
+    \\
+    \\
+    \langle m^2 \rangle & = \sum_s m(\textbf{s})^2  p(\textbf{s};T)
     = \frac{1}{Z} \sum_s \left( \frac{M(\textbf{s})}{N} \right)^2 e^{-\beta E(\textbf{s})}
     = \frac{ \langle M^2 \rangle}{4^2}
     = \frac{ \langle M^2 \rangle}{16}
@@ -455,93 +476,93 @@ and the susceptibility
 \section{Possible $\Delta E$ values}\label{appendix:delta_E}
 Considering a 2D lattice of arbitrary size $(L>2)$ and remembering that we are working with periodic boundary conditions, we can show that there are only a few possible values of $\Delta E$. The calculation of $\Delta E$ between spin configurations will be limited to the flipping of a single spin. To find the possible energy differences we will look at a spin at a random position. This central spin will start in an up state(+1) and then be flipped (-1). We remind that $ E(\textbf{s}) = - J \sum^4_{\langle kl \rangle} s_k s_l$ and $ \Delta E = E_{\text{after}} - E_{\text{before}}$.
 \begin{table}[H]
-%\centering
-\begin{tabular}{llll}
-   & $\uparrow$ &    \\
-$\uparrow$ & $\uparrow$ & $\uparrow$ \\
-   & $\uparrow$ &  
-\end{tabular}
-has $E = -4J$, now flipping we have 
-\begin{tabular}{llll}
-    & $\uparrow$ &    \\
- $\uparrow$ & $\downarrow$ & $\uparrow$ \\
-    & $\uparrow$ &  
- \end{tabular}
- and $E = 4J$, resulting in $\Delta E = 8J$.
+    %\centering
+    \begin{tabular}{llll}
+                   & $\uparrow$ &            \\
+        $\uparrow$ & $\uparrow$ & $\uparrow$ \\
+                   & $\uparrow$ &
+    \end{tabular}
+    has $E = -4J$, now flipping we have
+    \begin{tabular}{llll}
+                   & $\uparrow$   &            \\
+        $\uparrow$ & $\downarrow$ & $\uparrow$ \\
+                   & $\uparrow$   &
+    \end{tabular}
+    and $E = 4J$, resulting in $\Delta E = 8J$.
 \end{table}
 This can be show for the four remaining possible starting configurations as well.
 \begin{table}[H]
     %\centering
     \begin{tabular}{llll}
-       & $\uparrow$ &    \\
-    $\downarrow$ & $\uparrow$ & $\uparrow$ \\
-       & $\uparrow$ &  
+                     & $\uparrow$ &            \\
+        $\downarrow$ & $\uparrow$ & $\uparrow$ \\
+                     & $\uparrow$ &
     \end{tabular}
-    has $E = -2J$. Flipping we have 
+    has $E = -2J$. Flipping we have
     \begin{tabular}{llll}
-        & $\uparrow$ &    \\
-     $\downarrow$ & $\downarrow$ & $\uparrow$ \\
-        & $\uparrow$ &  
-     \end{tabular}
-     and $E = 2J$, resulting in $\Delta E = 4J$.
-\end{table}
-    
-\begin{table}[H]
-    %\centering
-    \begin{tabular}{llll}
-       & $\uparrow$ &    \\
-    $\downarrow$ & $\uparrow$ & $\uparrow$ \\
-       & $\downarrow$ &  
+                     & $\uparrow$   &            \\
+        $\downarrow$ & $\downarrow$ & $\uparrow$ \\
+                     & $\uparrow$   &
     \end{tabular}
-    has $E = 0$. Flipping we have 
-    \begin{tabular}{llll}
-        & $\uparrow$ &    \\
-     $\downarrow$ & $\downarrow$ & $\uparrow$ \\
-        & $\downarrow$ &  
-     \end{tabular}
-     and $E = 0$, resulting in $\Delta E = 0$.
+    and $E = 2J$, resulting in $\Delta E = 4J$.
 \end{table}
 
 \begin{table}[H]
     %\centering
     \begin{tabular}{llll}
-       & $\uparrow$ &    \\
-    $\downarrow$ & $\uparrow$ & $\downarrow$ \\
-       & $\downarrow$ &  
+                     & $\uparrow$   &            \\
+        $\downarrow$ & $\uparrow$   & $\uparrow$ \\
+                     & $\downarrow$ &
     \end{tabular}
-    has $E = 2J$. Flipping we have 
+    has $E = 0$. Flipping we have
     \begin{tabular}{llll}
-        & $\uparrow$ &    \\
-     $\downarrow$ & $\downarrow$ & $\downarrow$ \\
-        & $\downarrow$ &  
-     \end{tabular}
-     and $E = -2J$, resulting in $\Delta E = -4J$.
+                     & $\uparrow$   &            \\
+        $\downarrow$ & $\downarrow$ & $\uparrow$ \\
+                     & $\downarrow$ &
+    \end{tabular}
+    and $E = 0$, resulting in $\Delta E = 0$.
 \end{table}
 
 \begin{table}[H]
     %\centering
     \begin{tabular}{llll}
-       & $\downarrow$ &    \\
-    $\downarrow$ & $\uparrow$ & $\downarrow$ \\
-       & $\downarrow$ &  
+                     & $\uparrow$   &              \\
+        $\downarrow$ & $\uparrow$   & $\downarrow$ \\
+                     & $\downarrow$ &
     \end{tabular}
-    has $E = 4J$. Flipping we have 
+    has $E = 2J$. Flipping we have
     \begin{tabular}{llll}
-        & $\downarrow$ &    \\
-     $\downarrow$ & $\downarrow$ & $\downarrow$ \\
-        & $\downarrow$ &  
-     \end{tabular}
-     and $E = -4J$, resulting in $\Delta E = -8J$.
+                     & $\uparrow$   &              \\
+        $\downarrow$ & $\downarrow$ & $\downarrow$ \\
+                     & $\downarrow$ &
+    \end{tabular}
+    and $E = -2J$, resulting in $\Delta E = -4J$.
+\end{table}
+
+\begin{table}[H]
+    %\centering
+    \begin{tabular}{llll}
+                     & $\downarrow$ &              \\
+        $\downarrow$ & $\uparrow$   & $\downarrow$ \\
+                     & $\downarrow$ &
+    \end{tabular}
+    has $E = 4J$. Flipping we have
+    \begin{tabular}{llll}
+                     & $\downarrow$ &              \\
+        $\downarrow$ & $\downarrow$ & $\downarrow$ \\
+                     & $\downarrow$ &
+    \end{tabular}
+    and $E = -4J$, resulting in $\Delta E = -8J$.
 \end{table}
 The five possible values of the energy difference are thus, $\Delta E = 8J, 4J, 0, -4J, -8J$.
 
 \newpage
 \section{Theoretical background for critical phenomena}\label{appendix:critical}
-Power laws with so-called critical exponents describe how a physical system behaves when close to its critical point. For the Ising model this is close to its critical temperature. For temperatures $T$ close to $T_c$ the \textit{infinite} 2D Ising model's mean magnetization, heat capacity and susceptibility behave as follows: 
+Power laws with so-called critical exponents describe how a physical system behaves when close to its critical point. For the Ising model this is close to its critical temperature. For temperatures $T$ close to $T_c$ the \textit{infinite} 2D Ising model's mean magnetization, heat capacity and susceptibility behave as follows:
 \begin{align*}
-    \langle |m| \rangle &\propto |T-T_c(L = \infty)|^\beta, \\
-    C_V &\propto |T-T_c(L = \infty)|^{-\alpha}, \\
-    \chi &\propto |T-T_c(L = \infty)|^{-\gamma}. 
+    \langle |m| \rangle & \propto |T-T_c(L = \infty)|^\beta,     \\
+    C_V                 & \propto |T-T_c(L = \infty)|^{-\alpha}, \\
+    \chi                & \propto |T-T_c(L = \infty)|^{-\gamma}.
 \end{align*}
 Here $\beta = 1/8$, $\alpha = 0$ and $\gamma = 7/4$ are the critical exponents. We see that $C_V$ and $\chi$ diverge close to $T_c$. The \textit{correlation length}
 \begin{equation}

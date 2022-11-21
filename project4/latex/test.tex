@@ -60,7 +60,7 @@
 In table \ref{tab:timing} we see that parallelizing our code can reduce computation time a factor of 0.25 using 8 threads for an 8 thread CPU. We also see that a 4 thread parallelization performs well with a speed-up factor of 3.45.
 % ===========================================
 
-From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using a processor's all threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance overall as well as better scaling when using more threads.
+From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using a processor's all threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance than our time level parallelization overall as well as better scaling when using more threads. This would require further investigation.
 
 
 
@@ -73,6 +73,13 @@ flipping a single spin....
 
 compare numerical analytical
 
+burn in time resultater - hva ser vi for ordered
+
+varians i histogram for T=1 er mye mindre samtidig som den ser mye mer ekstreme verdier Ser verdier helt opp til -0.8 - større intervall enn for T=2.4
+
+diskusjon - begrunnelse for at 10^6 er valgt og ikke høyere eller lavere.
+
+diskusjon - mindre temperatursteg samtidig som bruk av flere lattice sizes.
 The equations introduced in the methods-section are presented in a somewhat awkward way. You should write the text in a coherent manner, with the equations as part of this.
 
 Many quantities are given without units.

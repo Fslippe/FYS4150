@@ -280,7 +280,7 @@ def plot_temp_cycles(data, L_sizes):
 
     sns.lineplot(L_tot, slope*L_tot+intercept, label=r"%.4f $L^{-1}$ + %.4f" %(slope, intercept))
     plt.xlabel(r"$L^{-1}$")
-    plt.ylabel(r"$T$ $[ J/k_B ]$")
+    plt.ylabel(r"$T_c$ $[ J/k_B ]$")
 
     plt.legend()
     plt.savefig("../figures/linregress.pdf", dpi=300, bbox_inches="tight")
@@ -375,11 +375,11 @@ def main():
     #plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     
     # Histogram T
-    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
-    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
+    #plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    #plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
 
     # compare large Lattice sizes
-    #plot_temp_cycles(all_data, L_sizes)
+    plot_temp_cycles(all_data, L_sizes)
 
     # Time used with and without paralleization
     #timing_test()
