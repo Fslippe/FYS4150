@@ -43,7 +43,8 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    NB! Abstract here
+    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC).
+    The MCMC method is first 
 \end{abstract}
 \maketitle
 \raggedbottom
@@ -108,7 +109,7 @@ represents the partition function. This, the `inverse temperature'' and the tota
 This will be the probability distribution used for random sampling in our Monte Carlo approach.
 
 
-For comparison with early numerical implementations we will fist consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
+For comparison with early numerical implementations we will first consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
 
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
@@ -284,7 +285,7 @@ Moving beyond expectation values we approximate the probability function $p_{\ep
     \caption{Approximation of the probability function $p_{\epsilon}(\epsilon ; T)$ for $L=20$ and $T=2.4 J/k_B$. The blue line shows the kernel distribution estimation of the histogram.}
     \label{fig:histogram_T_2_4_m}
 \end{figure}
-Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig:histogram_T_2_4_m} for $T=2.4 J/k_B$ the most noticeable result is the difference in variance. For $T=1.0 J/k_B$ an $\epsilon \approx -2$ is by far the most likely, whilst possible $\epsilon$ values for $T=2.4 J/k_B$ cover a larger range of approximately $[-1.7,-0.9]$.
+Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig:histogram_T_2_4_m} for $T=2.4 J/k_B$ the most noticeable result is the difference in variance. For $T=1.0 J/k_B$ an $\epsilon \approx -2$ is by far the most likely, whilst possible $\epsilon$ values for $T=2.4 J/k_B$ cover a larger range of approximately $[-1.7,-0.9]J/k_B$.
 
 \begin{figure}[H]
     \centering
@@ -299,7 +300,7 @@ Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig
     \caption{$\langle |m| \rangle$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
     \label{fig:L_size_m_T}
 \end{figure}
-Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing lattice size $L$. Looking closely in at $T \in [2.22,2.4]$ one can see that $\langle \epsilon \rangle$ increases slightly with increasing $L$. In figure \ref{fig:L_size_m_T} the mean magnetization changes more noticeably for different $L$. $\langle |m| \rangle$ tends toward zero for increasing $T$ and noticeably the graphs slope steepens around $T \in [2.25,2.30]$ for increasing lattice sizes.
+Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing lattice size $L$. Looking closely in at $T \in [2.22,2.4]J/k_B$ one can see that $\langle \epsilon \rangle$ increases slightly with increasing $L$. In figure \ref{fig:L_size_m_T} the mean magnetization changes more noticeably for different $L$. $\langle |m| \rangle$ tends toward zero for increasing $T$ and noticeably the graphs slope steepens around $T \in [2.25,2.30]J/k_B$ for increasing lattice sizes.
 
 \begin{figure}[H]
     \centering
@@ -314,7 +315,7 @@ Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing
     \caption{$\chi$ is shown as a function of temperature $T$ for lattice size $L= 40, 60,80,100$.}
     \label{fig:L_size_X_T}
 \end{figure}
-The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235$, specifically for  $T \in [2.235,2.33]$ we have $\Delta T = 0.003$.
+The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]J/k_B$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]J/k_B$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30J/k_B$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. For all four figures above a smaller $\Delta T$ has been chosen for $T > 2.235J/k_B$, specifically for  $T \in [2.235,2.33]J/k_B$ we have $\Delta T = 0.003J/k_B$.
 
 \begin{table}
     \centering
@@ -324,7 +325,7 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
         \hline
         Lattice sizes                & 40    & 60    & 80    & 100   \\
         \hline
-        $T_C$ using $C_v$ [$J/k_B$]  & 2.287 & 2.284 & 2.274 & 2.271 \\
+        $T_C$ using $C_V$ [$J/k_B$]  & 2.287 & 2.284 & 2.274 & 2.271 \\
         \hline
         $T_C$ using $\chi$ [$J/k_B$] & 2.310 & 2.300 & 2.301 & 2.284 \\
         \hline
@@ -336,7 +337,7 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
     \caption{The blue line shows linear regression using critical temperature points $T_c$ from $\chi$ and $C_V$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
     \label{fig:linregress}
 \end{figure}
-Taking the temperature values for the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function
+Taking the temperature values at the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ show in table \ref{tab:critical_T} and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function
 \begin{equation}
     T_c(L) = 1.2735 L^{-1} + 2.2686.
 \end{equation}
@@ -364,7 +365,7 @@ In table \ref{tab:timing} we see that parallelizing our code can reduce computat
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 % numerical analytucal comparisson and reasonable agreement for L=2
-We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles.
+We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]J/k_B$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. $10^7$ would definitely give even better results, but also come at a large run time cost.
 
 % burn-in time for L=20 and approximating probability distribution
 Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize on the correct values) for a $20 \times 20$ lattice for $T=1.0 J/k_B$ in figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} we see that the only noticeable burn-in time is for the unordered spin case. For $\epsilon$ in figure \ref{fig:numeric_L_20_T_1_e} this is between $10^3$ and $10^4$ cycles. This explains the small variance in figure \ref{fig:histogram_T_1_m} which is run for $10^6$ cycles, thus gathering an enormous amount of samples after the burn-in time. The ordered case of all spins being up already matches the expected energy, thus not having a burn-in time.
@@ -374,7 +375,7 @@ Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=
 It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing.
 
 %approximation of L=\infty
-Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
+Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]J/k_B$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
 \begin{equation}
     T_c(L=\infty) = 2.2686 J/k_B.
 \end{equation}
@@ -394,7 +395,8 @@ From our timing test using parallelization at temperature level we saw a great r
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
-
+We have found the Markov Chain Monte Carlo method to give good approximations of mean energy, magnetization, heat capacity and susceptibility of the Ising model for different temperatures. The chosen $10^6$ MCMC cycles offers a good compromise between precision and computational cost. Studying the Ising model parameters' behavior over different temperatures such as in figure \ref{fig:L_size_c_v_T} shows indications of a phase tradition at a certain critical temperature $T_c$. Using eight data points of $T_c$ for four different lattice sizes we perform a linear regression allowing us to approximate the critical temperature for an infinite lattice. This results in $ T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. This is an impressive approximation of Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$.
+MORE ABOUT LOOSE ENDS AND FURTHER RESAERCH.
 
 
 \onecolumngrid
@@ -418,7 +420,7 @@ Additionally, we will calculate a few expectation values for which the general f
 \begin{align*}
     \langle A \rangle = \sum_s A_s p(s).
 \end{align*}
-This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}. For the energy we have
+This is a sum over all spin states $s_i$. Here $p(s)$ is a chosen probability distribution, in our this case the Boltzmann distribution in eq. \ref{eq:prob_dist}. The fist and second of the following analytical derivations will use the hyperbolic function definition $\sinh(x) = \frac{e^x - e^{-x}}{2}$ and $\cosh(x) = \frac{e^x + e^{-x}}{2}$ respectively. For the energy we have
 \begin{align*}
     \langle E \rangle          & =  \sum_s E(\textbf{s})  p(\textbf{s};T)
     = \frac{1}{Z} \sum_s E(\textbf{s})  e^{-\beta E(\textbf{s})}
