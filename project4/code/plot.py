@@ -237,46 +237,52 @@ def plot_temp_cycles(data, L_sizes):
         sns.scatterplot(x=t, y=data[i][1,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<\epsilon\right>$ [ $J$ ]")
-    plt.savefig("../figures/L_size_e_T.png", dpi=300, bbox_inches="tight")
+    plt.savefig("../figures/L_size_e_T.pdf", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
         sns.scatterplot(x=t, y=data[i][2,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\left<| m |\right>$ [ $J$ ]")
-    plt.savefig("../figures/L_size_m_T.png", dpi=300, bbox_inches="tight")
+    plt.savefig("../figures/L_size_m_T.pdf", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
         max_cv= np.argmax(data[i][3,:])
-        T_cv[i] = data[len(data)-i-1][3,:][max_cv]
+        T_cv[i] = data[len(data)-i-1][0,:][max_cv]
         L_inv[i] = 1/L_sizes[i]
         sns.scatterplot(x=t, y=data[i][3,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
         
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$C_v$ [ $k_B$ ]")
-    plt.savefig("../figures/L_size_c_v_T.png", dpi=300, bbox_inches="tight")
+    plt.savefig("../figures/L_size_c_v_T.pdf", dpi=300, bbox_inches="tight")
 
     plt.figure()
     for i in range(len(data)):
         max_X= np.argmax(data[i][4,:])
-        T_X[i] = data[len(data)-i-1][4,:][max_X]
+        T_X[i] = data[len(data)-i-1][0,:][max_X]
         sns.scatterplot(x=t, y=data[i][4,:], s=70, label="Lattice size: %i" %(L_sizes[i]))
     plt.xlabel(r"$T$ [ $J/k_B$ ]")
     plt.ylabel(r"$\chi$ $[k_B^{-1}]$")
-    plt.savefig("../figures/L_size_X_T.png", dpi=300, bbox_inches="tight")
+    plt.savefig("../figures/L_size_X_T.pdf", dpi=300, bbox_inches="tight")
 
     plt.figure()
-    slope, intercept, r, p, se = linregress(L_inv, T_X)
-    sns.scatterplot(L_inv, T_X)
-    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+    L_tot = np.append(L_inv, L_inv)
+    T_tot = np.append(T_cv, T_X)
+    res = linregress(L_tot, T_tot)
+    slope = res.slope
+    intercept = res.intercept 
+    plt.title(r"$R^2=$%.2f,  $SE_{intercept}=$ %.4f" %(res.rvalue**2, res.intercept_stderr))
 
-    plt.figure()
-    slope, intercept, r, p, se = linregress(L_inv, T_cv)
-    sns.scatterplot(L_inv, T_cv, label=r"%.4fT_c + %.4f" %(slope, intercept))
-    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+    sns.scatterplot(L_inv, T_X, label=r"data points from $\chi$")
+    sns.scatterplot(L_inv, T_cv, label=r"data points from $C_v$")
+
+    sns.lineplot(L_tot, slope*L_tot+intercept, label=r"%.4fT_c + %.4f" %(slope, intercept))
+    plt.xlabel(r"$L^{-1}$")
+    plt.ylabel(r"$T$ $[ J/k_B ]$")
 
     plt.legend()
+    plt.savefig("../figures/linregress.pdf", dpi=300, bbox_inches="tight")
 
 
 
