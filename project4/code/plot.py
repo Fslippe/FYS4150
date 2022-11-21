@@ -182,8 +182,8 @@ def plot_hist(data, T, savename, kde):
     print("mean: ", np.mean(data[:,0]))
     var = np.var(data[:,0])
     print("variance: ", var)
-
     plt.title(r"$T=$%.1f $J/k_B$,  $Var(\epsilon)=$%.6f [ $J$ ]" %(T, var))
+
     sns.histplot(data[:,0], stat="probability", kde=kde, bins=33)
     plt.xlabel(r"$\epsilon$ [ $J$ ]")
     plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches="tight")
@@ -369,23 +369,24 @@ def main():
     all_data = np.array([L_40, L_60, L_80, L_100], dtype= object)
 
     # Compare analytic and numeric for differnt T
-    #plot_T(np.array(temp_L_2))
+    plot_T(np.array(temp_L_2))
 
     # Diff analytic-nummeric
-    #plot_diff(np.array(cycle_L_2_1), 1)
+    plot_diff(np.array(cycle_L_2_1), 1)
 
+    # Time used with and without paralleization
+    timing_test()
+    
     # Compare ordered and random initial spins
-    #plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
-    #plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
+    plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
+    plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     
     # Histogram T
-    #plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
-    #plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
+    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
 
     # compare large Lattice sizes
     plot_temp_cycles(all_data, L_sizes)
 
-    # Time used with and without paralleization
-    #timing_test()
 if __name__ == "__main__":
     main()
