@@ -115,6 +115,7 @@ For comparison with early numerical implementations we will fist consider an ana
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[H]
     \centering
+    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
     \begin{tabular}{|l|l|l|l|}
     \hline
     \begin{tabular}[c]{@{}l@{}}Nr. of spins \\ in state +1\end{tabular} & Degeneracy & \begin{tabular}[c]{@{}l@{}}Total \\ energy\end{tabular} & \begin{tabular}[c]{@{}l@{}}Total \\ magnetization\end{tabular} \\ \hline
@@ -126,7 +127,6 @@ For comparison with early numerical implementations we will fist consider an ana
     3    & 4 & 0  & 2   \\    \hline
     4    & 1 & -8J & 4   \\    \hline                                 
     \end{tabular} \label{tab:analytic}
-    \caption{Analytic values for the sixteen \textbf{spin configurations} of the $2 \cross 2$ Ising model lattice.} 
 \end{table} 
 Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:analytic} and are used to test early versions of the code.
 
@@ -139,17 +139,6 @@ and the susceptibility normalized to number of spins
     \chi = \frac{1}{N} \frac{1}{k_B T} \left( \langle M^2 \rangle - \langle |M| \rangle^2 \right).
 \end{equation}
 Analytical solutions to these can also be found in appendix \ref{appendix:analytic}.
-
-\subsection*{Critical phenomena}
-The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
-\begin{equation*}
-    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
-\end{equation*}
-For our approximation we will use the scaling relation
-\begin{equation}
-    T_c(L) -T_c(L=\infty) = aL^{-1}.
-\end{equation}
-Here $a$ is constant. Theoretical background for this scaling realtion can be found in appendix \ref{appendix:critical}
 
 
 \subsection*{Periodic boundary conditions}
@@ -171,6 +160,25 @@ A Markov chain is a stok
 The algorithm generates a Markov chain 
 
 A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
+
+\subsection*{Critical phenomena}
+The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
+\begin{equation*}
+    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
+\end{equation*}
+For our approximation we will use the scaling relation
+\begin{equation}
+    T_c(L) -T_c(L=\infty) = aL^{-1}. \label{eq:scaling_rel}
+\end{equation}
+Here $a$ is constant. Theoretical background for this scaling relation can be found in appendix \ref{appendix:critical}. Eq. \ref{eq:scaling_rel} can be rearranged to the linear function
+\begin{equation}
+    T_c(L) = aL^{-1} + T_c(L=\infty). \label{eq:scaling_linear}
+\end{equation}
+This relation will be approximated by performing linear regression using \texttt{scipy.stats.linregress}. The data set used will be $T_C$ values for different lattice sizes $L$ from plots of $C_V$ and $\chi$. In other words, the temperature at which $C_V$ and $\chi$ reach their peak value for different lattice sizes. The linear regression resulting in
+\begin{equation}
+    y = ax + b 
+\end{equation}
+will thus supply a value for $a$ and the interception point $b$ which in this case is $T_c(L=\infty)$.
 
 \subsection*{Optimization and parallelization}
 Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
@@ -309,13 +317,34 @@ Figure \ref{fig:L_size_e_T} shows small variations in mean energy for increasing
 \end{figure}
 The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in [2.25,2.30]$ with increasing lattice size. In figure \ref{fig:L_size_X_T} the susceptibility shows similar behavior to the heat capacity with an increase of $\chi$ for larger lattice sizes in the region of  $T \in [2.25,2.35]$. In both cases the peak value for a $40 \times 40$ lattice is around $T=2.30$. As the lattice size increases, the peak $C_V$ and $\chi$ trend towards a lower temperature. 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/linregress.pdf}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $\chi$ and $C_V$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \label{fig:linregress}
+\end{figure}
+Taking the temperature values for the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function 
+\begin{equation}
+    T_c(L) = 1.2735 L^{-1} + 2.2686.
+\end{equation}
+This gives us $a=1.2735$ and letting $L=\infty$ we have 
+\begin{equation}
+    T_c(L=\infty) = 2.2686 J/k_B
+\end{equation}
+with a standard error of $0.0129 J/k_B$.
+
 % ===========================================
-\newpage
 \section{Discussion}\label{sec:discussion}
+% numerical analytucal comparisson and reasonable agreement for L=2
+We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. 
+
+% burn-in time for L=20
 
 
+%approximation of L=\infty
 Could get at better approximation using smaller $\Delta T$ leading to better linear regression points.
-%
+
+% optimization
 Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results. Whether this is more efficient for the computations that for example run over a range of different temperatures would require further investigation. 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
@@ -521,7 +550,7 @@ with $\nu=1$ also diverges near $T_c$. For our finite system $\xi = L$ is the la
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{../figures//metro_flow.jpg}
+    \includegraphics[width=1\textwidth]{../figures//metro_flow.pdf}
     \caption{Flowchart of the Metropolis algorithm taken from Computational Physics lecture notes \cite{compedium}.}
     \label{fig:metro_flow}
 \end{figure}
