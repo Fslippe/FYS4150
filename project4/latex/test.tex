@@ -45,7 +45,7 @@
 
 \begin{table}
     \centering
-    \caption{Time used for different number of threads in parall    elization at temperature level. A quad-core, 8 thread CPU has been used for the ising model initialized with a $5\times5$ lattice with randomized initial spins and temperature $T= 1$ $J/k_B$}
+    \caption{Time used for different number of threads in parallelization at temperature level. A quad-core, 8 thread CPU has been used for the ising model initialized with a $5\times5$ lattice with randomized initial spins and temperature $T= 1$ $J/k_B$}
     \label{tab:timing}
     \begin{tabular}{|c|c|c|c|}
         \hline
@@ -53,13 +53,26 @@
         \hline
         Time used (s)     & 29.12 & 8.42 & 7.32 \\
         \hline
-        speed up factor   & 1     & 0.29 & 0.25 \\
+        speed-up factor   & 1     & 3.45 & 3.92 \\
         \hline
     \end{tabular}
 \end{table}
-In table \ref{tab:timing} we see that parallelizing our code can reduce computation time a factor of 0.25 using 8 threads for an 8 thread CPU. We also see that a 4 thread parallelization performs well with a 0.29 reduction.
+In table \ref{tab:timing} we see that parallelizing our code can reduce computation time a factor of 0.25 using 8 threads for an 8 thread CPU. We also see that a 4 thread parallelization performs well with a speed-up factor of 3.45.
 % ===========================================
 
+From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads with a speed-up factor of 3.92 going from utilizing 1 to 8 threads. For an 8 thread CPU we would expect the speed-up factor being closer to 8, which shows that the physical core count of the processor influences the speed-up factor. In our case of a quad-core CPU we saw that even 4 threaded parallelization got close to the 8 thread performance. In total this means that the expected speed-up factor using a processor's all threads would be closer to its physical core and not thread count. On the other hand, we do not know how parallelization at the level of the Markov Chain Monte Carlo method would influence the speed-up time. Such a parallelization may see better performance overall as well as better scaling when using more threads.
 
-From our timing test using parallelization at temperature level we saw a great reduction in computation time when using more threads. Here it is important to notice that these timings are performed on a quad-core 8 thread CPU and can only be reproduced using a similar
-\end{document}
+
+
+Å GJØRE:
+periodic boundary inn i optimalization
+
+Hakkete: he Monte Carlo method will repeatedly require the
+Boltzmann factor e−β∆E . The energy shift induced by
+flipping a single spin....
+
+compare numerical analytical
+
+The equations introduced in the methods-section are presented in a somewhat awkward way. You should write the text in a coherent manner, with the equations as part of this.
+
+Many quantities are given without units.

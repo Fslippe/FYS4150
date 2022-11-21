@@ -118,7 +118,16 @@ void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool or
 }
 void cycle_loop(int n_cycles, int seed, double T, int lattice_dim, bool order, std::string save2, int threads)
 {
-    arma::vec cycle_array = arma::logspace(1, 6, n_cycles);
+    arma::vec cycle_array;
+    if (lattice_dim == 2)
+    {
+        cycle_array = arma::logspace(1, 7, n_cycles);
+    }
+    else
+    {
+        cycle_array = arma::logspace(1, 6, n_cycles);
+    }
+
     arma::mat cycle_val = arma::mat(5, n_cycles);
 
 #pragma omp parallel for num_threads(threads)
