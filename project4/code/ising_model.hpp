@@ -19,7 +19,7 @@ private:
     double T;
     int n_spins;
     int temp_idx;
-    arma::vec average;
+    arma::vec sum;
 
 public:
     int N;

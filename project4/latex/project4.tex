@@ -44,7 +44,7 @@
 %This is how we create an abstract section.
 \begin{abstract}
     This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC).
-    The MCMC method is first 
+    The MCMC method is first
 \end{abstract}
 \maketitle
 \raggedbottom
@@ -70,6 +70,10 @@ A detailed discussion of the results and methods is then presented in section \r
 
 % ===========================================
 \section{Methods}\label{sec:methods}
+A GitHub repository containing code and more information on how to reproduce the results of this report can be found following this link:
+\url{https://github.com/Fslippe/FYS4150/tree/main/project4}
+
+
 The square 2D lattices for our Ising model will have a length of $L$ containing $N$ spins with the relation $N = L^2$. Each spin $s_i$ will have two possible states of
 \begin{equation*}
     s_i = -1 \text{ or } s_i = +1.
@@ -142,11 +146,8 @@ and the susceptibility normalized to number of spins
 Analytical solutions to these can also be found in appendix \ref{appendix:analytic}.
 
 
-\subsection*{Markov chain Monte Carlo method}
-A Markov chain is a stok
-
-\subsection*{The Metropolis algorithm}
-The algorithm generates a Markov chain
+\subsection*{Markov chain Monte Carlo and the metropolis algorithm}
+We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$. We then check if $w$ is larger or equal some random number in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. We update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before an average of the cumulative sums is taken. In total can the metropolis algorithm together with the Monte Carlo sampling be viewed as a Markov Chain from how the probability to transition to a new state only is dependent on the current state spin configuration and following energy and magnetization.
 
 A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
 
