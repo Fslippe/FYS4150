@@ -43,7 +43,7 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC). The main parameters that are computed and analyzed are mean energy $\epsilon$, mean magnetization $m$, specific heat capacity $C_V$ and susceptibility $\chi$. The MCMC method is first compared to analytical solutions for a $2 \times 2$ lattice and burn-in times are studied for a $20 \times 20$ lattice. These result in $10^6$ MCMC cycles being the optimal compromise between precision and computational expense. The Ising model simulation is then run for lattice sizes $40 \times 40, 60 \times 60, 80 \times 80$ and $100\times 100$. The previously mentioned parameters are plotted against a temperature range of $T \in [2.1,2.4]J/k_B$ for each lattice size. These results show indications of a phase transition taking place at a critical temperature $T_c$. These $T_c$ points for different lattice sizes are then used to approximate the infinite lattice case through linear regression. Our final result is $T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. An impressive approximation when compared to Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. To be able to run the larger computations for reasonable runtimes the MCMC code has been parallelized using OpenMP achieving a speed-up factor of $3.92$ for 8 threads on an 8 thread quad-core CPU.
+    We investigate phase transition in the widely studied Ising model and find a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase transition. This is done using a Markov Chain Monte Carlo (MCMC) approach. We approximate the expectation value for the mean energy $\epsilon$ and mean magnetization $m$ as well as the specific heat capacity $C_V$ and susceptibility $\chi$. The MCMC method is first compared to analytical solutions for a $2 \times 2$ lattice and burn-in times are studied for a $20 \times 20$ lattice. Based on these results we choose to use $10^6$ MCMC cycles for the following analysis since it appears to be the optimal compromise between precision and computational expense. Investigating the probability function $p_{\epsilon}(\epsilon ; T)$ we find a variance of $0.000059J$ for $T=1.0J/k_B$ and a larger variance of $0.020269J$ for $T=2.4J/k_B$ indicating a greater probability of jumping to a higher energy state at the higher temperature. The Ising model simulation is then run for lattice sizes $40 \times 40, 60 \times 60, 80 \times 80$ and $100\times 100$. The previously mentioned parameters are plotted against a temperature range of $T \in [2.1,2.4]J/k_B$ for each lattice size. These results show indications of a phase transition taking place at a critical temperature $T_c$. These $T_c$ points for different lattice sizes are then used to approximate the infinite lattice case through linear regression. Our final result is $T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. Comparing this to Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$ we see that the error between our numeric and the analytic result lies within our standard error. To be able to run the larger computations for reasonable runtimes the MCMC code has been parallelized using OpenMP achieving a speed-up factor of $3.92$ for 8 threads on an 8 thread quad-core CPU.
 \end{abstract}
 \maketitle
 \raggedbottom
@@ -51,19 +51,19 @@
 
 % ===========================================
 \section{Introduction}\label{sec:intro}
-This article will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature. Past this point the magnetic spins are no longer aligned, causing the given ferromagnetic material to lose its magnetization.
+This article will explore temperature-dependent behavior in ferromagnetism using the two-dimensional \textbf{Ising model}. The main purpose of our simulations is to determine a numerical estimation of the \textbf{critical temperature} at which the system transitions from a magnetized to a non-magnetized phase. This is also called the Curie temperature \cite{compendium}. Past this point the magnetic spins are no longer aligned, causing the given ferromagnetic material to lose its magnetization.
 
-With the Ising model we can easily model a magnetic materials' response to thermal energy. Magnet spins in the model have two states, either up or down. These can be flipped by energy input and each individual spin influences the total state of the system.
+With the Ising model we can model a magnetic materials' response to thermal energy. Spins in the model have two states, either up or down. These can be flipped by energy input (such as an increase in temperature) and each individual spin influences the total state of the system.
 
-The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen. Additionally, when it comes to studies of phase transition, theoretical approaches such as mean field models can actually predict wrong behavior, further motivating the use of the Ising model.\cite{compendium}
+The Ising model is a widely studied model in statistical physics. Work on the model has shown to be useful for the analysis of several complex systems. Some examples are gasses sticking to solid surfaces or hemoglobin molecules that absorb oxygen \cite{compendium}. Additionally, when it comes to studies of phase transition, theoretical approaches such as mean field models can actually predict wrong behavior, further motivating the use of the Ising model.\cite{compendium}
 
-We will simulate the Ising model using a Markov Chain Monte Carlo (MCMC) approach. After testing our numerical method we will finally try to approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, our goal is not to necessarily find this temperature, but rather analyze how well our chosen MCMC approach can approximate such a complex problem.
+We will simulate the Ising model using a Markov Chain Monte Carlo (MCMC) approach. After validating our numerical method we will finally approximate the critical temperature for an infinite $(L=\infty)$ 2D Isisng model. The analytical solution to this problem was found by Lars Onsager in 1944 \cite{project}. Thus, we can use Onsagers analytical result to evaluate the precision of the numerical MCMC method.
 
 To allow for reasonable runtimes for the larger computations our MCMC code is parallelized using OpenMP.
 
 Section \ref{sec:methods} will cover the theoretical background of the Ising model and MCMC method as well as some analytical solutions for code testing. More comprehensive derivations of the analytical values can be found in appendix \ref{appendix:analytic} and \ref{appendix:delta_E}.
 
-In section \ref{sec:results} we present results from our Ising model simulations. These cover comparison betwween analytic and numerical results, an analysis of burn-in time for a larger lattice size of $L = 20$ and finally an investigation of phase transitions.
+In section \ref{sec:results} we present results from our Ising model simulations. These entail comparison between analytic and numerical results, an analysis of burn-in time for a larger lattice size of $L = 20$ and finally an investigation of phase transition.
 
 A detailed discussion of the results and methods is then presented in section \ref{sec:discussion} followed by a summary and concluding thoughts in section \ref{sec:conclusion}.
 
@@ -85,11 +85,11 @@ Here $\mathscr{B}$ is an external magnetic field. Since we will be looking at th
 \begin{equation}
     E(\textbf{s}) = - J \sum^N_{\langle kl \rangle} s_k s_l,
 \end{equation}
-where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors.
+where $\langle kl \rangle$ denotes the sum going over all \textit{neighboring pairs} of spins avoiding double-counting. $J$ is the \textbf{coupling constant} simply setting the energy associated with spin interactions. \textit{Periodic boundary conditions} will be implemented allowing all spins to have four neighbors. The magnetization of the entire system is expressed as
 \begin{equation}
-    M(\textbf{s}) = \sum^N_i s_i
+    M(\textbf{s}) = \sum^N_i s_i,
 \end{equation}
-is the magnetization of the entire system expressed as a sum over all spins. The energy per spin is
+a sum over all spins. The energy per spin is
 \begin{equation}
     \epsilon(\textbf{s}) = \frac{E(\textbf{s})}{N} \label{eq:mean_E}
 \end{equation}
@@ -97,15 +97,15 @@ and the magnetization per spin is given by
 \begin{equation}
     m(\textbf{s}) = \frac{M(\textbf{s})}{N}. \label{eq:mean_M}
 \end{equation}
-These values will be used to compare and analyze results.
+These values will be used to compare and analyze results. The ``inverse temperature'' is given by
 \begin{equation}
     \beta = \frac{1}{k_B T}
 \end{equation}
-describes the ``inverse temperature'' with the systems' temperature $T$ and the Boltzmann constant $k_B$.
+where $T$ is the systems' temperature and $k_B$ the Boltzmann constant. The partitions function is expressed as
 \begin{equation}
-    Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}
+    Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}.
 \end{equation}
-represents the partition function. This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution},
+This, the `inverse temperature'' and the total energy of the system appear in the \textit{Boltzmann distribution},
 \begin{equation}
     p(\textbf{s};T) = \frac{1}{Z} e^{-\beta E(\textbf{s})}.\label{eq:prob_dist}
 \end{equation}
@@ -132,7 +132,7 @@ For comparison with early numerical implementations we will first consider an an
         4                          & 1          & -8J                        & 4                          \\    \hline
     \end{tabular} \label{tab:analytic}
 \end{table}
-Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:analytic} and are used to test early versions of the code.
+Based on the values in table \ref{tab:analytic} we derive the specific analytical expressions for the $2 \cross 2$ lattice case. The calculations of these analytic solutions can be found in appendix \ref{appendix:analytic} and are used to verify the numerical solutions.
 
 We will study properties of the system at equilibrium for different lattice sizes as a function of temperature $T$. The analysis will focus on four main properties. The mean energy (eq. \ref{eq:mean_E}), mean magnetization (eq. \ref{eq:mean_M}), specific heat capacity normalized to number of spins
 \begin{equation}
@@ -157,7 +157,7 @@ Selvom dette er en riktig beskrivelse av metropolis så er dette veldig overflat
 For our random number $r$ in the interval [0,1] we use a Mersenne Twister generator. This generator has a period of $2^{199937}$ which defines how long it continues before repeating itself \cite{SHEMA201071}. This means that we will not run into any problems with a random number being repeated, which may compromise our performance.
 
 \subsection*{Critical phenomena}
-The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
+The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager \cite{project}. His result is
 \begin{equation*}
     T_{c \text{ analytic}}(L=\infty) = \frac{2}{\ln(1+\sqrt{2})}J/k_B \approx 2.269 J/k_B.
 \end{equation*}
@@ -173,8 +173,7 @@ This relation will be approximated by performing linear regression using the sci
 \begin{equation}
     y = ax + b
 \end{equation}
-will thus supply a value for $a$ and the interception point $b$ which in this case is $T_c(L=\infty)$.
-
+will thus supply a value for $a$ and the interception point $b$ yields an approximation for $T_c(L=\infty)$.
 
 \subsection*{Optimization and parallelization}
 %\subsection*{Periodic boundary conditions}
@@ -208,7 +207,7 @@ Furthermore, the code is written such that it can be run parallelized. This allo
 \twocolumngrid
 % ===========================================
 \section{Results}\label{sec:results}
-To check the numerical implementation we compare analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in the following figures.
+We begin by verifying the numerical implementation by comparing  analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in figure \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T}.
 
 \begin{figure}[H]
     \centering
@@ -244,7 +243,7 @@ Figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_analytic.pdf}
-    \caption{The blue, yellow, green and red line show the change of the difference between numerical and analytical results as a function of MCMC cycles for $\langle \epsilon \rangle$, $\langle |m| \rangle$, $C_V$ and $\chi$ respectively. In this case $L=2$ and the results are presented on a log scale.}
+    \caption{The blue, yellow, green and red line show the change of the difference between numerical and analytical results as a function of MCMC cycles for $\langle \epsilon \rangle$, $\langle |m| \rangle$, $C_V$ and $\chi$ respectively. In this case $L=2$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_analytic}
 \end{figure}
 In figure \ref{fig:numeric_analytic} one can see how the difference between numerical and analytical results decreases for increasing MCMC cycles. After about $10^{5}$ cycles the numerical results stabilize and are in good agreement with the analytical result for a $2 \times 2$ lattice. Further computations will be run for $10^6$ cycles to ensure precision since enough computational power is available.
@@ -255,14 +254,14 @@ This allows us to move on to more complex computations of larger lattice sizes. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_e.pdf}
-    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_L_20_T_1_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_1_m.pdf}
-    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=1.0 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_L_20_T_1_m}
 \end{figure}
 Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that the MCMC method has a burn-in time of about $10^4$ cycles for $T=1.0J/k_B$ in an unordered spin case. Starting with ordered spins there is no burn-in time at all.
@@ -270,14 +269,14 @@ Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that t
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_e.pdf}
-    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
+    \caption{Numerical approximation values for $\langle \epsilon \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_L_20_T_2_4_e}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/numeric_L_20_T_2_4_m.pdf}
-    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale.}
+    \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_L_20_T_2_4_m}
 \end{figure}
 For $T=1.0J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time looks to be around $10^5$ cycles for both ordered and unordered spins.
@@ -299,6 +298,11 @@ Moving beyond expectation values we approximate the probability function $p_{\ep
 \end{figure}
 Comparing figure \ref{fig:histogram_T_1_m} for $T=1.0 J/k_B$ and figure \ref{fig:histogram_T_2_4_m} for $T=2.4 J/k_B$ the most noticeable result is the difference in variance. For $T=1.0 J/k_B$ an $\epsilon \approx -2$ is by far the most likely, whilst possible $\epsilon$ values for $T=2.4 J/k_B$ cover a larger range of approximately $[-1.7,-0.9]J/k_B$.
 
+\onecolumngrid
+\newpage
+\twocolumngrid
+
+In figure \ref{fig:L_size_e_T}, \ref{fig:L_size_m_T}, \ref{fig:L_size_c_v_T},  and \ref{fig:L_size_X_T} we have computed $\langle \epsilon \rangle$, $\langle |m|\rangle$, $C_V$ and $\chi$ respectively for varying temperatures in the range $[2.1,2.4]J/k_B$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/L_size_e_T.pdf}
@@ -399,25 +403,28 @@ In table \ref{tab:timing} we see that parallelizing our code can reduce computat
 % ===========================================
 \section{Discussion}\label{sec:discussion}
 % numerical analytucal comparisson and reasonable agreement for L=2
-We start by testing our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]J/k_B$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this complex Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. $10^7$ would definitely give even better results, but also come at a large run time cost.
+We start by verifying our numerical Ising model simulation against analytical results for a $2 \times 2$ lattice to ensure its functionality. The results in figures \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T} show excellent agreement over $T \in [0.5, 4.0]J/k_B$ for $10^6$ MCMC cycles. This shows the MCMC method is a suitable choice for this 2D Ising model problem. Taking a closer look at the amount of cycles necessary for good agreement in figure \ref{fig:numeric_analytic} confirms that at least $10^5$ MCMC cycles are necessary for a precise numerical approximation. All further simulations are therefore run for $10^6$ cycles. $10^7$ would definitely give even better results, but also comes at a large run time cost.
 
 % burn-in time for L=20 and approximating probability distribution
-Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize on the correct values) for a $20 \times 20$ lattice for $T=1.0 J/k_B$ in figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} we see that the only noticeable burn-in time is for the unordered spin case. For $\epsilon$ in figure \ref{fig:numeric_L_20_T_1_e} this is between $10^3$ and $10^4$ cycles. This explains the small variance in figure \ref{fig:histogram_T_1_m} which is run for $10^6$ cycles, thus gathering an enormous amount of samples after the burn-in time. The ordered case of all spins being up already matches the expected energy, thus not having a burn-in time.
+Studying the burn-in time (i.e. the time it takes for the algorithm to stabilize on the correct values) for a $20 \times 20$ lattice for $T=1.0 J/k_B$ in figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} we see that the only noticeable burn-in time is for the unordered spin case. For $\epsilon$ in figure \ref{fig:numeric_L_20_T_1_e} this is between $10^3$ and $10^4$ cycles. The ordered case of all spins being up already matches the expected energy, thus not having a burn-in time. Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}.
+%-----------------------------------------------
+It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing. Another option, and potential future improvement would be to not use the burn-in time data at all and only use samples after the burn-in cycles.
 
-Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=2.4 J/k_B$ on the other hand, show a slightly longer burn-in time closer to $10^5$ cycles. In this case the ordered spin configuration does not instantly match the expected values resulting in more similar behavior for the ordered and unordered burn-in time. The burn-in time for $\langle \epsilon \rangle$ at $T=2.4J/k_B$ in figure \ref{fig:numeric_L_20_T_2_4_e} is longer than in the $T=1.0 J/k_B$ case explaining the larger variance in figure \ref{fig:histogram_T_2_4_m} compared to figure \ref{fig:histogram_T_1_m}. One can also see some oscillatory behavior matching the almost even distribution to both sides of $-1.2 J$ in figure \ref{fig:histogram_T_2_4_m}.
-
-It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing.
+%variance 
+Studying the histograms approximating the probability function $p_{\epsilon}(\epsilon;T)$ in figure \ref{fig:histogram_T_1_m} and \ref{fig:histogram_T_2_4_m} there is a clear difference in variance. We have a variance of $0.020269 J$ for $T=2.4J/k_B$ and a much smaller $0.000059 J$ for $T=1.0J/k_B$. This can be explained by and increasing probability of jumping to a higher energy state as $T$ increases.
 
 %approximation of L=\infty
 Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]J/k_B$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress_X} and \ref{fig:linregress_cv} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
 \begin{equation}
-    T_c(L=\infty) = 2.2686 J/k_B.
+    T_{c,tot}(L=\infty) = 2.2686 \pm 0.0129  J/k_B.
 \end{equation}
 This is an excellent approximation of Onsager's analytical result of
 \begin{equation}
     T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B
 \end{equation}
-confirming the Markov Chain Monte Carlo method's applicability to complex problem-solving. To improve the approximation one could use an even smaller $\Delta T$ and more lattice sizes. This would result in a more precise set of data points for the linear regression.
+confirming the Markov Chain Monte Carlo method's applicability to the modeling of the 2D Ising model without an external magnetic field.
+
+To improve the approximation one could use an even smaller $\Delta T$ and more lattice sizes. This would result in a more precise set of data points for the linear regression.
 
 % optimization
 Considering code optimization, we have chosen to parallelize the section of the code lopping over different temperatures and different numbers of cycles. This gives us time savings when we are plotting against these two variables, but not when running a single MCMC run. Another way of parallelizing the code would therefore be at the level of the MCMC ``walkers'' using several threads to execute multiple individual MCMC runs to finally combine the results.
@@ -429,8 +436,10 @@ From our timing test using parallelization at temperature level we saw a great r
 
 % ===========================================
 \section{Conclusion}\label{sec:conclusion}
-We have found the Markov Chain Monte Carlo method to give good approximations of mean energy, magnetization, heat capacity and susceptibility of the Ising model for different temperatures. The chosen $10^6$ MCMC cycles offers a good compromise between precision and computational cost. Whether the chosen number of cycles is actually enough in comparison to the burn-in time for lattices larger than $20 \times 20$ could be an area of future research.
-Studying the Ising model parameters' behavior over different temperatures such as in figure \ref{fig:L_size_c_v_T} shows indications of a phase transition at a certain critical temperature $T_c$. Using eight data points of $T_c$ for four different lattice sizes we perform a linear regression allowing us to approximate the critical temperature for an infinite lattice. This results in $ T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. This is an impressive approximation of Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. A speed-up factor of $3.92$ was achieved when running the parallelized code across 8 threads on an 8 thread quad-core CPU. This was good enough for the chosen simulations, yet it is possible other parallelization implementations are more efficient. This again would require further research. Overall, running the same simulations for a higher number of MCMC cycles, more lattice sizes and smaller choices of $\Delta T$ would presumably give better results than presented.
+We have simulated the 2D Ising model using a Markov Chain Monte Carlo (MCMC) approach. This was done taking random samples from the Boltzmann distribution using the Metropolis algorithm. We have found the MCMC method to give good approximations of mean energy, magnetization, heat capacity and susceptibility of the Ising model for different temperatures. The chosen $10^6$ MCMC cycles offers a good compromise between precision and computational cost. Whether the chosen number of cycles is actually enough in comparison to the burn-in time for lattices larger than $20 \times 20$ could be an area of future research.
+Studying the Ising model parameters' behavior over different temperatures such as in figure \ref{fig:L_size_c_v_T} shows indications of a phase transition at a certain critical temperature $T_c$. Using eight data points of $T_c$ for four different lattice sizes we perform a linear regression allowing us to approximate the critical temperature for an infinite lattice. This results in $T_{c,tot}(L=\infty) = 2.2686 \pm 0.0129  J/k_B$. This is an impressive approximation of Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. 
+A smaller variance for the probability function $p_{\epsilon}(\epsilon ; T)$ at $T=1.0J/k_B$ was found in comparison to $T=2.4J/k_B$ indicating a low probability of jumping to a higher energy state at low temperatures. 
+Furthermore, a speed-up factor of $3.92$ was achieved when running the parallelized code across 8 threads on an 8 thread quad-core CPU. This was good enough for the chosen simulations, yet it is possible other parallelization implementations are more efficient. This again would require further research. Overall, running the same simulations for a higher number of MCMC cycles, more lattice sizes, smaller choices of $\Delta T$ and disregarding burn-in time samples would presumably give better results than presented.
 
 
 \onecolumngrid
