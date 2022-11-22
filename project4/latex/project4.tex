@@ -101,7 +101,7 @@ These values will be used to compare and analyze results. The ``inverse temperat
 \begin{equation}
     \beta = \frac{1}{k_B T}
 \end{equation}
-where $T$ is the systems' temperature and $k_B$ the Boltzmann constant. The partitions function is expressed as
+where $T$ is the systems' temperature and $k_B$ the Boltzmann constant. The partition function is expressed as
 \begin{equation}
     Z = \sum_{\text{all possible \textbf{s}}} e^{- \beta E(\textbf{s})}.
 \end{equation}
@@ -112,7 +112,7 @@ This, the `inverse temperature'' and the total energy of the system appear in th
 This will be the probability distribution used for random sampling in our Monte Carlo approach.
 
 
-For comparison with early numerical implementations we will first consider an analytical solution. The following table \ref*{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
+For comparison with early numerical implementations we will first consider an analytical solution. The following table \ref{tab:analytic} summarizes all sixteen possible \textbf{spin configurations} of a $2 \cross 2$ lattice with \textit{periodic boundary conditions}.
 
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
@@ -146,13 +146,10 @@ Analytical solutions to these can also be found in appendix \ref{appendix:analyt
 
 
 \subsection*{Markov chain Monte Carlo and the metropolis algorithm}
-The Marov Chain Monte Carlo method with the metropolis algorithm requires both detailed balance and ergodicity. This means that every transition in the system we are looking at are reversible, aperiodic and positive recurrent. For the Ising model is each transition only dependent on a transition probability calculated from an energy difference between the previous and new state which fulfills detailed balance. This probability is expressed in equation \ref{eq:prob_dist} and also fulfill ergodicity from that every new change of the system is independent of every other changes that have been performed.
+The Markov Chain Monte Carlo method with the metropolis algorithm requires both detailed balance and ergodicity. This means that every transition in the system we are looking at is reversible, aperiodic and positive recurrent. For the Ising model each transition is only dependent on a transition probability calculated from an energy difference between the previous and new state which fulfills detailed balance. This probability is expressed in equation \ref{eq:prob_dist} and also fulfills ergodicity since every new change of the system is independent of every other change that has been performed.
 
-A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}, and is described as follows. We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$ which fulfill the detailed balance. We then check if $w$ is larger or equal to some random number $r$ in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. The probability of this configuration change is what is earlier described as the transition probability. After this we update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before expectation values using the cumulative sums are taken. In total the metropolis algorithm together with the Monte Carlo sampling becomes a Markov Chain. This is from how the probability to transition to a new state only is dependent on the current spin configuration and following energy and magnetization.
+A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}, and is described as follows. We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$ which fulfill the detailed balance. We then check if $w$ is larger or equal to some random number $r$ in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. The probability of this configuration change is what is earlier described as the transition probability. After this we update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before expectation values using the cumulative sums are taken. In total the metropolis algorithm together with the Monte Carlo sampling becomes a Markov Chain. This is how the probability to transition to a new state only is dependent on the current spin configuration and following energy and magnetization.
 
-Selvom dette er en riktig beskrivelse av metropolis så er dette veldig overflatisk. Om dere har tid ville jeg kanskje ha forklart hvorfor dette er slik. Det enkleste er å forklare at dette fører til transfer probabilities som oppfylder detailed balanced. Uansett ville det kanskje være bedre å skrive “transfer probabilites” og eller en pseudo kode for algoritmen her.
-
-… Så først referance til flow chart etterå, så dere bør kanskje refere til dene heroppe.
 \subsection*{Random values}
 For our random number $r$ in the interval [0,1] we use a Mersenne Twister generator. This generator has a period of $2^{199937}$ which defines how long it continues before repeating itself \cite{SHEMA201071}. This means that we will not run into any problems with a random number being repeated, which may compromise our performance.
 
@@ -207,7 +204,7 @@ Furthermore, the code is written such that it can be run parallelized. This allo
 \twocolumngrid
 % ===========================================
 \section{Results}\label{sec:results}
-We begin by verifying the numerical implementation by comparing  analytical and numerical results for a $2\times2$ lattice case for $T=[0.5,4.0]J/k_B$ in figure \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T}.
+We begin by verifying the numerical implementation by comparing  analytical and numerical results for a $2\times2$ lattice case for $T \in [0.5,4.0]J/k_B$ in figure \ref{fig:numeric_analytic_e_T}, \ref{fig:numeric_analytic_m_T}, \ref{fig:numeric_analytic_c_v_T} and \ref{fig:numeric_analytic_X_T}.
 
 \begin{figure}[H]
     \centering
@@ -279,7 +276,7 @@ Figure \ref{fig:numeric_L_20_T_1_e} and \ref{fig:numeric_L_20_T_1_m} show that t
     \caption{Numerical approximation values for $\langle |m| \rangle$ against number of MCMC cycles for $T=2.4 J/k_B$. The blue line shows the evolution from a random spin configuration whereas the orange line is for the case of an ordered spin configuration. Here $L=20$ and the results are presented on a log scale along the $x$ axis.}
     \label{fig:numeric_L_20_T_2_4_m}
 \end{figure}
-For $T=1.0J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time looks to be around $10^5$ cycles for both ordered and unordered spins.
+For $T=2.4J/k_B$ we see that the values for $\langle \epsilon \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_e} and equally for $\langle |m| \rangle$ in figure \ref{fig:numeric_L_20_T_2_4_m} are fairly stable around $10^4$. The full burn-in time looks to be around $10^5$ cycles for both ordered and unordered spins.
 
 Moving beyond expectation values we approximate the probability function $p_{\epsilon}(\epsilon ; T)$ using MCMC samples. This is done for both $T=1.0J/k_B$ and $T=2.4J/k_B$.
 %histograms
@@ -335,7 +332,7 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
 
 \begin{table}
     \centering
-    \caption{Critical temperature as a function of lattice size computed using both $\chi$ and $C_v$.}
+    \caption{Critical temperature as a function of lattice size computed using both $\chi$ and $C_V$.}
     \label{tab:critical_T}
     \begin{tabular}{|c|c|c|c|c|}
         \hline
@@ -356,13 +353,13 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/linregress_cv.pdf}
-    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_v$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_V$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
     \label{fig:linregress_cv}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{../figures/linregress.pdf}
-    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_v$ and $\chi$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_V$ and $\chi$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
     \label{fig:linregress}
 \end{figure}
 Taking the temperature values at the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ show in table \ref{tab:critical_T} and performing linear regression results in the blue line in figure \ref{fig:linregress_X} and \ref{fig:linregress_cv} where we see good linear fits. For $\chi$ we have the function
@@ -373,13 +370,13 @@ This gives us $a=1.4419$ and letting $L=\infty$ we have with the uncertainty exp
 \begin{equation}
     T_{c,\chi}(L=\infty) = 2.2757 \pm 0.0097  J/k_B.
 \end{equation}
-For $C_v$ we have:
+For $C_V$ we have:
 \begin{equation}
-    T_{c,C_v}(L) = 1.1051 L^{-1} + 2.2615  J/k_B.
+    T_{c,C_V}(L) = 1.1051 L^{-1} + 2.2615  J/k_B.
 \end{equation}
 This gives us $a=1.1051$ and letting $L=\infty$ we have
 \begin{equation}
-    T_{c,C_v}(L=\infty) = 2.2615 \pm 0.0052  J/k_B.
+    T_{c,C_V}(L=\infty) = 2.2615 \pm 0.0052  J/k_B.
 \end{equation}
 A combination of figure \ref{fig:linregress_cv} and \ref{fig:linregress_X} can be seen in figure \ref{fig:linregress} and gives us
 \begin{align}
