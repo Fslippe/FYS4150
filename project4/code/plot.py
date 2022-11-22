@@ -184,7 +184,13 @@ def plot_hist(data, T, savename, kde):
     print("variance: ", var)
     plt.title(r"$T=$%.1f $J/k_B$,  $Var(\epsilon)=$%.6f [ $J$ ]" %(T, var))
 
-    sns.histplot(data[:,0], stat="probability", kde=kde, bins=33)
+    if T == 1:
+        bins = 100
+    else:
+        bins = 33
+
+    sns.histplot(data[:,0], stat="probability", kde=kde, bins=bins)
+
     plt.xlabel(r"$\epsilon$ [ $J$ ]")
     plt.savefig("../figures/%s_m.pdf" %(savename), dpi=300, bbox_inches="tight")
     plt.show()
@@ -218,8 +224,6 @@ def timing_test():
     print("\n Speed up factor from 1 to 4 threads: ", thread4_total/thread1_total)
     print("\n Speed up factor from 4 to 8 threads: ", thread8_total/thread4_total)
 
-def funcinv(x, a, b):
-    return b + a/x
 
 def plot_temp_cycles(data, L_sizes):
     """
@@ -267,6 +271,33 @@ def plot_temp_cycles(data, L_sizes):
     plt.savefig("../figures/L_size_X_T.pdf", dpi=300, bbox_inches="tight")
 
     """Linear regression"""
+    plt.figure()
+    res = linregress(L_inv, T_X)
+    slope = res.slope
+    intercept = res.intercept 
+    plt.title(r"$R^2=$%.2f,  $SE_{intercept}=$ %.4f" %(res.rvalue**2, res.intercept_stderr))
+
+    sns.scatterplot(L_inv, T_X, label=r"data points from $\chi$")
+    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4f $L^{-1}$ + %.4f" %(slope, intercept))
+    plt.xlabel(r"$L^{-1}$")
+    plt.ylabel(r"$T_c$ $[ J/k_B ]$")
+    plt.legend()
+    plt.savefig("../figures/linregress_X.pdf", dpi=300, bbox_inches="tight")
+
+    plt.figure()
+    res = linregress(L_inv, T_cv)
+    slope = res.slope
+    intercept = res.intercept 
+    plt.title(r"$R^2=$%.2f,  $SE_{intercept}=$ %.4f" %(res.rvalue**2, res.intercept_stderr))
+
+    sns.scatterplot(L_inv, T_cv, label=r"data points from $C_v$")
+
+    sns.lineplot(L_inv, slope*L_inv+intercept, label=r"%.4f $L^{-1}$ + %.4f" %(slope, intercept))
+    plt.xlabel(r"$L^{-1}$")
+    plt.ylabel(r"$T_c$ $[ J/k_B ]$")
+    plt.legend()
+    plt.savefig("../figures/linregress_cv.pdf", dpi=300, bbox_inches="tight")
+
     plt.figure()
     L_tot = np.append(L_inv, L_inv)
     T_tot = np.append(T_cv, T_X)
@@ -369,21 +400,21 @@ def main():
     all_data = np.array([L_40, L_60, L_80, L_100], dtype= object)
 
     # Compare analytic and numeric for differnt T
-    plot_T(np.array(temp_L_2))
+    #plot_T(np.array(temp_L_2))
 
     # Diff analytic-nummeric
-    plot_diff(np.array(cycle_L_2_1), 1)
+    #plot_diff(np.array(cycle_L_2_1), 1)
 
     # Time used with and without paralleization
-    timing_test()
+    #timing_test()
     
     # Compare ordered and random initial spins
-    plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
-    plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
+    #plot_data(np.array(cycle_L20_1), np.array(cycle_L20_1_order), 1, savename="numeric_L_20_T_1")
+    #plot_data(np.array(cycle_L20_2_4), np.array(cycle_L20_2_4_order), 2.4, savename="numeric_L_20_T_2_4")
     
     # Histogram T
-    plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
-    plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
+    #plot_hist(np.array(histogram_T_1), 1, "histogram_T_1", False)
+    #plot_hist(np.array(histogram_T_2_4), 2.4, "histogram_T_2_4", True)
 
     # compare large Lattice sizes
     plot_temp_cycles(all_data, L_sizes)

@@ -43,7 +43,7 @@
 
 %This is how we create an abstract section.
 \begin{abstract}
-    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC). The main parameters that are computed and analyzed are mean energy $\epsilon$, mean magnetization $m$, specific heat capacity $C_V$ and susceptibility $\chi$. The MCMC method is first compared to analytical solutions for a $2 \times 2$ lattice and burn-in times are studied for a $20 \times 20$ lattice. These result in $10^6$ MCMC cycles being the optimal compromise between precision and computational expense. The Ising model simulation is then run for lattice sizes $40 \times 40, 60 \times 60, 80 \times 80$ and $100\times 100$. The previously mentioned parameters are plotted against a temperature range of $T \in [2.1,2.4]J/k_B$ for each lattice size. These results show indications of a phase transition taking place at a critical temperature $T_c$. These $T_c$ points for different lattice sizes are then used to approximate the infinite lattice case through linear regression. Our final result is $T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. An impressive approximation when compared to Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. To be able to run the larger computations for reasonable runtimes the MCMC code has been parallelized using OpenMP achieving a speed-up factor of $3.92$ for 8 threads on an 8 thread quad-core CPU. 
+    This article looks at phase transition in the widely studied Ising model. We attempt a numerical approximation of the critical temperature at which an infinite lattice Ising model undergoes phase change using a Markov Chain Monte Carlo approach (MCMC). The main parameters that are computed and analyzed are mean energy $\epsilon$, mean magnetization $m$, specific heat capacity $C_V$ and susceptibility $\chi$. The MCMC method is first compared to analytical solutions for a $2 \times 2$ lattice and burn-in times are studied for a $20 \times 20$ lattice. These result in $10^6$ MCMC cycles being the optimal compromise between precision and computational expense. The Ising model simulation is then run for lattice sizes $40 \times 40, 60 \times 60, 80 \times 80$ and $100\times 100$. The previously mentioned parameters are plotted against a temperature range of $T \in [2.1,2.4]J/k_B$ for each lattice size. These results show indications of a phase transition taking place at a critical temperature $T_c$. These $T_c$ points for different lattice sizes are then used to approximate the infinite lattice case through linear regression. Our final result is $T_c(L=\infty) = 2.2686 J/k_B$ with a standard error of $0.0129 J/k_B$. An impressive approximation when compared to Onsager's analytical result of  $T_{c \text{ analytic}}(L=\infty) \approx 2.269 J/k_B$. To be able to run the larger computations for reasonable runtimes the MCMC code has been parallelized using OpenMP achieving a speed-up factor of $3.92$ for 8 threads on an 8 thread quad-core CPU.
 \end{abstract}
 \maketitle
 \raggedbottom
@@ -146,7 +146,15 @@ Analytical solutions to these can also be found in appendix \ref{appendix:analyt
 
 
 \subsection*{Markov chain Monte Carlo and the metropolis algorithm}
-We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$. We then check if $w$ is larger or equal some random number in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. We update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before an average of the cumulative sums is taken. In total can the metropolis algorithm together with the Monte Carlo sampling be viewed as a Markov Chain from how the probability to transition to a new state only is dependent on the current state spin configuration and following energy and magnetization. A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}.
+The Marov Chain Monte Carlo method with the metropolis algorithm requires both detailed balance and ergodicity. This means that every transition in the system we are looking at are reversible, aperiodic and positive recurrent. For the Ising model is each transition only dependent on a transition probability calculated from an energy difference between the previous and new state which fulfills detailed balance. This probability is expressed in equation \ref{eq:prob_dist} and also fulfill ergodicity from that every new change of the system is independent of every other changes that have been performed.
+
+A flow chart of the Metropolis algorithm can be found in appendix \ref{appendix:metro}, and is described as follows. We start with an initial energy computed from the random or ordered initial configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$ which fulfill the detailed balance. We then check if $w$ is larger or equal to some random number $r$ in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. The probability of this configuration change is what is earlier described as the transition probability. After this we update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before expectation values using the cumulative sums are taken. In total the metropolis algorithm together with the Monte Carlo sampling becomes a Markov Chain. This is from how the probability to transition to a new state only is dependent on the current spin configuration and following energy and magnetization.
+
+Selvom dette er en riktig beskrivelse av metropolis så er dette veldig overflatisk. Om dere har tid ville jeg kanskje ha forklart hvorfor dette er slik. Det enkleste er å forklare at dette fører til transfer probabilities som oppfylder detailed balanced. Uansett ville det kanskje være bedre å skrive “transfer probabilites” og eller en pseudo kode for algoritmen her.
+
+… Så først referance til flow chart etterå, så dere bør kanskje refere til dene heroppe.
+\subsection*{Random values}
+For our random number $r$ in the interval [0,1] we use a Mersenne Twister generator. This generator has a period of $2^{199937}$ which defines how long it continues before repeating itself \cite{SHEMA201071}. This means that we will not run into any problems with a random number being repeated, which may compromise our performance.   Since we have parallelization at the level of temperature.
 
 \subsection*{Critical phenomena}
 The final goal for the MCMC simulations will be to approximate the critical temperature for an \textit{infinite} $(L=\infty)$ 2D Ising model. As mentioned in section \ref{sec:intro}, the analytical solution for this was found by Lars Onsager. His result is
@@ -167,20 +175,24 @@ This relation will be approximated by performing linear regression using the sci
 \end{equation}
 will thus supply a value for $a$ and the interception point $b$ which in this case is $T_c(L=\infty)$.
 
+
 \subsection*{Optimization and parallelization}
 %\subsection*{Periodic boundary conditions}
-The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{fig:neighbors}, also at the boundaries of the lattice.
-\begin{figure}[H]
+The Ising model simulations we will be implemented using periodic boundary conditions. This way, all spins will have four neighbors as seen in table \ref{tab:neighbors}, also at the boundaries of the lattice.
+\begin{table}[H]
     \centering
+    \label{tab:neighbors}
+    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).}
     \begin{tabular}{llll}
                    & $\uparrow$ &            \\
         $\uparrow$ & $\uparrow$ & $\uparrow$ \\
                    & $\uparrow$ &
-    \end{tabular}\label{fig:neighbors}
-    \caption{An example of a spin and its four neighbors. Here all five spins are in an up state (+1).}
-\end{figure}
-Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator.
-
+    \end{tabular}
+\end{table}
+Periodic boundaries could be implemented using if-tests, but if-tests within loops can be slow. To make the code slightly more efficient we have chosen to write a \texttt{periodic} function using the modulo operator. For an index \texttt{idx}, lattice dimension \texttt{dim} and \texttt{offset} equaling 1 or -1 for neighboring indexes up or right, or down or left respectively we have
+\begin{align*}
+    \texttt{neighboring index} = \texttt{(idx + dim + offset) \% dim}.
+\end{align*}
 The Monte Carlo method will repeatedly require the Boltzmann factor $e^{-\beta \Delta E}$. The energy shift induced by flipping a single spin
 \begin{equation}
     \Delta E = E_{\text{after}} - E_{\text{before}}
@@ -190,7 +202,7 @@ can only take five possible values in a 2D-lattice of arbitrary size($L > 2$) Th
     \Delta E = 8J, 4J, 0, -4J, -8J.
 \end{equation}
 To reduce computational cost we will avoid repeatedly calling the exponential function. This is done by pre-computing the five possible Boltzmann factors in an array.
-Furthermore, the code is written such that it can be run parallelized. This allows us to run it on several threads using OpneMP to reduce runtimes.
+Furthermore, the code is written such that it can be run parallelized. This allows us to run it on several threads using OpenMP to reduce runtimes. We chose to parallelize at the level of temperature and number of cycles meaning that each thread gets its own set of temperatures or number of cycles to run the MCMC algorithm for. This does not speed up the algorithm when running for one specific temperature or number of MC cycles, but can improve the speed when testing for different values of these parameters.
 \onecolumngrid
 \newpage
 \twocolumngrid
@@ -333,20 +345,42 @@ The specific heat capacity in figure \ref{fig:L_size_c_v_T} increases for $T \in
 \end{table}
 \begin{figure}[H]
     \centering
+    \includegraphics[width=.5\textwidth]{../figures/linregress_X.pdf}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $\chi$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \label{fig:linregress_X}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/linregress_cv.pdf}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_v$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \label{fig:linregress_cv}
+\end{figure}
+\begin{figure}[H]
+    \centering
     \includegraphics[width=.5\textwidth]{../figures/linregress.pdf}
-    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $\chi$ and $C_V$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
+    \caption{The blue line shows linear regression using critical temperature points $T_c$ from $C_v$ and $\chi$ for different lattice sizes $L$. Here temperature $T$ is plotted against $L^{-1}$.}
     \label{fig:linregress}
 \end{figure}
-Taking the temperature values at the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ show in table \ref{tab:critical_T} and performing linear regression results in the blue line in figure \ref{fig:linregress}. We have the function
+Taking the temperature values at the peak values of the specific heat capacity $C_V$ and the susceptibility $\chi$ show in table \ref{tab:critical_T} and performing linear regression results in the blue line in figure \ref{fig:linregress_X} and \ref{fig:linregress_cv} where we see good linear fits. For $\chi$ we have the function
 \begin{equation}
-    T_c(L) = 1.2735 L^{-1} + 2.2686.
+    T_{c,\chi}(L) = 1.4419 L^{-1} + 2.2757  J/k_B.
 \end{equation}
-This gives us $a=1.2735$ and letting $L=\infty$ we have
+This gives us $a=1.4419$ and letting $L=\infty$ we have with the uncertainty expressed as the standard error
 \begin{equation}
-    T_c(L=\infty) = 2.2686 J/k_B
+    T_{c,\chi}(L=\infty) = 2.2757 \pm 0.0097  J/k_B.
 \end{equation}
-with a standard error of $0.0129 J/k_B$.
-
+For $C_v$ we have:
+\begin{equation}
+    T_{c,C_v}(L) = 1.1051 L^{-1} + 2.2615  J/k_B.
+\end{equation}
+This gives us $a=1.1051$ and letting $L=\infty$ we have
+\begin{equation}
+    T_{c,C_v}(L=\infty) = 2.2615 \pm 0.0052  J/k_B.
+\end{equation}
+A combination of figure \ref{fig:linregress_cv} and \ref{fig:linregress_X} can be seen in figure \ref{fig:linregress} and gives us
+\begin{align}
+    T_{c,tot}(L=\infty) = 2.2686 \pm 0.0129  J/k_B.
+\end{align}
 \begin{table}[H]
     \centering
     \caption{Time used for different number of threads in parallelization at temperature level. A quad-core, 8 thread CPU has been used for the ising model initialized with a $5\times5$ lattice with randomized initial spins and temperature $T= 1$ $J/k_B$}
@@ -375,7 +409,7 @@ Figure \ref{fig:numeric_L_20_T_2_4_e} and \ref{fig:numeric_L_20_T_2_4_m} for $T=
 It could be argued that more precise results can be generated if one chooses not to use samples from the burn-in time. This is because a very unlikely initial state can affect the final distribution since a large amount of the samples generated are actually highly unlikely. A solution to this, and what we have chosen to do, is to run as many cycles as is computationally reasonable when considering runtimes. Based on the burn-in time results, running $10^6$ cycles seems enough to out way any highly unlikely initial spin configuration. At least in the $L=20$ case. Whether this is actually true for larger lattice sizes as well would require further testing.
 
 %approximation of L=\infty
-Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]J/k_B$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
+Having developed a certain understanding and confidence in our model we now start looking for indications of phase transition. One can see that the mean magnetization drops off more abruptly after $T=2.25 J/k_B$ in figure \ref{fig:L_size_m_T}. This matches the expected phase transition for the Ising model which is a loss of magnetization after a certain critical temperature $T_c$. Seeing how the graphs slope steepens for increasing $L$ we would expect it to be infinitely steep in an infinite lattice case at $T_c$. Studying the region $T \in [2.235,2.33]J/k_B$ in figure \ref{fig:L_size_c_v_T} and \ref{fig:L_size_X_T} we observe definite peak values for $C_V$ and $\chi$. This abrupt change from the change of the external temperature parameter further indicates a phase transition happening in this region of $T$. The critical temperature at which $C_V$ and $\chi$ peak for different lattice sizes is shown in table \ref{tab:critical_T}. The critical temperature at which the phase transition happens for an infinite lattice is then found in figure \ref{fig:linregress_X} and \ref{fig:linregress_cv} using linear regression of the $T_c$ for different lattice sizes. Since the data set is fairly small we have chosen to use all eight data points. The resulting critical temperature approximation is
 \begin{equation}
     T_c(L=\infty) = 2.2686 J/k_B.
 \end{equation}

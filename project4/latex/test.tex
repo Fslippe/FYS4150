@@ -86,8 +86,14 @@ METROPOLIS
 We start with an initial energy computed from the random or odered inital configuration of spins. We randomly flip one spin and calculate a temporary energy which we use to calculate $\Delta E$ which can take 5 different values. This gives us the possibility to use the returned value as an index which matches with the pre-calculated $w= e^{-\beta \Delta E}$. We then check if $w$ is larger or equal some random number in the interval [0,1] and if so, we accept the new flipped configuration. If not we keep the old configuration which allows us to move towards the energy minimum for the given temperature. We update the total energy and magnetization of the lattice if the configuration is changed. We repeat this $N$ times before we use the last calculated $M$ and $E$ to add to cumulative sums of $E$, $E^2$, $M$, $M^2$ and $|M|$. This is one Monte Carlo cycle and is repeated for a chosen number of cycles before an average of the cumulative sums is taken. In total can the metropolis algorithm together with the Monte Carlo sampling be viewed as a Markov Chain from how the probability to transition to a new state only is dependent on the current state spin configuration and following energy and magnetization.
 
 
+For our random number $r$ in the interval [0,1] we use a Mersenne Twister generator. This generator has a period of $2^{199937}$ which defines how long it continues before repeating itself \cite{SHEMA201071}. This means that we will not run into any problems with a random number being repeated, which may compromise our performance.   Since we have parallelization at the level of temperature.
+
+1 [5 3 34 56 ]
+2 [5 3 34 56 ]
+
 
 Å GJØRE:
+
 periodic boundary inn i optimalization
 
 Hakkete: he Monte Carlo method will repeatedly require the
