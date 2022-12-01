@@ -1,27 +1,29 @@
-#include "double_slit_box.hpp"
+#include <armadillo>
+#include <cmath>
+#include <complex>
 
-// Constructor
-DoubleSlitBox::DoubleSlitBox()
-{
-    
-}
 
-// Tranlates a pair of indices (i,j) from an u^n (M-2)x(M-2) matrix to a corresponding single index k in a u^n vector.
-int DoubleSlitBox::translate_indices(int i, int j) 
+int main()
 {
-    return (i-1) + (M-2)*(j-1);
-}
-
-// Fills mnatrices A and B for CN scheme 
-void DoubleSlitBox::fill_A_B( int M, double h, double dt, arma::cx_mat V)
-{
+    // input M, h, dt, V
+    int M = 5;
+    double dt = 1.5;
+    double h = 1.6;
+   //arma::cx_mat V;
+//--------------------------------------------
     int n = (M-2);
     int N = n*n; // matix size NxN
+    //int r = 3;
 
+    // arma::vec P(10, arma::fill::randu);
+    // arma::cx_vec a = roots(P);
+    // arma::cx_vec b = roots(P);
 //-------------------------------------------- VECTOR FILLER
     // complex values
     std::complex<double> r(0, (dt / (2.*h*h)));
     std::complex<double> a_term = 1. + 4.*r;
+    std::cout << "\n \n";
+    std::cout << a_term;
     std::complex<double> b_term = 1. - 4.*r;
     std::complex<double> ab_term(0, dt / 2.);
     
@@ -29,15 +31,15 @@ void DoubleSlitBox::fill_A_B( int M, double h, double dt, arma::cx_mat V)
     arma::cx_vec a(N);
     arma::cx_vec b(N);
 
-    // fill a and b vectors
-    for (int i = 1; i <= n; i++ )
-    {
-         for (int j = 1; i <= n; i++ )
-         {
-            a( translate_indices( i, j) ) = a_term + ab_term * V(i,j);
-            b( translate_indices( i, j) ) = b_term - ab_term * V(i,j);
-         }
-    }
+    // // fill a and b vectors
+    // for (int i = 1; i <= n; i++ )
+    // {
+    //      for (int j = 1; i <= n; i++ )
+    //      {
+    //         a( translate_indices( i, j) ) = a_term + ab_term * V(i,j);
+    //         b( translate_indices( i, j) ) = b_term - ab_term * V(i,j);
+    //      }
+    // }
 
 //--------------------------------------------- MATRIX FILLER
     // Create A and B matrix
@@ -71,22 +73,12 @@ void DoubleSlitBox::fill_A_B( int M, double h, double dt, arma::cx_mat V)
 
     }
 
-}
+//---------------------------------------------
+  
 
-// Evolves the system one time step (dt) using the Crank-Nicholson scheme
-void DoubleSlitBox::evolve_CN(double dt)
-{
-
-}
-
-// Sets up initial state based on an unnormalised Gaussian wave packet epression
-void DoubleSlitBox::init_box()
-{
-
-}
-
-// initializes the potential V
-void DoubleSlitBox::init_V()
-{
-
+    // A.print();
+    // std::cout << "\n \n";
+    // B.print();
+    
+    return 0;
 }
