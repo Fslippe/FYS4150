@@ -1,0 +1,181 @@
+\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-1}  % defines the basic parameters of the document
+% For preview: skriv i terminal: latexmk -pdf -pvc filnavn
+% If you want a single-column, remove "reprint"
+
+% Allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+% \usepackage[english]{babel}
+
+%% Note that you may need to download some of these packages manually, it depends on your setup.
+%% I recommend downloading TeXMaker, because it includes a large library of the most common packages.
+
+\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
+\include{amsmath}
+\usepackage{graphicx}         % include graphics such as plots
+\usepackage{xcolor}           % set colors
+\usepackage{hyperref}         % automagic cross-referencing
+\usepackage{listings}         % display code
+\usepackage{subfigure}        % imports a lot of cool and useful figure commands
+\usepackage{float}
+%\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+% defines the color of hyperref objects
+% Blending two colors:  blue!80!black  =  80% blue and 20% black
+\hypersetup{ % this is just my personal choice, feel free to change things
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}}
+
+
+% ===========================================
+
+
+\begin{document}
+
+\title{Numerical simulation of the 2+1 dimensional Schrödinger equation}  % self-explanatory
+\author{Alessio Canclini, Filip von der Lippe} % self-explanatory
+\date{\today}                             % self-explanatory
+\noaffiliation                            % ignore this, but keep it.
+
+%This is how we create an abstract section.
+\begin{abstract}
+   NB! Abstract here!
+\end{abstract}
+\maketitle
+
+
+% ===========================================
+\section{Introduction}
+%
+PDEs ect.
+
+% ===========================================
+\section{Methods}\label{sec:methods}
+%
+To simulate the double-slit-in-a-box experiment we use the following theoretical framework. The time-dependent Schrödinger equation's general formulation is
+\begin{equation}
+    i \hbar \frac{d}{dt} | \Psi \rangle = \hat{H} | \Psi \rangle.
+\end{equation}
+Here $| \Psi \rangle$ is the quantum state and $\hat{H}$ is the Hamiltonian operator. For our purposes we consider a single, non-relativistic particle in two spatial dimensions. This allows $| \Psi \rangle$ to be expressed as $/Psi(x,y,t)$, a complex-valued function. In this case the Schrödinger equation can be expressed as
+\begin{align}
+    i \hbar \frac{\partial}{\partial t} \Psi(x,y,t) = - \frac{\hbar^2}{2m} \left( \frac{\partial^2}{\partial x^2} + \frac{\partial}{\partial y^2}\right) \Psi(x,y,t) \\
+    + V(x,y,t) \Psi (x,y,t).
+\end{align}
+In the first term on the RHS, $- \frac{\hbar^2}{2m} \frac{\partial^2 \Psi}{\partial x^2}$ and $- \frac{\hbar^2}{2m} \frac{\partial^2 \Psi}{\partial x^2}$ express kinetic energy equivalent to $\frac{p^2}{2m}$ in classical physics. Here $m$ is the particle mass. Only the case of a time-independent potential $V = V(x,y)$ is considered. Working in this kind of position space the Born rule is
+\begin{align}
+    p(x,y;t) = |\Psi(x,y,t)|^2 = \Psi^{\ast} (x,y,t) \Psi(x,y,t).
+\end{align}
+Here $p(x,y;t)$ is the probability density of a particle being detected at a position $(x,y)$ at a time $t$. Continuing we assume that all dimensions have been scaled away. This leaves us with a dimensionless Schrödinger equation
+\begin{equation}
+    i \frac{\partial u}{\partial t} = - \frac{\partial^2 u}{\partial y^2} - \frac{\partial^2 u}{\partial y^2} + v(x,y)u. \label{eq:wave_eq}
+\end{equation}
+$v(x,y)$ is some potential and $u = u(x,y,t)$ our ``wave function'' which will hold a complex value ($u \in \mathbb{C}$). With this new notation the Born rule becomes
+\begin{equation}
+    p(x,y,;t) = |u(x,y,t)|^2 = u^{\ast} (x,y,t) u(x,y,t).
+\end{equation}
+Here we assume that the wave function $u$ has been properly normalized.
+
+\subsection*{Initial and boundary conditions}
+
+\subsection*{The Crank-Nicholson scheme}
+Using the Crank-Nicholson scheme, eq. \ref{eq:wave_eq} is discretized as
+\begin{align}
+    &u_{ij}^{n+1} - r \left[ u_{i+1,j}^{n+1}- 2 u_{ij}^{n+1} + u_{i-1,j}^{n+1} \right] \\
+    &- r \left[ u_{i,j+1}^{n+1}- 2 u_{ij}^{n+1} + u_{i,j-1}^{n+1} \right]
+    + \frac{i \Delta t}{2} v_{ij} u_{ij}^{n+1} \\
+    &= u_{ij}^n 
+    + r \left[ u_{i+1,j}^{n}- 2 u_{ij}^{n} + u_{i-1,j}^{n} \right] \\
+    &+ r \left[ u_{i,j+1}^{n}- 2 u_{ij}^{n} + u_{i,j-1}^{n} \right]
+    - \frac{i \Delta t}{2} v_{ij} u_{ij}^{n}.
+\end{align}
+Here $r \equiv \frac{i \Delta t}{2h^2}$. $i$ indexes are not to be confused with the imangiary unit $i$. A more comprehensive analytical derivation can be found in appendix \ref{appendix:analytic}. Considering the case with our specific boundary conditions, this can be expressed as the matrix equation
+\begin{equation}
+    A \vec{u}^{\text{ }n+1} = B \vec{u}^{\text{ }n}.
+\end{equation}
+% ===========================================
+\section{Results}\label{sec:results}
+%
+
+% ===========================================
+\section{Discussion}\label{sec:discussion}
+%
+
+
+% ===========================================
+\section{Conclusion}\label{sec:conclusion}
+
+\onecolumngrid
+
+%\bibliographystyle{apalike}
+\bibliography{ref}
+
+\newpage
+\appendix
+
+\section{Analytical discretization of the 2+1 dimensional wave equation} \label{appendix:analytic}
+
+The Schrödinger equation written as
+\begin{equation}
+    i \frac{\partial u}{\partial t} = - \frac{\partial^2 u}{\partial x^2} - \frac{\partial^2 u}{\partial y^2} + v(x,y)u, \label{eq:wave_eq_appendix}
+\end{equation}
+can be discretized using the Crank - Nicholson scheme. This involves using the forward Euler approximation for time 
+\begin{equation}
+    \frac{\partial u}{\partial t} = \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t}, \label{eq:partial_t}
+\end{equation}
+and evaluating the second order spatial derivative in both the current and next time step to then use the average for both spatial dimension $x$ and $y$. Using Taylor expansion results in
+\begin{equation}
+    \frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j} -2u_{ij} + u_{i-1,j}}{h^2}.
+\end{equation}
+Then evaluating in the current and next time step we have
+\begin{equation}
+    \frac{\partial^2 u}{\partial x^2} = \frac{1}{2} \left[ \frac{u_{i+1,j}^{n+1} -2u_{ij}^{n+1} + u_{i-1,j}^{n+1}}{h^2} 
+    + \frac{u_{i+1,j}^{n} -2u_{ij}^{n} + u_{i-1,j}^{n}}{h^2} \right] \label{eq:partial_x}
+\end{equation}
+for the $x$ dimension. Similarly, for the $y$ dimension we have
+\begin{equation}
+    \frac{\partial^2 u}{\partial y^2} = \frac{u_{i,j+1} -2u_{ij} + u_{i,j-1}}{h^2}
+\end{equation}
+and evaluated in the current and next time step
+\begin{equation}
+    \frac{\partial^2 u}{\partial y^2} = \frac{1}{2} \left[ \frac{u_{i,j+1}^{n+1} -2u_{ij}^{n+1} + u_{i,j-1}^{n+1}}{h^2}
+    + \frac{u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}{h^2} \right]. \label{eq:partial_y}
+\end{equation}
+Now to discretize eq. \ref{eq:wave_eq_appendix} we insert our results from eq. \ref{eq:partial_t}, \ref{eq:partial_x} and \ref{eq:partial_y}. This gives
+\begin{align}
+    i \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} 
+    =& - \frac{1}{2} \left[ \frac{u_{i+1,j}^{n+1} -2u_{ij}^{n+1} + u_{i-1,j}^{n+1}}{h^2} 
+    + \frac{u_{i+1,j}^{n} -2u_{ij}^{n} + u_{i-1,j}^{n}}{h^2} \right] \\
+     -& \frac{1}{2} \left[ \frac{u_{i,j+1}^{n+1} -2u_{ij}^{n+1} + u_{i,j-1}^{n+1}}{h^2}
+     + \frac{u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}{h^2} \right]
+     + \frac{1}{2} \left[ v_{ij}u_{ij}^{n+1} + v_{ij}u_{ij}^n \right], 
+\end{align}
+where the whole RHS is evaluated in the current and next time step including the last term. Then multiplying by $i\Delta t$ on both sides (remembering that $i^2 = -1$), we have
+\begin{align}
+    - u_{ij}^{n+1} + u_{ij}^n 
+    =& - \frac{i\Delta t}{2} \left[ \frac{u_{i+1,j}^{n+1} -2u_{ij}^{n+1} + u_{i-1,j}^{n+1}}{h^2} 
+    + \frac{u_{i+1,j}^{n} -2u_{ij}^{n} + u_{i-1,j}^{n}}{h^2} \right] \\
+     -& \frac{i\Delta t}{2} \left[ \frac{u_{i,j+1}^{n+1} -2u_{ij}^{n+1} + u_{i,j-1}^{n+1}}{h^2}
+     + \frac{u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}{h^2} \right]
+     + \frac{i\Delta t}{2} \left[ v_{ij}u_{ij}^{n+1} + v_{ij}u_{ij}^n \right]. 
+\end{align}
+\\ \\
+NB! Need to check if the above and below expressions are actually equal!
+\\ \\
+Collecting all the $n+1$ terms on the LHS we have the final expression
+\begin{align}
+    u_{ij}^{n+1} - r \left[ u_{i+1,j}^{n+1}- 2 u_{ij}^{n+1} + u_{i-1,j}^{n+1} \right] 
+    - r \left[ u_{i,j+1}^{n+1}- 2 u_{ij}^{n+1} + u_{i,j-1}^{n+1} \right] 
+    + \frac{i \Delta t}{2} v_{ij} u_{ij}^{n+1} \\
+    = u_{ij}^n 
+    + r \left[ u_{i+1,j}^{n}- 2 u_{ij}^{n} + u_{i-1,j}^{n} \right] 
+    + r \left[ u_{i,j+1}^{n}- 2 u_{ij}^{n} + u_{i,j-1}^{n} \right]
+    - \frac{i \Delta t}{2} v_{ij} u_{ij}^{n},
+\end{align}
+where $r \equiv \frac{i \Delta t}{2h^2}$. 
+
+\end{document}
