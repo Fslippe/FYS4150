@@ -4,7 +4,10 @@
 #include "omp.h"
 #include "time.h"
 
+// Test lattice for different temperatures and save datafile
 void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool order, std::string save1, int threads, double T_min, double T_max);
+
+// Test lattice for different number of cycles and save datafile
 void cycle_loop(int n_cycles, int seed, double T, int lattice_dim, bool order, std::string save2, int threads);
 
 int main(int argc, char *argv[])
@@ -20,6 +23,7 @@ int main(int argc, char *argv[])
     double T_min = atof(argv[8]);
     double T_max = atof(argv[9]);
 
+    // oderered or random initial spins
     bool order;
     if (order_in == "false")
     {
@@ -40,9 +44,11 @@ int main(int argc, char *argv[])
     // Values depending on number of cycles
     clock_t t1;
     clock_t t2;
+
+    // running cycle loop
     if (save1 != "none")
     {
-        std::cout << "\nCYCLE DIFFERENCE\n";
+        std::cout << "\nCYCLE\n";
         t1 = clock();
         cycle_loop(n_cycles, seed, T, lattice_dim, order, save1, threads);
         t2 = clock();
@@ -86,6 +92,8 @@ void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool or
 {
     arma::mat T_val;
     arma::vec temp;
+
+    // Testing for extra values from T=2.235
     if (T_min == 2.1)
     {
         arma::vec a = arma::linspace(T_min, 2.23, 15);
@@ -98,7 +106,7 @@ void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool or
     }
     else
     {
-        temp = arma::linspace(T_min, T_max, n_T); // change
+        temp = arma::linspace(T_min, T_max, n_T);
         T_val = arma::mat(5, n_T);
     }
 
@@ -114,11 +122,13 @@ void temp_loop(int n_T, int cycles, int seed, double T, int lattice_dim, bool or
             T_val(i, j) = IM.val_vec(i - 1);
         }
     }
-    T_val.save(save1);
+    T_val.save(save1); // savefile
 }
+
 void cycle_loop(int n_cycles, int seed, double T, int lattice_dim, bool order, std::string save2, int threads)
 {
     arma::vec cycle_array;
+    // running less total cycles if dimension is not 2
     if (lattice_dim == 2)
     {
         cycle_array = arma::logspace(1, 7, n_cycles);
@@ -142,5 +152,5 @@ void cycle_loop(int n_cycles, int seed, double T, int lattice_dim, bool order, s
             cycle_val(i, j) = IM.val_vec(i - 1);
         }
     }
-    cycle_val.save(save2);
+    cycle_val.save(save2); // savefile
 }

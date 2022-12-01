@@ -1,8 +1,8 @@
 #include "ising_model.hpp"
 
+// Constructor
 IsingModel::IsingModel(int dim_in)
 {
-
     dim = dim_in;
     n_spins = dim * dim;
 
@@ -11,6 +11,7 @@ IsingModel::IsingModel(int dim_in)
     val_vec = arma::vec(4);
 }
 
+// Method to initialize lattice with a chosen temperature, seed, and spin order
 void IsingModel::init_lattice(double T_in, int seed, bool spin_order)
 {
     sum = arma::zeros(5);
@@ -40,6 +41,7 @@ void IsingModel::init_lattice(double T_in, int seed, bool spin_order)
         }
     }
 
+    // Initial energy
     for (int j = 0; j < dim; j++)
     {
         for (int i = 0; i < dim; i++)
@@ -54,13 +56,13 @@ void IsingModel::init_lattice(double T_in, int seed, bool spin_order)
     }
 }
 
+// periodic boundary conditions
 int IsingModel::periodic(int idx, int lim, int offset)
 {
     return (idx + lim + offset) % lim;
 }
 
 // Calculate energy at the given index using periodic boundary conditions
-//
 int IsingModel::energy(int ix, int iy)
 {
     up = lattice(ix, periodic(iy, dim, 1));
@@ -91,6 +93,7 @@ void IsingModel::metropolis()
     }
 }
 
+// Monte carlo sample for a chosen number of cycles
 void IsingModel::MC_sample(int cycles, bool histogram)
 {
     if (histogram)
@@ -120,6 +123,7 @@ void IsingModel::MC_sample(int cycles, bool histogram)
     }
 }
 
+// output called after running all MC samples
 void IsingModel::output(int cycles)
 {
     // normalizing the sum
