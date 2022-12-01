@@ -76,7 +76,8 @@ void DoubleSlitBox::fill_A_B( int M, double h, double dt, arma::cx_mat V)
 // Evolves the system one time step (dt) using the Crank-Nicholson scheme
 void DoubleSlitBox::evolve_CN(double dt)
 {
-
+    b = B * u;
+    u = arma::spsolve(A,b);
 }
 
 // Sets up initial state based on an unnormalised Gaussian wave packet epression
