@@ -52,7 +52,13 @@
 % ===========================================
 \section{Introduction}
 %
-PDEs ect.
+Looking at the world around you there are an incredible variety of processes occurring. This can be the weather, how heat diffuses through your cooking utensils and burns you, or how light behaves and allows you to see it all. Most such physical processes are amazingly complex and depend on many variables. Partial differential equations (PDEs) allow us to model such processes.
+These PDEs can be incredibly difficult and often impossible to solve analytically. An example some readers might be familiar with are the famous Navier-Stokes equations, the solving of which would be rewarded with a million dollar prize. Thus, to simulate and at least approximate solutions to these equations we utilize the rapidly evolving tool of computational simulation by implementing a variety of finite difference schemes and letting a computer do the repetitive work. 
+We will use the Crank-Nicholson scheme to solve a possibly even more famous PDE, the time-dependent Schrödinger equation. The equation is simplified to our specific case where we simulate arguably the most famous experiment in physics; the double slit experiment. It was originally performed by Thomas Young in 1802 resulting in the first demonstration of wave-particle duality. 
+
+Crank-Nicholson
+
+conservation of probability to check stability
 
 % ===========================================
 \section{Methods}\label{sec:methods}
@@ -81,6 +87,22 @@ $v(x,y)$ is some potential and $u = u(x,y,t)$ our ``wave function'' which will h
 Here we assume that the wave function $u$ has been properly normalized.
 
 \subsection*{Initial and boundary conditions}
+Dirichlet boundary conditions are implemented in the $xy$-plane as follows.
+\begin{itemize}
+    \item $u(x=0,y,t) = 0$
+    \item $u(x=1,y,t) = 0$
+    \item $u(x,y=0,t) = 0$
+    \item $u(x,y=1,t) = 0$
+\end{itemize}
+
+The initial wave function $u_{ij}^0$ is given by the unnormalized quantum mechanical Gaussian wavepacket
+\begin{align}
+    u(x,y,t = 0) = e^{-\frac{(x-x_c)^2}{2 \sigma_x^2} -\frac{(y-y_c)^2}{2 \sigma_y^2}+ ip_x (x-x_c)+ ip_y (y-y_c)}.
+\end{align}
+This is then normalized such that
+\begin{equation}
+    \sum_{i,j} u_{ij}^{0*} u_{ij}^0 = 1.
+\end{equation}
 
 \subsection*{The Crank-Nicholson scheme}
 Using the Crank-Nicholson scheme, eq. \ref{eq:wave_eq} is discretized as

@@ -22,8 +22,6 @@ int main()
     // complex values
     std::complex<double> r(0, (dt / (2.*h*h)));
     std::complex<double> a_term = 1. + 4.*r;
-    std::cout << "\n \n";
-    std::cout << a_term;
     std::complex<double> b_term = 1. - 4.*r;
     std::complex<double> ab_term(0, dt / 2.);
     
@@ -31,15 +29,15 @@ int main()
     arma::cx_vec a(N);
     arma::cx_vec b(N);
 
-    // // fill a and b vectors
-    // for (int i = 1; i <= n; i++ )
-    // {
-    //      for (int j = 1; i <= n; i++ )
-    //      {
-    //         a( translate_indices( i, j) ) = a_term + ab_term * V(i,j);
-    //         b( translate_indices( i, j) ) = b_term - ab_term * V(i,j);
-    //      }
-    // }
+    // fill a and b vectors
+    for (int i = 1; i <= n; i++ )
+    {
+         for (int j = 1; i <= n; i++ )
+         {
+            a( translate_indices( i, j) ) = a_term + ab_term * V(i,j);
+            b( translate_indices( i, j) ) = b_term - ab_term * V(i,j);
+         }
+    }
 
 //--------------------------------------------- MATRIX FILLER
     // Create A and B matrix
