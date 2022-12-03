@@ -131,6 +131,7 @@ void DoubleSlitBox::init_wave()
             u( translate_indices( i, j) ) = wp_val;
          }
     }
+    // NB! u needs to be normalized !!!!
    
 }
 
