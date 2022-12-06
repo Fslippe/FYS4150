@@ -56,7 +56,7 @@ void DoubleSlitBox::fill_A_B()
     // fill a and b vectors
     for (int i = 1; i <= n; i++)
     {
-        for (int j = 1; i <= n; i++)
+        for (int j = 1; j <= n; i++)
         {
             // std::cout << V << "\n";
             // std::cout << i << j << translate_indices(i, j) << "\n";
