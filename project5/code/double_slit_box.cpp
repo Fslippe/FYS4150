@@ -146,8 +146,13 @@ void DoubleSlitBox::init_wave()
         }
     }
     u /= sum;
-    u.print();
-    std::cout << sum;
+    // u.print();
+
+    // SOMETHING WRONG WITH THE TEST FOR THE SUM OVER U LENGTH
+    std::cout << sum << "\n";
+    arma::vec im = arma::imag(u);
+    std::cout << im * im << "test\n";
+    // std::cout << arma::real(u) * arma::real(u) + arma::imag(u) * arma::imag(u);
 
     // std::cout << u(1) << "vsd" << u;
 
