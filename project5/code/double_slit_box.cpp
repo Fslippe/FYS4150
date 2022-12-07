@@ -22,7 +22,7 @@ DoubleSlitBox::DoubleSlitBox(double h_in, double dt_in, double T_in, double xc_i
 
     // Double slix box matrices (total matrix size)
     // arma::cx_mat U(M,M);
-    V = arma::zeros(M, M);
+    V = arma::mat(M, M);
     // Crank Nicholson matrices and vectors (internal matrix size)
     b = arma::cx_vec(N);
     u = arma::cx_vec(N);
@@ -56,7 +56,7 @@ void DoubleSlitBox::fill_A_B()
     // fill a and b vectors
     for (int i = 1; i <= n; i++)
     {
-        for (int j = 1; j <= n; i++)
+        for (int j = 1; j <= n; j++)
         {
             // std::cout << V << "\n";
             // std::cout << i << j << translate_indices(i, j) << "\n";
@@ -75,7 +75,6 @@ void DoubleSlitBox::fill_A_B()
     A.diag() = a;
     A.diag(n).fill(-r);
     A.diag(-n).fill(-r);
-    std::cout << "TEST\n";
 
     B.diag() = b;
     B.diag(n).fill(r);
@@ -103,6 +102,7 @@ void DoubleSlitBox::fill_A_B()
 void DoubleSlitBox::evolve_CN()
 {
     b = B * u;
+
     u = arma::spsolve(A, b); // spslover is well suited since A is a sparse matrix
 }
 
@@ -110,12 +110,33 @@ void DoubleSlitBox::evolve_CN_to_time()
 {
     int n_T = T / dt;
     arma::vec t = arma::linspace(0, T, n_T + 1);
-    // arma::cube u_save(n_T+1, u.size());
+    arma::mat t_save = t;
+    t_save.save("data/t8.dat");
+    arma::cube u_save = arma::zeros(n_T + 1, M, M);
+    arma::cube u_real = arma::zeros(n_T + 1, M, M);
+    arma::cube u_imag = arma::zeros(n_T + 1, M, M);
 
+    arma::vec p_val(u.size());
+    std::cout << "number of timesteps: " << n_T << "\n";
     for (int i = 0; i <= n_T; i++)
     {
+        std::cout << i << "\n";
         evolve_CN();
+        p_val = arma::vec(arma::real(u % arma::conj(u)));
+        for (int k = 1; k < M - 1; k++)
+        {
+            for (int j = 1; j < M - 1; j++)
+            {
+                u_save(i, j, k) = p_val(translate_indices(j, k));
+                u_real(i, j, k) = arma::vec(arma::real(u))(translate_indices(j, k));
+                u_imag(i, j, k) = arma::vec(arma::imag(u))(translate_indices(j, k));
+            }
+        }
     }
+    std::cout << n_T << M << "SIZE " << arma ::size(u_save);
+    u_save.save("data/double_slit_sigmay_02.dat");
+    u_real.save("data/double_slit_sigmay_02_real.dat");
+    u_imag.save("data/double_slit_sigmay_02_imag.dat");
 }
 // Sets up initial state vector u0 based on an unnormalised Gaussian wave packet epression
 void DoubleSlitBox::init_wave()
@@ -145,13 +166,13 @@ void DoubleSlitBox::init_wave()
             // std::cout << u(translate_indices(i, j)) << "\n";
         }
     }
-    u /= sum;
+    u /= std::sqrt(sum);
     // u.print();
-
+    // std::cout << arma::sum(arma::real(u % arma::conj(u)));
     // SOMETHING WRONG WITH THE TEST FOR THE SUM OVER U LENGTH
-    std::cout << sum << "\n";
-    arma::vec im = arma::imag(u);
-    std::cout << im * im << "test\n";
+    // std::cout << sum << "\n";
+    // arma::vec im = arma::imag(u);
+    // std::cout << im * im << "test\n";
     // std::cout << arma::real(u) * arma::real(u) + arma::imag(u) * arma::imag(u);
 
     // std::cout << u(1) << "vsd" << u;
@@ -173,7 +194,6 @@ void DoubleSlitBox::init_V()
     double wall_center_y = 0.5;
     double slit_distance = 0.05;
     double slit_aperture = 0.05;
-    double v_0 = 10;
     for (int j = 0; j < M; j++)
     {
         for (int i = 0; i < M; i++)
@@ -182,7 +202,7 @@ void DoubleSlitBox::init_V()
             {
                 if (j * h <= wall_center_y - slit_distance / 2 - slit_aperture || j * h >= wall_center_y + slit_distance / 2 + slit_aperture || (j * h <= wall_center_y + slit_distance / 2 && j * h >= wall_center_y - slit_distance / 2))
                 {
-                    V(i, j) = v_0;
+                    V(i, j) = v0;
                 }
             }
             else
@@ -196,5 +216,5 @@ void DoubleSlitBox::init_V()
         }
     }
 
-    V.save("data/test.dat");
+    V.save("data/V.dat");
 }
