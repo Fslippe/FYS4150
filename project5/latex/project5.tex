@@ -67,7 +67,7 @@ To simulate the double-slit-in-a-box experiment we use the following theoretical
 \begin{equation}
     i \hbar \frac{d}{dt} | \Psi \rangle = \hat{H} | \Psi \rangle.
 \end{equation}
-Here $| \Psi \rangle$ is the quantum state and $\hat{H}$ is the Hamiltonian operator. For our purposes we consider a single, non-relativistic particle in two spatial dimensions. This allows $| \Psi \rangle$ to be expressed as $/Psi(x,y,t)$, a complex-valued function. In this case the Schrödinger equation can be expressed as
+Here $| \Psi \rangle$ is the quantum state and $\hat{H}$ is the Hamiltonian operator. For our purposes we consider a single, non-relativistic particle in two spatial dimensions. This allows $| \Psi \rangle$ to be expressed as $ \Psi (x,y,t)$, a complex-valued function. In this case the Schrödinger equation can be expressed as
 \begin{align}
     i \hbar \frac{\partial}{\partial t} \Psi(x,y,t) = - \frac{\hbar^2}{2m} \left( \frac{\partial^2}{\partial x^2} + \frac{\partial}{\partial y^2}\right) \Psi(x,y,t) \\
     + V(x,y,t) \Psi (x,y,t).
@@ -95,15 +95,15 @@ Dirichlet boundary conditions are implemented in the $xy$-plane as follows.
     \item $u(x,y=1,t) = 0$
 \end{itemize}
 
-The initial wave function $u_{ij}^0$ is given by the unnormalized quantum mechanical Gaussian wavepacket
+The initial wave function $u_{ij}^0$ is given by the unnormalized quantum mechanical Gaussian wave packet
 \begin{align}
     u(x,y,t = 0) = e^{-\frac{(x-x_c)^2}{2 \sigma_x^2} -\frac{(y-y_c)^2}{2 \sigma_y^2}+ ip_x (x-x_c)+ ip_y (y-y_c)}.
 \end{align}
 This is then normalized such that
 \begin{equation}
-    \sum_{i,j} u_{ij}^{0*} u_{ij}^0 = 1.
+    \sum_{i,j} u_{ij}^{0*} u_{ij}^0 = 1,
 \end{equation}
-
+where $^*$ denotes the complex conjugate.
 \subsection*{The Crank-Nicholson scheme}
 Using the Crank-Nicholson scheme, eq. \ref{eq:wave_eq} is discretized as
 \begin{align}
@@ -115,13 +115,37 @@ Using the Crank-Nicholson scheme, eq. \ref{eq:wave_eq} is discretized as
     &+ r \left[ u_{i,j+1}^{n}- 2 u_{ij}^{n} + u_{i,j-1}^{n} \right]
     - \frac{i \Delta t}{2} v_{ij} u_{ij}^{n}.
 \end{align}
-Here $r \equiv \frac{i \Delta t}{2h^2}$. $i$ indexes are not to be confused with the imangiary unit $i$. A more comprehensive analytical derivation can be found in appendix \ref{appendix:analytic}. Considering the case with our specific boundary conditions, this can be expressed as the matrix equation
+Here $r \equiv \frac{i \Delta t}{2h^2}$. $i$ indexes are not to be confused with the imaginary unit $i$. A more comprehensive analytical derivation can be found in appendix \ref{appendix:analytic}. Considering the case with our specific boundary conditions, this can be expressed as the matrix equation
 \begin{equation}
     A \vec{u}^{\text{ }n+1} = B \vec{u}^{\text{ }n}.
 \end{equation}
 % ===========================================
 \section{Results}\label{sec:results}
 %
+// prob 7 plots
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/}
+    \caption{Deviation of the total probability from 1.0 as a function of time. Simulation settings: $h = 0.005, \Delta t = 2.5 \times 10^{-5}, T = 0.008, x_c = 0.25, \sigma_x = 0.05, p_x = 200, y_c = 0.5, \sigma_y = 0.05, p_y = 0, v_0 = 0$.}
+    \label{fig:}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/}
+    \caption{Deviation of the total probability from 1.0 as a function of time. Simulation settings: $h = 0.005, \Delta t = 2.5 \times 10^{-5}, T = 0.008, x_c = 0.25, \sigma_x = 0.05, p_x = 200, y_c = 0.5, \sigma_y = 0.10, p_y = 0, v_0 = 1 \times 10^{10}$.}
+    \label{fig:}
+\end{figure}
+
+//prob 8 color map plots
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/}
+    \caption{Color map of the 2D probability distribution Simulation settings: $h = 0.005, \Delta t = 2.5 \times 10^{-5}, T = 0.008, x_c = 0.25, \sigma_x = 0.05, p_x = 200, y_c = 0.5, \sigma_y = 0.10, p_y = 0, v_0 = 1 \times 10^{10}$.}
+    \label{fig:}
+\end{figure}
+
+
 
 % ===========================================
 \section{Discussion}\label{sec:discussion}
@@ -145,24 +169,29 @@ The Schrödinger equation written as
 \begin{equation}
     i \frac{\partial u}{\partial t} = - \frac{\partial^2 u}{\partial x^2} - \frac{\partial^2 u}{\partial y^2} + v(x,y)u, \label{eq:wave_eq_appendix}
 \end{equation}
-can be discretized using the Crank - Nicholson scheme. This involves using the forward Euler approximation for time 
+can be discretized using the Crank - Nicholson (CN) scheme. This involves using the forward Euler approximation for the time dimension and a linear combination of the second order center difference in the current and next time step.
 \begin{equation}
-    \frac{\partial u}{\partial t} = \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t}, \label{eq:partial_t}
+    u(t + \Delta t ) = u(t) + \Delta t \frac{\partial u}{\partial t} + O(\Delta t^2)
 \end{equation}
-and evaluating the second order spatial derivative in both the current and next time step to then use the average for both spatial dimension $x$ and $y$. Using Taylor expansion results in
+results in the forward Euler approximation
 \begin{equation}
-    \frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j} -2u_{ij} + u_{i-1,j}}{h^2}.
+    \frac{\partial u}{\partial t} = \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} + O(\Delta t). \label{eq:partial_t}
 \end{equation}
-Then evaluating in the current and next time step we have
+Similarly, using the Taylor expansion for the second order spatial derivative results in
+\begin{equation}
+    \frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j} -2u_{ij} + u_{i-1,j}}{h^2} + O(\Delta t^2).
+\end{equation}
+
+For the CN scheme we evaluate the spatial differences in both the current and next time step to then use linear combination (using ``The $\theta$ rule'' \cite{compendium} for $\theta = \frac{1}{2}$). This gives us
 \begin{equation}
     \frac{\partial^2 u}{\partial x^2} = \frac{1}{2} \left[ \frac{u_{i+1,j}^{n+1} -2u_{ij}^{n+1} + u_{i-1,j}^{n+1}}{h^2} 
     + \frac{u_{i+1,j}^{n} -2u_{ij}^{n} + u_{i-1,j}^{n}}{h^2} \right] \label{eq:partial_x}
 \end{equation}
-for the $x$ dimension. Similarly, for the $y$ dimension we have
+for the $x$ dimension. Equivalently, for the $y$ dimension we have
 \begin{equation}
     \frac{\partial^2 u}{\partial y^2} = \frac{u_{i,j+1} -2u_{ij} + u_{i,j-1}}{h^2}
 \end{equation}
-and evaluated in the current and next time step
+and evaluated in the current and next time step for CN
 \begin{equation}
     \frac{\partial^2 u}{\partial y^2} = \frac{1}{2} \left[ \frac{u_{i,j+1}^{n+1} -2u_{ij}^{n+1} + u_{i,j-1}^{n+1}}{h^2}
     + \frac{u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}{h^2} \right]. \label{eq:partial_y}
@@ -185,9 +214,15 @@ where the whole RHS is evaluated in the current and next time step including the
      + \frac{u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}{h^2} \right]
      + \frac{i\Delta t}{2} \left[ v_{ij}u_{ij}^{n+1} + v_{ij}u_{ij}^n \right]. 
 \end{align}
-\\ \\
-NB! Need to check if the above and below expressions are actually equal!
-\\ \\
+Introducing  $r \equiv \frac{i \Delta t}{2h^2}$ we have
+\begin{align}
+    - u_{ij}^{n+1} + u_{ij}^n 
+    =& - r \left[ {u_{i+1,j}^{n+1} -2u_{ij}^{n+1} + u_{i-1,j}^{n+1}} \right]
+    - r \left[ {u_{i+1,j}^{n} -2u_{ij}^{n} + u_{i-1,j}^{n}}\right] \\
+    -& r \left[ {u_{i,j+1}^{n+1} -2u_{ij}^{n+1} + u_{i,j-1}^{n+1}} \right]
+    - r \left[ {u_{i,j+1}^{n} -2u_{ij}^{n} + u_{i,j-1}^{n}}\right]
+    + \frac{i\Delta t}{2} v_{ij}u_{ij}^{n+1} + \frac{i\Delta t}{2} v_{ij}u_{ij}^n. 
+\end{align}
 Collecting all the $n+1$ terms on the LHS we have the final expression
 \begin{align}
     u_{ij}^{n+1} - r \left[ u_{i+1,j}^{n+1}- 2 u_{ij}^{n+1} + u_{i-1,j}^{n+1} \right] 
