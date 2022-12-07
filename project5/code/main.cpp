@@ -17,12 +17,10 @@ int main(int argc, char *argv[])
     int M = 5;
 
     DoubleSlitBox DS = DoubleSlitBox(h_in, dt_in, T_in, xc_in, sigma_x_in, px_in, yc_in, sigma_y_in, py_in, v0_in);
-    // DS.init_V();
+    DS.init_V();
     DS.fill_A_B();
     DS.init_wave();
-    // DS.evolve_CN_to_time();
-
-    // std::cout << DS.u;
+    DS.evolve_CN_to_time();
 
     // savefile.save("data/test.dat");
     return 0;
