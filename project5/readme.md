@@ -30,15 +30,15 @@ g++ -std=c++11 main.cpp slit_box.cpp -o main -larmadillo -O2
 ./main h_in dt_in T_in xc_in sigma_x_in px_in yc_in sigma_y_in py_in v0_in savename slits
 ```
 Here we have the chosen parameters given as command line arguments:
-    -*double* **h_in**                  h constant and position step size      
-    - *double* **dt_in**                 time step size of simulation
-    - *double* **T_in **                 time to simulate
-    - *double* **xc_in**                 x center of initial wave packet
-    - *double* **sigma_x_in**            x width of initial wave packet
-    - *double* **px_in**                 wave packet x momentum
-    - *double* **yc_in**                 y center of initial wave packet
-    - *double* **sigma_y_in**            y width of initial wave packet
-    - *double* **py_in**                 wave packet y momentum
-    - *int* **v0_in**                 potential value inside walls
-    - *string* **savename**              savename of data files
-    - *int* **slits**                 number of slits 
+- *double* **h_in**                  h constant and position step size      
+- *double* **dt_in**                 time step size of simulation
+- *double* **T_in **                 time to simulate
+- *double* **xc_in**                 x center of initial wave packet
+- *double* **sigma_x_in**            x width of initial wave packet
+- *double* **px_in**                 wave packet x momentum
+- *double* **yc_in**                 y center of initial wave packet
+- *double* **sigma_y_in**            y width of initial wave packet
+- *double* **py_in**                 wave packet y momentum
+- *int* **v0_in**                 potential value inside walls
+- *string* **savename**              savename of data files
+- *int* **slits**                 number of slits 
