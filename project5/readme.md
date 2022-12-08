@@ -15,7 +15,6 @@ The programming languages python and c++ have been used. To run the code make su
 pip3 install pyarma
 pip3 install matplotlib
 pip3 install seaborn
-pip3 install scipy
 ```
 
 Everything is built around one class slit_box with its own .cpp and .hpp files. 
