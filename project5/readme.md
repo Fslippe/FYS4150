@@ -1,4 +1,4 @@
-# Project 4 - A study of phase transition in the 2D Ising model using Markov Chain Monte Carlo simulation
+# Project 5 - Numerical simulation of the 2+1 dimensional Schrödinger equation 
 Authors:
 Alessio Canclini and Filip Severin von der Lippe
 
