@@ -2,6 +2,7 @@
 Authors:
 Alessio Canclini and Filip Severin von der Lippe
 
+![](https://github.com/Fslippe/FYS4150/blob/main/project5/figures/animation.gif)
 ## Structure of repository
 This folder of the repository FYS4150 contains all files used for Project 5 in FYS4150 Autumn 2022.
 - figures contains both figures used in the report of this project and other relevant figures produced by the included code.
