@@ -39,82 +39,6 @@ def run(h_in, dt_in, T_in, xc_in, sigma_x_in, px_in, yc_in, sigma_y_in, py_in, v
     print("time: ", time.time()-start)
 
 
-def animation_plot(data, h, dt):
-    sns.set_style("white")
-
-    # Set up a 2D xy grid
-    x_points = np.arange(0, 1+h, h)
-    y_points = np.arange(0, 1+h, h)
-    x, y = np.meshgrid(x_points, y_points, sparse=True)
-
-    # Array of time points
-    t_points = np.arange(0, 1+dt, dt)
-
-    # Some settings
-    fontsize = 12
-    t_min = t_points[0]
-    x_min, x_max = x_points[0], x_points[-1]
-    y_min, y_max = y_points[0], y_points[-1]
-
-    # Create figure
-    fig = plt.figure()
-    ax = plt.gca()
-
-    # Create a colour scale normalization according to the max z value in the first frame
-    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(data[:, 0, :]))
-    print(np.shape(data))
-    # Plot the first
-    img = ax.imshow(data[:, 0, :], extent=[x_min, x_max,
-                    y_min, y_max], cmap=plt.get_cmap("viridis"), norm=norm)
-
-    # Axis labels
-    plt.xlabel(r"$x$", fontsize=fontsize)
-    plt.ylabel(r"$y$", fontsize=fontsize)
-    plt.xticks(fontsize=fontsize)
-    plt.yticks(fontsize=fontsize)
-
-    # Add a colourbar
-    cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label(r"Re$(u_i)$", fontsize=fontsize)
-    cbar.ax.tick_params(labelsize=fontsize)
-
-    # Add a text element showing the time
-    time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
-                        horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
-
-    # Use matplotlib.animation.FuncAnimation to put it all together
-    anim = FuncAnimation(fig, partial(animation, img=img, data=data, t_min=t_min, dt=dt,
-                         time_txt=time_txt), interval=30, frames=np.arange(0, len(data[0, :, 0]), 2),  repeat=True, blit=0)
-
-    # Run the animation!
-    plt.show()
-
-    # # Save the animation
-    anim.save('../figures/animation_real.gif',
-              writer="writegif", bitrate=-1, fps=30)
-
-    sns.set_style("darkgrid")
-    plt.rcParams.update({"font.size": 12.5})
-
-    # Function that takes care of updating the z data and other things for each frame
-
-
-def animation(i, img, data, t_min, dt, time_txt):
-    # Normalize the colour scale to the current frame?
-
-    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(data[:, 0, :]))
-    img.set_norm(norm)
-
-    # Update z data
-    img.set_data(data[:, i, :])
-
-    # Update the time label
-    current_time = t_min + i * dt
-    time_txt.set_text("t = {:.3e}".format(current_time))
-
-    return img
-
-
 def plot_p_diff(t, data, save):
     """
     Plot time development of p difference to 1
@@ -194,6 +118,104 @@ def plot_at_x(data, t, dt, x, save, title):
     plt.show()
 
 
+def animation_plot(data, h, dt, savename):
+    """
+    Function to animate data
+    args:
+    - data              3D Dataset [x, t, y]
+    - h                 spatial stepsize 
+    - dt                time step size
+    - savename          save name of animation
+    """
+    sns.set_style("white")
+
+    # Set up a 2D xy grid
+    x_points = np.arange(0, 1+h, h)
+    y_points = np.arange(0, 1+h, h)
+    x, y = np.meshgrid(x_points, y_points, sparse=True)
+
+    # Array of time points
+    t_points = np.arange(0, 1+dt, dt)
+
+    # Some settings
+    fontsize = 12
+    t_min = t_points[0]
+    x_min, x_max = x_points[0], x_points[-1]
+    y_min, y_max = y_points[0], y_points[-1]
+
+    # Create figure
+    fig = plt.figure()
+    ax = plt.gca()
+
+    # Create a colour scale normalization according to the max z value in the first frame
+    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(data[:, 0, :]))
+    print(np.shape(data))
+    # Plot the first
+    img = ax.imshow(data[:, 0, :], extent=[x_min, x_max,
+                    y_min, y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+
+    # Axis labels
+    plt.xlabel(r"$x$", fontsize=fontsize)
+    plt.ylabel(r"$y$", fontsize=fontsize)
+    plt.xticks(fontsize=fontsize)
+    plt.yticks(fontsize=fontsize)
+
+    # Add a colourbar
+    cbar = fig.colorbar(img, ax=ax)
+    cbar.set_label(r"Re$(u_i)$", fontsize=fontsize)
+    cbar.ax.tick_params(labelsize=fontsize)
+
+    # Add a text element showing the time
+    time_txt = plt.text(0.95, 0.95, "t = {:.3e}".format(t_min), color="white",
+                        horizontalalignment="right", verticalalignment="top", fontsize=fontsize)
+
+    # Use matplotlib.animation.FuncAnimation to put it all together
+    anim = FuncAnimation(fig, partial(animation, img=img, data=data, t_min=t_min, dt=dt,
+                         time_txt=time_txt), interval=30, frames=np.arange(0, len(data[0, :, 0]), 2),  repeat=True, blit=0)
+
+    # Run the animation!
+    plt.show()
+
+    # # Save the animation
+    anim.save('../figures/%s.gif' % (savename),
+              writer="writegif", bitrate=-1, fps=30)
+
+    sns.set_style("darkgrid")
+    plt.rcParams.update({"font.size": 12.5})
+
+    # Function that takes care of updating the z data and other things for each frame
+
+
+def animation(i, img, data, t_min, dt, time_txt):
+    """
+    This function animates a frame of a time-varying 2D data visualization.
+
+    Args:
+    i: The frame number of the animation.
+    img: The image object to be updated with the current frame data.
+    data: A 3D array representing the time-varying data to be visualized.
+    t_min: The initial time of the data.
+    dt: The time step between frames.
+    time_txt: A text object to be updated with the current time.
+
+    Returns:
+    img: The updated image object with the current frame data.
+    """
+    # Normalize the colour scale to the current frame?
+
+    norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(data[:, 0, :]))
+    img.set_norm(norm)
+
+    # Update z data
+    img.set_data(data[:, i, :])
+
+    # Update the time label
+    current_time = t_min + i * dt
+    time_txt.set_text("t = {:.3e}".format(current_time))
+
+    return img
+
+
 def main():
 
     runcpp = True  # RUN c++ file if True
@@ -236,7 +258,6 @@ def main():
     DS2.load("data/double_slit_8.dat")
     DS2_long.load("data/double_slit_7.dat")
     DS2_long_real.load("data/double_slit_7_real.dat")
-
     DS3.load("data/tripple_slit_9.dat")
 
     # V for different number of slits
@@ -251,8 +272,8 @@ def main():
     plot_p_diff(np.array(t), np.array(DS), "no_slit_p_diff")
 #
     """Animation plot"""
-    animation_plot(np.array(DS2_long_real), h, dt)
-    animation_plot(np.array(DS2_long), h, dt)
+    animation_plot(np.array(DS2_long_real), h, dt, "animation_real")
+    animation_plot(np.array(DS2_long), h, dt, "animation")
 
     """Plotting probability at chosen x and t"""
     plot_at_x(np.array(DS2), 0.002, dt, 0.8,
